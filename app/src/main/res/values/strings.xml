@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">Syndic Manager</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_apartments">Buildings &amp; Appts</string>
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_communication">Announcements &amp; Chat</string>
+
+    <!-- Dashboard -->
+    <string name="stat_incomes_month">Incomes (Month)</string>
+    <string name="stat_expenses_month">Expenses (Month)</string>
+    <string name="stat_balance">Total Balance</string>
+    <string name="title_stats_filter">Month Filter:</string>
+    <string name="dash_table_title">Last 3 Payments</string>
+    <string name="title_stats_month">Monthly Stats</string>
+    <string name="txt_paid_month">Paid</string>
+    <string name="btn_view_all">View All</string>
+    <string name="full_table_title">Full Table</string>
+    <string name="btn_back_dash">Back</string>
+    <string name="btn_back_blds">Back to Buildings</string>
+    <string name="btn_back_apts">Back</string>
+
+    <!-- Buildings & Apartments -->
+    <string name="ph_bld_name">E.g.: Building A...</string>
+    <string name="btn_add_bld">Add Building</string>
+    <string name="alert_bld">Enter building name</string>
+    <string name="ph_apt_name">E.g.: Apt 1...</string>
+    <string name="btn_add_apt">Add Apartment</string>
+    <string name="alert_apt">Enter apartment name</string>
+    <string name="lbl_year">Year:</string>
+    <string name="opt_all_months">All months</string>
+    <string name="year_word">Year</string>
+    <string name="no_apts">No data.</string>
+    <string name="paid">Paid</string>
+    <string name="unpaid">Unpaid</string>
+    <string name="apt_month">Apt / Month</string>
+    <string name="btn_delete">Delete</string>
+
+    <!-- Resident Info -->
+    <string name="btn_show_resident">Show Resident (Private)</string>
+    <string name="title_resident_info">Resident Info</string>
+    <string name="ph_res_name">Name...</string>
+    <string name="ph_res_phone">Phone...</string>
+    <string name="btn_hide">Hide</string>
+    <string name="alert_res_saved">Saved successfully!</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_cancel_edit">Cancel</string>
+    <string name="lbl_res_name">Name:</string>
+    <string name="lbl_res_phone">Phone:</string>
+    <string name="title_edit_resident">Edit Info</string>
+
+    <!-- Expenses -->
+    <string name="title_new_exp">New Expense</string>
+    <string name="lbl_desc">Description:</string>
+    <string name="lbl_amount">Amount:</string>
+    <string name="ph_exp_desc">E.g.: Repair...</string>
+    <string name="ph_amount">Amount...</string>
+    <string name="btn_add_exp">Add Expense</string>
+    <string name="th_date">Date</string>
+    <string name="th_desc">Description</string>
+    <string name="th_amount">Amount</string>
+    <string name="th_action">Action</string>
+    <string name="title_exp_list">Expenses List</string>
+    <string name="alert_fill">Fill all information.</string>
+    <string name="alert_amt">Invalid amount!</string>
+    <string name="curr">MAD</string>
+
+    <!-- Receipts -->
+    <string name="lbl_receipt">Receipt (Optional):</string>
+    <string name="th_receipt">Receipt</string>
+    <string name="btn_view_receipt">Receipt</string>
+    <string name="no_receipt">None</string>
+    <string name="uploading">Saving...</string>
+
+    <!-- Announcements -->
+    <string name="title_announcements">Announcements</string>
+    <string name="ph_announce_title">Title...</string>
+    <string name="ph_announce_msg">Content...</string>
+    <string name="btn_add_announce">Publish</string>
+    <string name="lbl_ann_image">Image (Optional):</string>
+    <string name="btn_details">Details</string>
+    <string name="btn_del_ann">Delete Announcement</string>
+    <string name="title_comments">Comments</string>
+    <string name="ph_comment">Write a comment...</string>
+    <string name="btn_add_comment">Send Comment</string>
+    <string name="no_comments">No comments yet.</string>
+
+    <!-- Chat -->
+    <string name="title_chat">Chat</string>
+    <string name="ph_chat_name">Name</string>
+    <string name="ph_chat_msg">Message...</string>
+    <string name="btn_send_chat">Send</string>
+
+    <!-- Common Buttons -->
+    <string name="btn_save">Save</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="modal_del_title">Confirm Deletion</string>
+    <string name="btn_yes_del">Yes, Delete</string>
+    <string name="btn_undo">Undo</string>
+    <string name="msg_del_default">Are you sure you want to delete?</string>
+    <string name="msg_del_bld">Warning: Deleting the building will delete all its apartments!</string>
+    <string name="pay_title">Payment</string>
+
+    <!-- Auth -->
+    <string name="btn_locked">Locked</string>
+    <string name="btn_unlocked">Unlocked</string>
+    <string name="auth_title">Password</string>
+    <string name="auth_desc">Please enter the password.</string>
+    <string name="ph_pwd">Password...</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="change_pwd_title">Change Password</string>
+    <string name="ph_old_pwd">Old Password</string>
+    <string name="ph_new_pwd">New Password</string>
+    <string name="alert_wrong_pwd">Incorrect password!</string>
+    <string name="alert_pwd_changed">Password changed!</string>
+    <string name="alert_pwd_req">Enter a valid password.</string>
+    <string name="ph_confirm_pwd">Confirm Password</string>
+    <string name="alert_pwd_mismatch">Passwords do not match!</string>
+    <string name="modal_rename_title">Rename</string>
+    <string name="ph_rename">New name...</string>
+    <string name="title_select_bld">Select a building to view its payment table:</string>
+
+    <!-- Images -->
+    <string name="btn_add_img">Add Receipt</string>
+    <string name="btn_edit_img">Change Receipt</string>
+    <string name="txt_selected">Selected</string>
+    <string name="title_img_source">Select Image Source</string>
+    <string name="btn_camera">Camera</string>
+    <string name="btn_gallery">Gallery</string>
+    <string name="err_load_img">Failed to load or no image data.</string>
+    <string name="ph_chat_start">Start chatting now...</string>
+    <string name="txt_resident">Resident</string>
+    <string name="no_announcements">No announcements yet.</string>
+    <string name="btn_add_photo">Add Image</string>
+    <string name="btn_edit_photo">Change Image</string>
+    <string name="btn_del_comment">Delete</string>
+</resources>

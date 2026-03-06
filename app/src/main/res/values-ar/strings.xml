@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تسيير السانديك</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">الرئيسية</string>
+    <string name="nav_apartments">العمارات والشقق</string>
+    <string name="nav_expenses">المصاريف</string>
+    <string name="nav_communication">الإعلانات والدردشة</string>
+
+    <!-- Dashboard -->
+    <string name="stat_incomes_month">مداخيل الشهر</string>
+    <string name="stat_expenses_month">مصاريف الشهر</string>
+    <string name="stat_balance">صندوق السانديك (الإجمالي)</string>
+    <string name="title_stats_filter">إحصائيات الشهر:</string>
+    <string name="dash_table_title">آخر 3 شقق أدوا الواجب</string>
+    <string name="title_stats_month">إحصائيات الأداء بالشهر</string>
+    <string name="txt_paid_month">أدوا شهر</string>
+    <string name="btn_view_all">عرض تفاصيل جميع الشقق</string>
+    <string name="full_table_title">الجدول الكامل لجميع الشقق</string>
+    <string name="btn_back_dash">رجوع</string>
+    <string name="btn_back_blds">رجوع للعمارات</string>
+    <string name="btn_back_apts">رجوع</string>
+
+    <!-- Buildings & Apartments -->
+    <string name="ph_bld_name">مثال: العمارة A...</string>
+    <string name="btn_add_bld">+ إضافة عمارة</string>
+    <string name="alert_bld">المرجو كتابة اسم العمارة</string>
+    <string name="ph_apt_name">مثال: شقة 1...</string>
+    <string name="btn_add_apt">+ إضافة شقة</string>
+    <string name="alert_apt">المرجو كتابة اسم أو رقم الشقة</string>
+    <string name="lbl_year">اختر السنة:</string>
+    <string name="opt_all_months">جميع الأشهر</string>
+    <string name="year_word">سنة</string>
+    <string name="no_apts">لا توجد معلومات لعرضها حالياً.</string>
+    <string name="paid">أدى</string>
+    <string name="unpaid">غير مؤدى</string>
+    <string name="apt_month">الشقة / الشهر</string>
+    <string name="btn_delete">مسح</string>
+
+    <!-- Resident Info -->
+    <string name="btn_show_resident">إظهار معلومات الساكن (سري)</string>
+    <string name="title_resident_info">معلومات الساكن</string>
+    <string name="ph_res_name">اسم الساكن...</string>
+    <string name="ph_res_phone">رقم الهاتف...</string>
+    <string name="btn_hide">إخفاء</string>
+    <string name="alert_res_saved">تم الحفظ بنجاح!</string>
+    <string name="btn_edit">تعديل</string>
+    <string name="btn_cancel_edit">إلغاء</string>
+    <string name="lbl_res_name">الاسم:</string>
+    <string name="lbl_res_phone">الهاتف:</string>
+    <string name="title_edit_resident">إدخال / تعديل معلومات الساكن</string>
+
+    <!-- Expenses -->
+    <string name="title_new_exp">تسجيل مصروف جديد</string>
+    <string name="lbl_desc">البيان (فاش تخسرو لفلوس؟):</string>
+    <string name="lbl_amount">المبلغ (درهم):</string>
+    <string name="ph_exp_desc">مثال: إصلاح المصعد...</string>
+    <string name="ph_amount">المبلغ...</string>
+    <string name="btn_add_exp">+ إضافة مصروف</string>
+    <string name="th_date">التاريخ</string>
+    <string name="th_desc">البيان</string>
+    <string name="th_amount">المبلغ</string>
+    <string name="th_action">إجراء</string>
+    <string name="title_exp_list">لائحة المصاريف</string>
+    <string name="alert_fill">المرجو ملء جميع المعلومات.</string>
+    <string name="alert_amt">مبلغ غير صحيح!</string>
+    <string name="curr">د.م</string>
+
+    <!-- Receipts -->
+    <string name="lbl_receipt">صورة التوصيل (اختياري):</string>
+    <string name="th_receipt">التوصيل</string>
+    <string name="btn_view_receipt">التوصيل</string>
+    <string name="no_receipt">بدون صورة</string>
+    <string name="uploading">جاري حفظ الصورة...</string>
+
+    <!-- Announcements -->
+    <string name="title_announcements">إعلانات العمارة</string>
+    <string name="ph_announce_title">عنوان الإعلان...</string>
+    <string name="ph_announce_msg">محتوى الإعلان...</string>
+    <string name="btn_add_announce">نشر الإعلان</string>
+    <string name="lbl_ann_image">صورة مرفقة (اختياري):</string>
+    <string name="btn_details">التفاصيل</string>
+    <string name="btn_del_ann">مسح الإعلان</string>
+    <string name="title_comments">التعليقات</string>
+    <string name="ph_comment">اكتب تعليقك...</string>
+    <string name="btn_add_comment">إرسال التعليق</string>
+    <string name="no_comments">لا توجد تعليقات بعد.</string>
+
+    <!-- Chat -->
+    <string name="title_chat">دردشة السكان</string>
+    <string name="ph_chat_name">الاسم</string>
+    <string name="ph_chat_msg">اكتب رسالتك هنا...</string>
+    <string name="btn_send_chat">إرسال</string>
+
+    <!-- Common Buttons -->
+    <string name="btn_save">حفظ</string>
+    <string name="btn_clear">مسح</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="modal_del_title">تأكيد المسح</string>
+    <string name="btn_yes_del">نعم، امسح</string>
+    <string name="btn_undo">تراجع</string>
+    <string name="msg_del_default">هل أنت متأكد من المسح؟</string>
+    <string name="msg_del_bld">تحذير: مسح العمارة سيمسح جميع شققها نهائياً!</string>
+    <string name="pay_title">أداء</string>
+
+    <!-- Auth -->
+    <string name="btn_locked">مقفل</string>
+    <string name="btn_unlocked">مفتوح</string>
+    <string name="auth_title">أدخل كلمة المرور</string>
+    <string name="auth_desc">المرجو إدخال كلمة المرور لتأكيد التعديلات.</string>
+    <string name="ph_pwd">كلمة المرور...</string>
+    <string name="btn_confirm">تأكيد</string>
+    <string name="change_pwd_title">تغيير كلمة المرور</string>
+    <string name="ph_old_pwd">كلمة المرور الحالية</string>
+    <string name="ph_new_pwd">كلمة المرور الجديدة</string>
+    <string name="alert_wrong_pwd">كلمة المرور غير صحيحة!</string>
+    <string name="alert_pwd_changed">تم تغيير كلمة المرور بنجاح!</string>
+    <string name="alert_pwd_req">المرجو إدخال كلمة مرور صالحة.</string>
+    <string name="ph_confirm_pwd">تأكيد كلمة المرور</string>
+    <string name="alert_pwd_mismatch">كلمات المرور غير متطابقة!</string>
+    <string name="modal_rename_title">تغيير الاسم</string>
+    <string name="ph_rename">الاسم الجديد...</string>
+    <string name="title_select_bld">اختر عمارة لعرض جدول الأداء الخاص بها:</string>
+
+    <!-- Images -->
+    <string name="btn_add_img">إضافة التوصيل</string>
+    <string name="btn_edit_img">تغيير التوصيل</string>
+    <string name="txt_selected">مختار</string>
+    <string name="title_img_source">اختر مصدر الصورة</string>
+    <string name="btn_camera">الكاميرا</string>
+    <string name="btn_gallery">المعرض</string>
+    <string name="err_load_img">لم يتم العثور على صورة أو فشل التحميل.</string>
+    <string name="ph_chat_start">ابدأ الدردشة الآن...</string>
+    <string name="txt_resident">ساكن</string>
+    <string name="no_announcements">لا توجد إعلانات بعد.</string>
+    <string name="btn_add_photo">إضافة صورة</string>
+    <string name="btn_edit_photo">تغيير الصورة</string>
+    <string name="btn_del_comment">مسح</string>
+</resources>

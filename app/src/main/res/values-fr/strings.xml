@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gestion Syndic</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Tableau de bord</string>
+    <string name="nav_apartments">Immeubles &amp; Appts</string>
+    <string name="nav_expenses">Dépenses</string>
+    <string name="nav_communication">Annonces &amp; Chat</string>
+
+    <!-- Dashboard -->
+    <string name="stat_incomes_month">Revenus (Mois)</string>
+    <string name="stat_expenses_month">Dépenses (Mois)</string>
+    <string name="stat_balance">Caisse Syndic (Total)</string>
+    <string name="title_stats_filter">Filtre du mois :</string>
+    <string name="dash_table_title">3 Derniers Paiements</string>
+    <string name="title_stats_month">Stats Mensuelles</string>
+    <string name="txt_paid_month">Ont payé</string>
+    <string name="btn_view_all">Voir tous</string>
+    <string name="full_table_title">Tableau complet</string>
+    <string name="btn_back_dash">Retour</string>
+    <string name="btn_back_blds">Retour</string>
+    <string name="btn_back_apts">Retour</string>
+
+    <!-- Buildings & Apartments -->
+    <string name="ph_bld_name">Ex: Bâtiment A...</string>
+    <string name="btn_add_bld">+ Ajouter Immeuble</string>
+    <string name="alert_bld">Entrez le nom de l\'immeuble</string>
+    <string name="ph_apt_name">Ex: Appt 1...</string>
+    <string name="btn_add_apt">+ Ajouter Appt</string>
+    <string name="alert_apt">Entrez le nom de l\'appartement</string>
+    <string name="lbl_year">Année :</string>
+    <string name="opt_all_months">Tous les mois</string>
+    <string name="year_word">Année</string>
+    <string name="no_apts">Aucune donnée.</string>
+    <string name="paid">Payé</string>
+    <string name="unpaid">Non payé</string>
+    <string name="apt_month">Appt / Mois</string>
+    <string name="btn_delete">Supprimer</string>
+
+    <!-- Resident Info -->
+    <string name="btn_show_resident">Afficher infos (Privé)</string>
+    <string name="title_resident_info">Infos résident</string>
+    <string name="ph_res_name">Nom...</string>
+    <string name="ph_res_phone">Téléphone...</string>
+    <string name="btn_hide">Cacher</string>
+    <string name="alert_res_saved">Enregistré !</string>
+    <string name="btn_edit">Modifier</string>
+    <string name="btn_cancel_edit">Annuler</string>
+    <string name="lbl_res_name">Nom :</string>
+    <string name="lbl_res_phone">Tél :</string>
+    <string name="title_edit_resident">Éditer infos</string>
+
+    <!-- Expenses -->
+    <string name="title_new_exp">Nouvelle Dépense</string>
+    <string name="lbl_desc">Description :</string>
+    <string name="lbl_amount">Montant :</string>
+    <string name="ph_exp_desc">Ex: Réparation...</string>
+    <string name="ph_amount">Montant...</string>
+    <string name="btn_add_exp">+ Ajouter Dépense</string>
+    <string name="th_date">Date</string>
+    <string name="th_desc">Description</string>
+    <string name="th_amount">Montant</string>
+    <string name="th_action">Action</string>
+    <string name="title_exp_list">Liste des dépenses</string>
+    <string name="alert_fill">Remplissez toutes les infos.</string>
+    <string name="alert_amt">Montant invalide!</string>
+    <string name="curr">MAD</string>
+
+    <!-- Receipts -->
+    <string name="lbl_receipt">Reçu (Optionnel) :</string>
+    <string name="th_receipt">Reçu</string>
+    <string name="btn_view_receipt">Reçu</string>
+    <string name="no_receipt">Aucun</string>
+    <string name="uploading">Enregistrement...</string>
+
+    <!-- Announcements -->
+    <string name="title_announcements">Annonces</string>
+    <string name="ph_announce_title">Titre...</string>
+    <string name="ph_announce_msg">Contenu...</string>
+    <string name="btn_add_announce">Publier</string>
+    <string name="lbl_ann_image">Image (Optionnel) :</string>
+    <string name="btn_details">Détails</string>
+    <string name="btn_del_ann">Supprimer l\'annonce</string>
+    <string name="title_comments">Commentaires</string>
+    <string name="ph_comment">Écrivez un commentaire...</string>
+    <string name="btn_add_comment">Envoyer</string>
+    <string name="no_comments">Aucun commentaire pour l\'instant.</string>
+
+    <!-- Chat -->
+    <string name="title_chat">Chat</string>
+    <string name="ph_chat_name">Nom</string>
+    <string name="ph_chat_msg">Message...</string>
+    <string name="btn_send_chat">Envoyer</string>
+
+    <!-- Common Buttons -->
+    <string name="btn_save">Enregistrer</string>
+    <string name="btn_clear">Effacer</string>
+    <string name="btn_cancel">Annuler</string>
+    <string name="modal_del_title">Confirmation</string>
+    <string name="btn_yes_del">Oui, Supprimer</string>
+    <string name="btn_undo">Annuler</string>
+    <string name="msg_del_default">Voulez-vous vraiment supprimer ?</string>
+    <string name="msg_del_bld">Attention : Supprimer l\'immeuble supprimera tous ses appts !</string>
+    <string name="pay_title">Paiement</string>
+
+    <!-- Auth -->
+    <string name="btn_locked">Verrouillé</string>
+    <string name="btn_unlocked">Déverrouillé</string>
+    <string name="auth_title">Mot de passe</string>
+    <string name="auth_desc">Veuillez entrer le mot de passe.</string>
+    <string name="ph_pwd">Mot de passe...</string>
+    <string name="btn_confirm">Confirmer</string>
+    <string name="change_pwd_title">Changer MDP</string>
+    <string name="ph_old_pwd">Ancien MDP</string>
+    <string name="ph_new_pwd">Nouveau MDP</string>
+    <string name="alert_wrong_pwd">MDP incorrect!</string>
+    <string name="alert_pwd_changed">MDP changé!</string>
+    <string name="alert_pwd_req">Entrez un MDP.</string>
+    <string name="ph_confirm_pwd">Confirmer MDP</string>
+    <string name="alert_pwd_mismatch">Les mots de passe ne correspondent pas!</string>
+    <string name="modal_rename_title">Renommer</string>
+    <string name="ph_rename">Nouveau nom...</string>
+</resources>
