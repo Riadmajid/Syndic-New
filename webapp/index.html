@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسيير السانديك ZAINEB 4</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase (v8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <!-- Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF and AutoTable for proper PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --white: #ffffff;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            padding: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-links button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-links button:hover,
+        .nav-links button.active {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Layout Controls */
+        .auth-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .lang-select option {
+            color: var(--dark);
+            background: white;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-icon:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-icon.unlocked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats & Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border-bottom: 5px solid transparent;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card.incomes {
+            border-color: var(--success);
+        }
+
+        .stat-card.expenses {
+            border-color: var(--danger);
+        }
+
+        .stat-card.balance {
+            border-color: var(--secondary);
+            background-color: #f0f9ff;
+        }
+
+        .stat-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            color: #6b7280;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .stat-card .amount {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-primary {
+            color: var(--secondary);
+        }
+
+        /* Headers & Forms */
+        .header-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .header-action h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box::after {
+            content: '🔍';
+            position: absolute;
+            right: 12px;
+            top: 10px;
+            opacity: 0.5;
+        }
+
+        select.modern-select {
+            padding: 6px 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--dark);
+            outline: none;
+            cursor: pointer;
+            background: white;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 15px 12px;
+            text-align: center;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sticky First Column */
+        html[dir="rtl"] th:first-child,
+        html[dir="rtl"] td:first-child {
+            position: sticky;
+            right: 0;
+            background-color: #ffffff;
+            z-index: 2;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
+            text-align: right;
+        }
+
+        html[dir="ltr"] th:first-child,
+        html[dir="ltr"] td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #ffffff;
+            z-index: 2;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.03);
+            text-align: left;
+        }
+
+        th:first-child {
+            background-color: #f8fafc !important;
+            color: var(--primary);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .badge-paid {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .badge-unpaid {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .payment-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 24px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            margin: 0 auto;
+        }
+
+        .payment-badge.paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .payment-badge.unpaid {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Item Cards (Buildings/Apts) */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .item-card {
+            background: white;
+            padding: 30px 10px 20px 10px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-card .icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .item-card .name {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .card-actions {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .item-card:hover .card-actions {
+            opacity: 1;
+        }
+
+        .card-action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Buttons & Forms */
+        button.btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .payment-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 24px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            margin: 0 auto;
+        }
+
+        .payment-badge.paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .payment-badge.unpaid {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Visualization Section */
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0.5;
+        }
+
+        /* Chat & Communication */
+        .comm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .chat-box {
+            height: 400px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        .chat-msg {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            max-width: 85%;
+        }
+
+        .chat-msg .sender {
+            font-weight: 800;
+            color: var(--secondary);
+            font-size: 12px;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .chat-msg .text {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-msg .time {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+            display: block;
+            width: 100%;
+            text-align: end;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--light);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px;
+            }
+
+            .nav-links button {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 15px 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-action {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .grid-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* Chat Notification Badge */
+        .nav-badge-wrapper {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-badge 1s infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse-badge {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid var(--secondary);
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+            max-width: 350px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toast-notification:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Announcement Details & Comments */
+        .announce-detail-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .comments-section {
+            margin-top: 25px;
+            border-top: 2px solid #f1f5f9;
+            padding-top: 20px;
+        }
+
+        .comment-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--secondary);
+            position: relative;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .comment-name {
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .comment-date {
+            color: #94a3b8;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+
+        .comment-delete-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 5px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .announce-item {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .announce-item:hover {
+            transform: scale(1.02);
+            border-color: var(--secondary);
+        }
+
+        html[dir="rtl"] .toast-notification {
+            right: auto;
+            left: 30px;
+            border-left: none;
+            border-right: 5px solid var(--secondary);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast-notification .toast-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .toast-notification .toast-sender {
+            font-weight: 800;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .toast-notification .toast-msg {
+            font-size: 13px;
+            color: #4b5563;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <h3 id="loadingText" style="margin-top: 20px; color: var(--primary);">Loading...</h3>
+    </div>
+
+    <nav class="navbar" id="appNavbar" style="display: none;">
+        <div class="navbar-brand">
+            <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media"
+                class="navbar-logo" alt="Logo"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3062/3062334.png'">
+            <h2 data-i18n="app_title">🏢 ZAINEB 4 السانديك</h2>
+            <div class="auth-controls">
+                <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+                    <option value="ar">العربية</option>
+                    <option value="fr">Français</option>
+                    <option value="en">English</option>
+                </select>
+                <button id="btn-lock" class="btn-icon" onclick="handleLogout()" title="Logout">🚪</button>
+                <div id="sync-status"
+                    style="width:12px; height:12px; border-radius:50%; background:gray; margin-left:10px;"
+                    title="Firestore Connection"></div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <button onclick="changePage('dashboard')" class="active" data-i18n="nav_dashboard">الرئيسية</button>
+            <button onclick="changePage('apartments')" data-i18n="nav_apartments">العمارات والشقق</button>
+            <button onclick="changePage('expenses')" data-i18n="nav_expenses">المصاريف</button>
+            <span class="nav-badge-wrapper">
+                <button onclick="changePage('communication')" data-i18n="nav_comm">الإعلانات والدردشة</button>
+                <span id="chatBadge" class="chat-badge">!</span>
+            </span>
+            <button onclick="changePage('full-payments')" data-i18n="full_table_title">📋 الجدول السنوي</button>
+            <button id="navUsersLink" onclick="changePage('users')" data-i18n="nav_users"
+                style="display: none;">المستخدمين</button>
+        </div>
+    </nav>
+
+    <!-- NEW: Login Screen -->
+    <div id="loginScreen" class="page"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh;">
+        <div
+            style="background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); width: 100%; max-width: 400px; text-align: center;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media"
+                style="width: 100px; margin-bottom: 20px;" alt="Logo">
+            <h2 id="authTitle" style="color: var(--primary); margin-bottom: 30px;" data-i18n="title_login">ZAINEB 4</h2>
+
+            <div id="loginFields">
+                <div class="input-group">
+                    <label data-i18n="lbl_email">البريد الإلكتروني / Email</label>
+                    <input type="text" id="loginEmail" placeholder="example@mail.com">
+                </div>
+                <div class="input-group">
+                    <label data-i18n="lbl_password">كلمة المرور / Password</label>
+                    <input type="password" id="loginPwd" placeholder="******">
+                </div>
+
+                <!-- Registration Specific Fields -->
+                <div id="regFields" style="display: none;">
+                    <div class="input-group">
+                        <label data-i18n="lbl_name">الاسم الكامل / Name</label>
+                        <input type="text" id="regName" placeholder="Full Name">
+                    </div>
+                    <div class="input-group">
+                        <label data-i18n="lbl_building">العمارة / Building</label>
+                        <input type="text" id="regBuilding" placeholder="Building A">
+                    </div>
+                    <div class="input-group">
+                        <label data-i18n="lbl_apartment">رقم الشقة / Apartment</label>
+                        <input type="text" id="regApartment" placeholder="Apt 1">
+                    </div>
+                </div>
+
+                <div id="loginOptions"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="rememberMe" style="width: 16px; height: 16px;">
+                        <span data-i18n="lbl_remember_me">تذكرني (Remember Me)</span>
+                    </label>
+                    <a href="#" onclick="handleForgotPassword()"
+                        style="color: var(--secondary); text-decoration: none; font-weight: bold;"
+                        data-i18n="btn_forgot_pwd">نسيت كلمة السر؟</a>
+                </div>
+
+                <button id="authBtn" class="btn btn-primary" style="width: 100%;" onclick="handleAuth()"
+                    data-i18n="btn_login">تسجيل الدخول</button>
+                <div style="margin-top: 20px;">
+                    <a href="#" id="authToggle" onclick="toggleAuthMode()"
+                        style="color: var(--primary); text-decoration: none; font-weight: bold;"
+                        data-i18n="btn_register_mode">ليس لديك حساب؟ إنشاء حساب</a>
+                </div>
+                <p id="loginError" style="color: var(--danger); margin-top: 15px; font-size: 14px; display: none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Pending Approval Screen -->
+    <div id="pendingScreen" class="page"
+        style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 80vh; text-align: center; padding: 20px;">
+        <div
+            style="background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); max-width: 500px;">
+            <div style="font-size: 80px; margin-bottom: 20px;">⏳</div>
+            <h2 style="color: var(--primary);">الحساب قيد المراجعة</h2>
+            <p style="color: #6b7280; font-size: 18px; line-height: 1.6;">شكراً لتسجيلك. حسابك في حالة انتظار موافقة
+                المسؤول (السانديك). يرجى العودة لاحقاً أو التواصل مع الإدارة.</p>
+            <button class="btn btn-danger" style="margin-top: 30px; width: 100%;" onclick="handleLogout()">تسجيل
+                الخروج</button>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+
+        <!-- PAGE 1: DASHBOARD -->
+        <div id="dashboard" class="page active">
+
+            <div class="header-action">
+                <h3 data-i18n="title_stats_filter">📅 ملخص المالية :</h3>
+                <div style="display: flex; gap: 10px; flex: 1; justify-content: flex-end;">
+                    <select id="dashStatMonth" class="modern-select" onchange="updateDashboard()"></select>
+                    <select id="dashStatYear" class="modern-select" onchange="updateDashboard()"></select>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card incomes">
+                    <div class="stat-icon">💰</div>
+                    <h3 data-i18n="stat_incomes_month">مداخيل</h3>
+                    <div class="amount text-success" id="totalIncomes">0</div>
+                </div>
+                <div class="stat-card expenses">
+                    <div class="stat-icon">📉</div>
+                    <h3 data-i18n="stat_expenses_month">مصاريف</h3>
+                    <div class="amount text-danger" id="totalExpenses">0</div>
+                </div>
+                <div class="stat-card balance">
+                    <div class="stat-icon">🏦</div>
+                    <h3 data-i18n="stat_balance">صندوق السانديك</h3>
+                    <div class="amount text-primary" id="boxBalance">0</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="financialChart"></canvas>
+            </div>
+
+            <div class="header-action">
+                <h3 data-i18n="dash_table_title">📋 آخر العمليات</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="openExportModal('bilan')"
+                        style="background:var(--secondary);">📥 استخراج تقرير مفصل (Excel / PDF)</button>
+                    <button class="btn btn-primary" onclick="changePage('full-payments')" data-i18n="btn_view_all">📄
+                        الجميع</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="dashTable">
+                    <thead>
+                        <tr id="dashTableHead"></tr>
+                    </thead>
+                    <tbody id="dashTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- New Monthly Stats Section -->
+            <div class="header-action" style="margin-top: 30px;">
+                <h3 data-i18n="title_stats_month">📊 إحصائيات الأداء المتأخر حسب العمارة</h3>
+            </div>
+            <div id="monthlyStatsContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
+
+        </div>
+
+        <!-- PAGE 2: FULL PAYMENTS TABLE -->
+        <div id="full-payments" class="page">
+            <div class="header-action">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-danger" onclick="changePage('dashboard')">🔙</button>
+                    <h3 data-i18n="full_table_title">الجدول السنوي للأداء</h3>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="openExportModal('fullTable')">📗 Excel / PDF</button>
+                    <select id="fullYear" class="modern-select" onchange="renderFullTable()"></select>
+                </div>
+            </div>
+            <div id="fullBldSelector" class="grid-cards"></div>
+            <div id="fullTableContent" style="display: none; margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 id="fullTableBldName" style="margin: 0; color: var(--primary);"></h4>
+                    <button class="btn"
+                        onclick="document.getElementById('fullTableContent').style.display='none'; document.getElementById('fullBldSelector').style.display='grid';"
+                        style="background:#e5e7eb; color: #4b5563;">❌</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="mainFullTable" style="min-width: 900px; margin-top: 0;">
+                        <thead>
+                            <tr id="fullTableHead"></tr>
+                        </thead>
+                        <tbody id="fullTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: APARTMENTS -->
+        <div id="apartments" class="page">
+            <!-- Building List Screen -->
+            <div id="bldListScreen">
+                <div class="header-action">
+                    <h3 data-i18n="nav_apartments">العمارات</h3>
+                    <div class="search-box">
+                        <input type="text" id="bldSearch" placeholder="Search buildings..." oninput="renderBuildings()">
+                    </div>
+                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(addBuilding)"
+                        data-i18n="add_building">${t('add_building')}</button>
+                </div>
+                <div id="buildingsGrid" class="grid-cards"></div>
+            </div>
+
+            <!-- Apartment List Screen -->
+            <div id="aptListScreen" style="display: none;">
+                <div class="header-action">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-danger" onclick="backToBuildings()">🔙</button>
+                        <h4 id="activeBldName" style="margin:0;"></h4>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="aptSearch" placeholder="Search apartments..."
+                            oninput="renderApartments()">
+                    </div>
+                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(addApartment)"
+                        data-i18n="add_apartment">${t('add_apartment')}</button>
+                </div>
+                <div id="apartmentsGrid" class="grid-cards"></div>
+            </div>
+
+            <!-- Apartment Details Screen (Payment Grid) -->
+            <div id="aptDetailsScreen" style="display: none;">
+                <div class="header-action" style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-danger" onclick="backToApartments()">🔙</button>
+                        <h3 id="activeAptName" style="margin:0;"></h3>
+                    </div>
+                    <select id="aptYear" class="modern-select" onchange="renderAptPayments()"></select>
+                </div>
+
+                <div id="residentTools"
+                    style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--card-shadow);">
+                    <div id="resInfoCompact">
+                        <p style="margin:0; font-size: 14px; font-weight:700;">Resident: <span id="resNameLabel"
+                                style="color: var(--secondary);">---</span></p>
+                        <p style="margin:0; font-size: 12px; color: #6b7280;" id="resPhoneLabel">No phone saved</p>
+                    </div>
+                    <button class="btn btn-admin-only" style="background: #f1f5f9; color: var(--primary);"
+                        onclick="requireAuth(openResidentModal)">✏️ Details</button>
+                </div>
+
+                <div id="aptPaymentGrid" class="grid-cards"
+                    style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));"></div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: EXPENSES -->
+        <div id="expenses" class="page">
+            <div class="header-action">
+                <h3 data-i18n="nav_expenses">سجل المصاريف</h3>
+                <div style="display: flex; gap: 10px;">
+                    <select id="expMonth" class="modern-select" onchange="renderExpenses()"></select>
+                    <select id="expYear" class="modern-select" onchange="renderExpenses()"></select>
+                    <button class="btn btn-success" onclick="openExportModal('expenses')" title="Export">📊 Excel /
+                        PDF</button>
+                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(openAddExpenseModal)">+
+                        Add</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="expensesTableExport">
+                    <thead>
+                        <tr>
+                            <th data-i18n="th_date">Date</th>
+                            <th data-i18n="th_desc">Reason</th>
+                            <th data-i18n="th_amount">Amount</th>
+                            <th data-i18n="th_receipt">Receipt</th>
+                            <th>-</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE 5: COMMUNICATION -->
+        <div id="communication" class="page">
+            <div class="comm-grid">
+                <div class="page-card"
+                    style="background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <h3 style="margin:0;" data-i18n="title_announcements">Announcements</h3>
+                        <button class="btn btn-primary btn-admin-only" onclick="requireAuth(openAddAnnounceModal)">+
+                            New</button>
+                    </div>
+                    <div id="announcementsList"
+                        style="display: flex; flex-direction: column; gap: 12px; max-height: 500px; overflow-y: auto;">
+                    </div>
+                </div>
+
+                <div class="page-card"
+                    style="background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow);">
+                    <h3 style="margin-bottom: 15px;" data-i18n="title_chat">Resident Chat</h3>
+                    <div class="chat-box" id="chatContainer"></div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;">
+                        <button class="btn btn-primary" onclick="sendChat()">🚀</button>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                        <input type="checkbox" id="chatIsPrivate" style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="chatIsPrivate" style="color: var(--danger); font-weight: bold; cursor: pointer;">🔒
+                            رسالة خاصة للمسؤول (Private to Admin)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 7: USERS MANAGEMENT -->
+        <div id="users" class="page">
+            <div class="header-action">
+                <h3 data-i18n="nav_users">المستخدمين</h3>
+                <button class="btn btn-secondary" onclick="changePage('dashboard')">← Dashboard</button>
+            </div>
+            <div id="usersList"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast-notification" onclick="changePage('communication'); hideToast();">
+        <div class="toast-header">
+            <span>💬</span>
+            <span class="toast-sender" id="toastSender"></span>
+        </div>
+        <p class="toast-msg" id="toastMsg"></p>
+    </div>
+
+    <!-- UNIVERSAL MODAL -->
+    <div id="universalModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal()">✖</div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // FIREBASE INITIALIZATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdIUHvUTRze0Pj8TqF36sKnlRUQcSCtUM",
+            authDomain: "syndic-54327.firebaseapp.com",
+            databaseURL: "https://syndic-54327-default-rtdb.firebaseio.com",
+            projectId: "syndic-54327",
+            storageBucket: "syndic-54327.firebasestorage.app",
+            messagingSenderId: "221199418649",
+            appId: "1:221199418649:web:0569352de9de01390af188",
+            measurementId: "G-37C59NTMP0"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // APP STATE
+        let data = { buildings: [], apartments: [], payments: {}, expenses: [], announcements: [], chat: [] };
+        let allUsers = [];
+        let userAccount = null;
+        let currentLang = localStorage.getItem('syndicLang') || 'ar';
+        let isAuthenticated = false; // Means user is logged in AND is admin
+        let isLoaded = false;
+        let activeBldId = null;
+        let activeAptId = null;
+        let isRegisterMode = false;
+        let charInstance = null;
+        let lastChatCount = 0;
+        let chatNotifSound = null;
+
+        // Initialize notification sound
+        try {
+            chatNotifSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgj6q0pHdRQV+Pqr2uf1dFWYyms7iFYExYiKC2t5VwWVaIobeuj2NTWIeis66OaVxdiaGypI1oX2CKoK+gjGpkYougrJ6La2hljKCpnIpsb2mNoKidiW5ybW+foZmHcHRwc6CfmIZ0eHJ3n52Wh3l8dXqenJWIe398fp2blYqAg4GBnJqUjIOGhYWbmZONh4mIiZqXko+KjIyNmZaRkY2PkJKYlZGTkJOUl5SQlZOXmJaUkpiVmJmXmJaWl5iYl5eXl5iYl5eXl5iYl5eXl5iYmJiYmJiYmJiYmA==');
+            chatNotifSound.volume = 0.5;
+        } catch (e) { console.log('Audio not supported'); }
+
+        const i18n = {
+            ar: {
+                app_title: "🏢 ZAINEB 4", nav_dashboard: "الرئيسية", nav_apartments: "العمارات", nav_expenses: "المصاريف", nav_comm: "التواصل", nav_users: "المستخدمين",
+                stat_incomes_month: "مداخيل (الشهر)", stat_expenses_month: "مصاريف (الشهر)", stat_balance: "الصندوق الصافي",
+                title_stats_filter: "📅 ملخص المالية :", dash_table_title: "📋 آخر 3 شقق أدوا الواجب", btn_view_all: "📄 الجميع",
+                opt_all_months: "جميع الشهور", txt_paid_month: "مؤدى في", no_apts: "لا توجد شقق",
+                th_apt: "الشقة / الشهر", th_last_pay: "آخر أداء", th_amt: "المبلغ", no_recent: "لا يوجد عمليات أخيرة",
+                unpaid: "غير مؤدى", paid: "مؤدى", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                th_date: "التاريخ", th_desc: "البيان", th_amount: "المبلغ", th_receipt: "التوصيل", curr: "DHM", year_word: "سنة",
+                title_announcements: "📢 الإعلانات", title_chat: "💬 الدردشة", full_table_title: "الجدول السنوي للأداء", add_expense: "إضافة مصروف",
+                add_building: "+ إضافة عمارة", add_apartment: "+ إضافة شقة",
+                change_pwd: "تغيير كلمة المرور", old_pwd: "كلمة المرور الحالية", new_pwd: "كلمة المرور الجديدة", confirm_pwd: "تأكيد كلمة المرور", pwd_success: "تم تغيير كلمة المرور بنجاح!", pwd_mismatch: "كلمات المرور غير متطابقة أو غير صالحة!", old_pwd_wrong: "كلمة المرور القديمة خاطئة!", btn_save: "حفظ",
+                title_comments: "💬 التعليقات", no_comments: "لا توجد تعليقات بعد.", ph_comment: "اكتب تعليقك هنا...", btn_details: "عرض التفاصيل ←",
+                btn_like: "إعجاب", btn_dislike: "لم يعجبني", btn_reply: "رد", title_add_reply: "إضافة رد",
+                title_new_ann: "إعلان جديد", lbl_ann_title: "العنوان", lbl_ann_msg: "نص الإعلان", lbl_ann_photo: "📸 إرفاق صورة (اختياري)", btn_publish: "نشر الإعلان", publishing: "جاري النشر...", title_ann_photo: "صورة الإعلان", btn_download: "تحميل الصورة ⬇️", err_load_photo: "❌ تعذر تحميل الصورة",
+                lbl_email: "البريد الإلكتروني", lbl_password: "كلمة المرور", lbl_name: "الاسم الكامل", lbl_building: "العمارة", lbl_apartment: "رقم الشقة",
+                lbl_remember_me: "تذكرني", btn_forgot_pwd: "نسيت كلمة السر؟", btn_login: "تسجيل الدخول", btn_register: "إنشاء حساب",
+                btn_login_mode: "ليس لديك حساب؟ إنشاء حساب", btn_register_mode: "لديك حساب؟ تسجيل الدخول", title_register: "إنشاء حساب جديد", title_login: "تسجيل الدخول",
+                btn_approve: "موافقة", btn_make_admin: "إعطاء صلاحية مسؤل", btn_delete_user: "حذف",
+                title_export_excel: "تحميل ملف Excel", lbl_export_year: "اختر السنة :", lbl_export_month: "اختر الشهر :", lbl_export_type: "نوع التقرير :", opt_export_bilan: "الحصيلة كاملة (المصاريف + المداخيل + الملخص)", opt_export_payments: "سجل الأداءات فقط", opt_export_expenses: "سجل المصاريف فقط", btn_download_excel: "تحميل Excel 📥"
+            },
+            fr: {
+                app_title: "🏢 ZAINEB 4", nav_dashboard: "Tableau de bord", nav_apartments: "Immeubles", nav_expenses: "Dépenses", nav_comm: "Comm.", nav_users: "Utilisateurs",
+                stat_incomes_month: "Incomes (Mois)", stat_expenses_month: "Dépenses (Mois)", stat_balance: "Caisse Net",
+                title_stats_filter: "📅 Résumé financier :", dash_table_title: "📋 Activités récentes", btn_view_all: "📄 Tous",
+                opt_all_months: "Tous les mois", txt_paid_month: "Payé en", no_apts: "Aucun appartement",
+                th_apt: "Appartement", th_last_pay: "Dernier paiement", th_amt: "Montant", no_recent: "Aucune activité récente",
+                unpaid: "Impayé", paid: "Payé", months: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+                th_date: "Date", th_desc: "Libellé", th_amount: "Montant", th_receipt: "Reçu", curr: "MAD", year_word: "Année",
+                title_announcements: "📢 Annonces", title_chat: "💬 Chat", full_table_title: "Tableau de paiement annuel", add_expense: "Ajouter Dépense",
+                add_building: "+ Bâtiment", add_apartment: "+ Appartement",
+                change_pwd: "Changer le mot de passe", old_pwd: "Ancien mot de passe", new_pwd: "Nouveau mot de passe", confirm_pwd: "Confirmer le mot de passe", pwd_success: "Mot de passe modifié!", pwd_mismatch: "Les mots de passe ne correspondent pas!", old_pwd_wrong: "Ancien mot de passe incorrect!", btn_save: "Enregistrer",
+                title_comments: "💬 Commentaires", no_comments: "Pas encore de commentaires.", ph_comment: "Écrivez votre commentaire...", btn_details: "Voir détails ←",
+                btn_like: "J'aime", btn_dislike: "Je n'aime pas", btn_reply: "Répondre", title_add_reply: "Ajouter une réponse",
+                title_new_ann: "Nouvel Annonce", lbl_ann_title: "Titre", lbl_ann_msg: "Message", lbl_ann_photo: "📸 Joindre une image (optionnel)", btn_publish: "Publier", publishing: "Publication...", title_ann_photo: "Image de l'annonce", btn_download: "Télécharger ⬇️", err_load_photo: "❌ Échec du chargement",
+                lbl_email: "Email", lbl_password: "Mot de passe", lbl_name: "Nom complet", lbl_building: "Bâtiment", lbl_apartment: "Appartement",
+                lbl_remember_me: "Se souvenir de moi", btn_forgot_pwd: "Mot de passe oublié?", btn_login: "Connexion", btn_register: "S'inscrire",
+                btn_login_mode: "Déjà un compte? Se connecter", btn_register_mode: "Pas de compte? S'inscrire", title_register: "Créer un compte", title_login: "Connexion",
+                title_users: "Gestion des utilisateurs", btn_approve: "Approuver", btn_make_admin: "Rendre Admin", btn_delete_user: "Supprimer",
+                title_export_excel: "Télécharger Excel", lbl_export_year: "Sélectionner l'année :", lbl_export_month: "Sélectionner le mois :", lbl_export_type: "Type de rapport :", opt_export_bilan: "Bilan complet (Dépenses + Recettes + Résumé)", opt_export_payments: "Paiements uniquement", opt_export_expenses: "Dépenses uniquement", btn_download_excel: "Télécharger Excel 📥"
+            },
+            en: {
+                app_title: "🏢 Syndic", nav_dashboard: "Dashboard", nav_apartments: "Buildings", nav_expenses: "Expenses", nav_comm: "Comm.", nav_users: "Users",
+                stat_incomes_month: "Incomes (Month)", stat_expenses_month: "Expenses (Month)", stat_balance: "Net Balance",
+                title_stats_filter: "📅 Financial Summary :", dash_table_title: "📋 Recently", btn_view_all: "📄 View all",
+                opt_all_months: "All Months", txt_paid_month: "Paid in", no_apts: "No apartments found",
+                th_apt: "Apartment", th_last_pay: "Last Pay", th_amt: "Amount", no_recent: "No recent payments",
+                unpaid: "Unpaid", paid: "Paid", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                th_date: "Date", th_desc: "Description", th_amount: "Amount", th_receipt: "Receipt", curr: "MAD", year_word: "Year",
+                title_announcements: "📢 Announcements", title_chat: "💬 Chat", full_table_title: "Yearly Payment Table", add_expense: "Add Expense",
+                add_building: "+ Building", add_apartment: "+ Apartment",
+                change_pwd: "Change Password", old_pwd: "Old Password", new_pwd: "New Password", confirm_pwd: "Confirm Password", pwd_success: "Password changed successfully!", pwd_mismatch: "Passwords do not match or invalid!", old_pwd_wrong: "Incorrect old password!", btn_save: "Save",
+                btn_like: "Like", btn_dislike: "Dislike", btn_reply: "Reply", title_add_reply: "Add Reply",
+                title_new_ann: "New Announcement", lbl_ann_title: "Title", lbl_ann_msg: "Message", lbl_ann_photo: "📸 Attach image (optional)", btn_publish: "Publish", publishing: "Publishing...", title_ann_photo: "Announcement Image", btn_download: "Download ⬇️", err_load_photo: "❌ Load failed",
+                lbl_email: "Email", lbl_password: "Password", lbl_name: "Full Name", lbl_building: "Building", lbl_apartment: "Apartment",
+                lbl_remember_me: "Remember Me", btn_forgot_pwd: "Forgot Password?", btn_login: "Login", btn_register: "Register",
+                btn_login_mode: "Already have an account? Login", btn_register_mode: "Don't have an account? Register", title_register: "Create New Account", title_login: "Secure Login",
+                btn_approve: "Approve", btn_make_admin: "Make Admin", btn_delete_user: "Delete",
+                title_export_excel: "Download Excel", lbl_export_year: "Select Year:", lbl_export_month: "Select Month:", lbl_export_type: "Report Type:", opt_export_bilan: "Full Bilan (Expenses + Incomes + Summary)", opt_export_payments: "Payments only", opt_export_expenses: "Expenses only", btn_download_excel: "Download Excel 📥"
+            }
+        };
+
+        // UI HELPERS
+        function t(key) { return i18n[currentLang][key] || key; }
+        function closeModal() { document.getElementById('universalModal').style.display = 'none'; }
+
+        function requireAuth(callback) {
+            if (userAccount && userAccount.role === 'admin') return callback();
+            alert("🔒 هذه العملية متاحة للمسؤول (Admin) فقط.");
+        }
+
+        function isAdmin() {
+            return userAccount && userAccount.role === 'admin';
+        }
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('regFields').style.display = isRegisterMode ? 'block' : 'none';
+            document.getElementById('loginOptions').style.display = isRegisterMode ? 'none' : 'flex';
+            document.getElementById('authBtn').innerText = isRegisterMode ? (t('btn_register') || 'إنشاء حساب') : (t('btn_login') || 'تسجيل الدخول');
+            document.getElementById('authToggle').innerText = isRegisterMode ? (t('btn_register_mode')) : (t('btn_login_mode'));
+            document.getElementById('authTitle').innerText = isRegisterMode ? (t('title_register')) : "ZAINEB 4";
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        async function handleAuth() {
+            if (isRegisterMode) handleRegister();
+            else handleLogin();
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const pwd = document.getElementById('loginPwd').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const errEl = document.getElementById('loginError');
+
+            if (!email || !pwd) {
+                errEl.innerText = "يرجى ملء جميع الحقول";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, pwd);
+                // Remember Me Logic
+                if (rememberMe) {
+                    localStorage.setItem('syndicRememberEmail', email);
+                } else {
+                    localStorage.removeItem('syndicRememberEmail');
+                }
+            } catch (err) {
+                errEl.innerText = "خطأ في الدخول: " + err.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function handleRegister() {
+            const email = document.getElementById('loginEmail').value;
+            const pwd = document.getElementById('loginPwd').value;
+            const name = document.getElementById('regName').value;
+            const building = document.getElementById('regBuilding').value;
+            const apartment = document.getElementById('regApartment').value;
+            const errEl = document.getElementById('loginError');
+
+            if (!email || !pwd || !name || !building || !apartment) {
+                errEl.innerText = "يرجى ملء جميع الحقول";
+                errEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const cred = await firebase.auth().createUserWithEmailAndPassword(email, pwd);
+                const uid = cred.user.uid;
+                const newAcc = {
+                    uid: uid,
+                    email: email,
+                    role: 'resident',
+                    approved: false,
+                    name: name,
+                    building: building,
+                    apartment: apartment
+                };
+                await db.collection("users").doc(uid).set(newAcc);
+            } catch (err) {
+                errEl.innerText = "خطأ في التسجيل: " + err.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function handleForgotPassword() {
+            const email = document.getElementById('loginEmail').value;
+            if (!email) {
+                alert("يرجى إدخال البريد الإلكتروني أولاً لإرسال رابط استعادة كلمة السر.");
+                return;
+            }
+            if (confirm(`هل تريد إرسال رابط استعادة كلمة السر إلى ${email}؟`)) {
+                try {
+                    await firebase.auth().sendPasswordResetEmail(email);
+                    alert("تم إرسال رابط استعادة كلمة السر. يرجى التحقق من بريدك الإلكتروني.");
+                } catch (err) {
+                    alert("خطأ: " + err.message);
+                }
+            }
+        }
+
+        function handleLogout() {
+            firebase.auth().signOut().then(() => {
+                location.reload();
+            });
+        }
+
+        // NAVIGATION
+        function changePage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+
+            // Highlight nav button (if exists)
+            const index = ['dashboard', 'apartments', 'expenses', 'communication', 'full-payments', 'users'].indexOf(page);
+            if (index !== -1) {
+                const navBtns = document.querySelectorAll('.nav-links button');
+                if (navBtns[index]) navBtns[index].classList.add('active');
+            }
+
+            // Clear chat badge when entering communication page
+            if (page === 'communication') {
+                const badge = document.getElementById('chatBadge');
+                if (badge) badge.style.display = 'none';
+                hideToast();
+            }
+
+            if (page === 'dashboard') updateDashboard();
+            if (page === 'apartments') { backToBuildings(); renderBuildings(); }
+            if (page === 'expenses') renderExpenses();
+            if (page === 'communication') { renderAnnouncements(); renderChat(); }
+            if (page === 'full-payments') renderFullBuildings();
+            if (page === 'users') renderUsers();
+        }
+
+        // CHAT NOTIFICATION FUNCTIONS
+        function showChatNotification(sender, msg) {
+            // Show badge
+            const badge = document.getElementById('chatBadge');
+            if (badge) badge.style.display = 'flex';
+
+            // Play sound
+            try { if (chatNotifSound) { chatNotifSound.currentTime = 0; chatNotifSound.play(); } } catch (e) { }
+
+            // Show toast
+            document.getElementById('toastSender').innerText = sender;
+            document.getElementById('toastMsg').innerText = msg;
+            const toast = document.getElementById('toastNotification');
+            toast.style.display = 'block';
+
+            // Auto-hide after 5 seconds
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(hideToast, 5000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toastNotification');
+            if (toast) toast.style.display = 'none';
+        }
+
+        // NEW: Auth Listener
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("Auth state changed, user:", user ? user.email : "none");
+            if (user) {
+                // Fetch user doc - FIXED: .doc() instead of .document()
+                db.collection("users").doc(user.uid).onSnapshot(doc => {
+                    console.log("User doc snapshot received, exists:", doc.exists);
+                    if (doc.exists) {
+                        userAccount = doc.data();
+                        console.log("User role:", userAccount.role, "Approved:", userAccount.approved);
+                        updateUIShowHide();
+                        if (userAccount.approved) {
+                            startDataSync();
+                        }
+                    } else {
+                        console.log("User doc missing, creating one...");
+                        // Create initial user doc if missing
+                        const newAcc = { uid: user.uid, email: user.email, role: 'resident', approved: false };
+                        db.collection("users").doc(user.uid).set(newAcc);
+                    }
+                }, err => {
+                    console.error("User doc listener error:", err);
+                });
+            } else {
+                userAccount = null;
+                updateUIShowHide();
+
+                // NEW: Populate remembered email
+                const savedEmail = localStorage.getItem('syndicRememberEmail');
+                if (savedEmail) {
+                    const emailInput = document.getElementById('loginEmail');
+                    if (emailInput && !emailInput.value) {
+                        emailInput.value = savedEmail;
+                        document.getElementById('rememberMe').checked = true;
+                    }
+                }
+            }
+        });
+
+        function updateUIShowHide() {
+            const login = document.getElementById('loginScreen');
+            const pending = document.getElementById('pendingScreen');
+            const main = document.getElementById('mainContainer');
+            const navbar = document.getElementById('appNavbar');
+            const loading = document.getElementById('loadingScreen');
+
+            loading.style.display = 'none';
+
+            if (!userAccount) {
+                login.style.display = 'flex';
+                pending.style.display = 'none';
+                main.style.display = 'none';
+                navbar.style.display = 'none';
+            } else if (!userAccount.approved) {
+                login.style.display = 'none';
+                pending.style.display = 'flex';
+                main.style.display = 'none';
+                navbar.style.display = 'none';
+            } else {
+                login.style.display = 'none';
+                pending.style.display = 'none';
+                main.style.display = 'block';
+                navbar.style.display = 'flex';
+
+                // NEW: Toggle visibility of admin buttons in headers
+                document.querySelectorAll('.btn-admin-only').forEach(btn => {
+                    btn.style.display = isAdmin() ? 'inline-block' : 'none';
+                });
+            }
+        }
+
+        let mainSyncListener = null;
+        let chatSyncListener = null;
+        let announcementSyncListener = null;
+
+        function startDataSync() {
+            if (mainSyncListener) return;
+
+            // Main Data (Buildings, Apartments, Expenses)
+            mainSyncListener = db.collection("syndic_data").doc("zaineb4").onSnapshot(doc => {
+                const statusIndicator = document.getElementById('sync-status');
+                if (statusIndicator) {
+                    statusIndicator.style.background = '#10b981';
+                    statusIndicator.title = "Connected to Firebase";
+                }
+
+                if (doc.exists) {
+                    const docData = doc.data();
+                    data.buildings = docData.buildings || [];
+                    data.apartments = docData.apartments || [];
+                    data.expenses = docData.expenses || [];
+                    data.payments = docData.payments || {};
+
+                    // Ensure arrays - DO NOT stringify IDs here (breaks Android)
+                    ['buildings', 'apartments', 'expenses'].forEach(key => {
+                        if (data[key] && !Array.isArray(data[key])) data[key] = Object.values(data[key]);
+                    });
+
+                    // DO NOT fix buildingId here (breaks Android)
+
+                    if (!isLoaded) {
+                        isLoaded = true;
+                        init();
+                    }
+                    refreshCurrentView();
+                } else {
+                    if (userAccount && userAccount.role === 'admin') {
+                        saveData();
+                    }
+                }
+            });
+
+            // Chat Sync (Dedicated Collection)
+            if (!chatSyncListener) {
+                chatSyncListener = db.collection("syndic_chat").orderBy("id").limitToLast(100).onSnapshot(snap => {
+                    const messages = snap.docs.map(doc => doc.data());
+                    const oldChatCount = data.chat.length;
+                    data.chat = messages;
+
+                    if (isLoaded && data.chat.length > oldChatCount && oldChatCount > 0) {
+                        const isOnCommPage = document.getElementById('communication').classList.contains('active');
+                        if (!isOnCommPage) {
+                            const newMsg = data.chat[data.chat.length - 1];
+                            // Only notify for public or relevant private messages
+                            if (!newMsg.isPrivate || newMsg.senderUid === userAccount.uid || isAdmin()) {
+                                showChatNotification(newMsg.name, newMsg.msg);
+                            }
+                        }
+                    }
+                    if (document.getElementById('communication').classList.contains('active')) renderChat();
+                });
+            }
+
+            // Announcements Sync (Dedicated Collection)
+            if (!announcementSyncListener) {
+                announcementSyncListener = db.collection("syndic_announcements").orderBy("id", "desc").onSnapshot(snap => {
+                    data.announcements = snap.docs.map(doc => doc.data());
+                    if (document.getElementById('communication').classList.contains('active')) renderAnnouncements();
+                });
+            }
+
+            // Sync Users Collection (Admin only)
+            db.collection("users").onSnapshot(snap => {
+                console.log("Users snapshot received, count:", snap.size);
+                allUsers = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+                if (document.getElementById('users').classList.contains('active')) renderUsers();
+            }, err => {
+                console.error("Users sync error:", err);
+            });
+        }
+
+        function saveData() {
+            if (userAccount && userAccount.role === 'admin') {
+                const toSave = {
+                    buildings: data.buildings.map(b => ({ ...b, id: Number(b.id) || 0 })),
+                    apartments: data.apartments.map(a => {
+                        const cleanApt = { ...a };
+                        // Remove any undefined properties explicitly
+                        Object.keys(cleanApt).forEach(key => cleanApt[key] === undefined && delete cleanApt[key]);
+                        return {
+                            ...cleanApt,
+                            id: Number(cleanApt.id) || 0,
+                            buildingId: Number(cleanApt.buildingId) || 0,
+                            lastPaidTime: cleanApt.lastPaidTime ? (Number(cleanApt.lastPaidTime) || 0) : 0
+                        };
+                    }),
+                    expenses: data.expenses.map(e => {
+                        const cleanExp = { ...e };
+                        Object.keys(cleanExp).forEach(key => cleanExp[key] === undefined && delete cleanExp[key]);
+                        return { ...cleanExp, id: Number(cleanExp.id) || 0 };
+                    }),
+                    payments: data.payments || {}
+                };
+
+                // Sanitize payments to remove undefined values if any
+                Object.keys(toSave.payments).forEach(key => {
+                    if (toSave.payments[key] === undefined || isNaN(toSave.payments[key])) {
+                        delete toSave.payments[key];
+                    }
+                });
+
+                db.collection("syndic_data").doc("zaineb4").set(toSave).catch(e => console.error("Firestore Save Error:", e));
+            } else {
+                console.warn("Unauthorized write attempt");
+            }
+        }
+
+        function init() {
+            const now = new Date();
+            let yearOpts = '';
+            for (let y = 2014; y <= 2040; y++) {
+                yearOpts += `<option value="${y}">${y}</option>`;
+            }
+            const monthOpts = t('months').map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+
+            ['dashStatYear', 'aptYear', 'expYear', 'fullYear'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) { el.innerHTML = yearOpts; el.value = now.getFullYear(); }
+            });
+
+            ['dashStatMonth', 'expMonth'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) { el.innerHTML = `<option value="all">${t('opt_all_months') || 'All Months'}</option>` + monthOpts; el.value = 'all'; }
+            });
+
+            applyLanguage();
+            updateDashboard();
+        }
+
+        function refreshCurrentView() {
+            if (document.getElementById('dashboard').classList.contains('active')) updateDashboard();
+            if (document.getElementById('expenses').classList.contains('active')) renderExpenses();
+            if (document.getElementById('communication').classList.contains('active')) { renderAnnouncements(); renderChat(); }
+            if (document.getElementById('full-payments').classList.contains('active')) {
+                if (window.activeFullBldId) renderFullTable();
+                else renderFullBuildings();
+            }
+            if (activeBldId) renderApartments();
+            if (activeAptId) renderAptPayments();
+            if (document.getElementById('users').classList.contains('active')) renderUsers();
+        }
+
+        // --- MAINTENANCE: DATA CLEANUP (Run once to fix Android crashes) ---
+        async function runDataCleanup() {
+            if (!confirm("This will convert all String IDs in Firestore back to Numbers for Android compatibility. Continue?")) return;
+
+            console.log("Starting data cleanup...");
+
+            // 1. Main Data
+            const mainDoc = await db.collection("syndic_data").doc("zaineb4").get();
+            if (mainDoc.exists) {
+                const d = mainDoc.data();
+                const fixed = {
+                    buildings: (d.buildings || []).map(b => ({ ...b, id: Number(b.id) })),
+                    apartments: (d.apartments || []).map(a => ({ ...a, id: Number(a.id), buildingId: Number(a.buildingId) })),
+                    expenses: (d.expenses || []).map(e => ({ ...e, id: Number(e.id) })),
+                    payments: d.payments
+                };
+                await db.collection("syndic_data").doc("zaineb4").set(fixed);
+                console.log("Main data fixed.");
+            }
+
+            // 2. Chat
+            const chatSnap = await db.collection("syndic_chat").get();
+            for (const doc of chatSnap.docs) {
+                const m = doc.data();
+                const fixedM = { ...m, id: Number(m.id), replies: (m.replies || []).map(r => ({ ...r, id: Number(r.id) })) };
+                await db.collection("syndic_chat").doc(doc.id).set(fixedM);
+            }
+            console.log("Chat data fixed.");
+
+            // 3. Announcements
+            const annSnap = await db.collection("syndic_announcements").get();
+            for (const doc of annSnap.docs) {
+                const a = doc.data();
+                const fixedA = { ...a, id: Number(a.id), comments: (a.comments || []).map(c => ({ ...c, id: Number(c.id) })) };
+                await db.collection("syndic_announcements").doc(doc.id).set(fixedA);
+            }
+            console.log("Announcements fixed.");
+
+            alert("Data cleanup complete! The Android app should now work correctly.");
+            location.reload();
+        }
+
+        // DASHBOARD & CHARTS
+        function updateDashboard() {
+            const m = document.getElementById('dashStatMonth').value;
+            const y = document.getElementById('dashStatYear').value;
+
+            let inc = 0, exp = 0;
+            // Incomes
+            Object.keys(data.payments).forEach(k => {
+                let [id, py, pm] = k.split('_');
+                if (py == y && (m == 'all' || pm == m)) inc += data.payments[k];
+            });
+            // Expenses
+            data.expenses.forEach(e => {
+                let d = new Date(e.date);
+                if (d.getFullYear() == y && (m == 'all' || (d.getMonth() + 1) == m)) exp += e.amount;
+            });
+
+            // Totals
+            let globalInc = Object.values(data.payments).reduce((a, b) => a + b, 0);
+            let globalExp = data.expenses.reduce((a, b) => a + b.amount, 0);
+
+            document.getElementById('totalIncomes').innerText = `${inc} ${t('curr')}`;
+            document.getElementById('totalExpenses').innerText = `${exp} ${t('curr')}`;
+            document.getElementById('boxBalance').innerText = `${inc - exp} ${t('curr')}`;
+
+            renderFinancialChart(y);
+            renderDashboardTable();
+            renderMonthlyStats(y, m);
+        }
+
+        function renderMonthlyStats(year, monthStr) {
+            const container = document.getElementById('monthlyStatsContainer');
+            let bldStats = [];
+
+            data.buildings.forEach(b => {
+                let apts = data.apartments.filter(a => String(a.buildingId) === String(b.id));
+                if (apts.length === 0) return;
+
+                let paidCount = 0;
+                apts.forEach(a => {
+                    if (monthStr === 'all') {
+                        // For 'all' months, check if they have any payment this year? 
+                        // Or better: check if they paid for ALL months so far?
+                        // User likely wants to see how many apartments are "up to date" or just have any payment.
+                        // Let's count how many have at least one payment in the selected year if 'all' is selected.
+                        let hasAnyPayment = false;
+                        for (let m = 1; m <= 12; m++) {
+                            if (data.payments[`${a.id}_${year}_${m}`] > 0) {
+                                hasAnyPayment = true;
+                                break;
+                            }
+                        }
+                        if (hasAnyPayment) paidCount++;
+                    } else {
+                        let m = parseInt(monthStr);
+                        let amt = data.payments[`${a.id}_${year}_${m}`];
+                        if (amt && amt > 0) paidCount++;
+                    }
+                });
+
+                bldStats.push({ name: b.name, paid: paidCount, total: apts.length });
+            });
+
+            if (bldStats.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 20px; color: #94a3b8;">${t('no_apts')}</div>`;
+                return;
+            }
+
+            container.innerHTML = bldStats.map(b => {
+                let color = b.paid === b.total ? 'var(--success)' : (b.paid > 0 ? '#f59e0b' : 'var(--danger)');
+                let monthLabel = monthStr === 'all' ? (t('opt_all_months') || 'Yearly') : t('months')[parseInt(monthStr) - 1];
+                return `
+                    <div style="background: white; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-weight: bold;">🏢 ${b.name}</div>
+                        <div style="text-align: right;">
+                            <div style="color: ${color}; font-weight: 800; font-size: 18px;">${b.paid} / ${b.total}</div>
+                            <div style="font-size: 11px; color: #6b7280;">${t('txt_paid_month') || 'Paid in'} ${monthLabel}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderFinancialChart(year) {
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            if (charInstance) charInstance.destroy();
+
+            const monthsData = Array(12).fill(0).map((_, i) => {
+                let m = i + 1;
+                let mInc = 0, mExp = 0;
+                Object.keys(data.payments).forEach(k => {
+                    let [id, py, pm] = k.split('_');
+                    if (py == year && pm == m) mInc += data.payments[k];
+                });
+                data.expenses.forEach(e => {
+                    let d = new Date(e.date);
+                    if (d.getFullYear() == year && (d.getMonth() + 1) == m) mExp += e.amount;
+                });
+                return { inc: mInc, exp: mExp };
+            });
+
+            charInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: t('months'),
+                    datasets: [
+                        { label: 'Incomes', data: monthsData.map(d => d.inc), backgroundColor: '#10b981' },
+                        { label: 'Expenses', data: monthsData.map(d => d.exp), backgroundColor: '#ef4444' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+            });
+        }
+
+        function renderDashboardTable() {
+            const head = document.getElementById('dashTableHead');
+            const body = document.getElementById('dashTableBody');
+            head.innerHTML = `<th>${t('th_apt') || 'Apartment'}</th><th>${t('th_last_pay') || 'Last Payment'}</th><th>${t('th_amt') || 'Amount'}</th>`;
+
+            let recent = [];
+            data.apartments.forEach(apt => {
+                // Check if apartment has ANY payment in the payments object
+                const aptPaymentsKeys = Object.keys(data.payments).filter(key => key.startsWith(`${apt.id}_`));
+                const hasPayment = aptPaymentsKeys.length > 0;
+
+                if (hasPayment) {
+                    // Ensure apt.lastPaidTime is set if we found payments but it's missing
+                    if (!apt.lastPaidTime) {
+                        // Estimate last paid time (just something to make it sortable)
+                        apt.lastPaidTime = 1;
+                    }
+                    recent.push(apt);
+                } else if (apt.lastPaidTime) {
+                    recent.push(apt);
+                }
+            });
+
+            recent.sort((a, b) => (b.lastPaidTime || 0) - (a.lastPaidTime || 0));
+            const top3 = recent.slice(0, 3);
+
+            if (top3.length === 0) {
+                body.innerHTML = `<tr><td colspan="3" style="padding: 20px; color: #94a3b8;">${t('no_recent') || 'No recent payments entries'}</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = top3.map(a => {
+                let bld = data.buildings.find(b => String(b.id) === String(a.buildingId));
+                let latestDate = a.lastPaidTime && a.lastPaidTime > 1 ? new Date(a.lastPaidTime) : null;
+                let latestAmt = a.lastTotal || 0;
+
+                // Fallback: if amount is 0, try to find the actual value in payments
+                if (latestAmt === 0) {
+                    const aptPayments = Object.keys(data.payments)
+                        .filter(k => k.startsWith(`${a.id}_`))
+                        .map(k => ({ key: k, val: data.payments[k] }));
+                    if (aptPayments.length > 0) {
+                        // Take the last one (most likely latest)
+                        latestAmt = aptPayments[aptPayments.length - 1].val;
+
+                        // Also try to extract date if possible, but for now just use placeholder or current
+                        if (!latestDate) latestDate = new Date();
+                    }
+                }
+
+                let latestDateString = latestDate ? latestDate.toLocaleDateString() : '---';
+                return `<tr><td><b>${a.name}</b><br><small>${bld?.name || ''}</small></td><td>${latestDateString}</td><td class="text-success" style="font-weight:800;">${latestAmt} ${t('curr')}</td></tr>`;
+            }).join('');
+        }
+
+        // BUILDINGS & APTS
+        function renderBuildings() {
+            const query = document.getElementById('bldSearch').value.toLowerCase();
+            const grid = document.getElementById('buildingsGrid');
+            const adminMode = isAdmin();
+            grid.innerHTML = data.buildings.filter(b => b.name.toLowerCase().includes(query)).map(b => `
+                <div class="item-card" onclick="openBuilding('${b.id}')">
+                    ${adminMode ? `
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => renameItem('${b.id}', 'bld'))">✏️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => deleteItem('${b.id}', 'bld'))">🗑️</button>
+                    </div>` : ''}
+                    <div class="icon">🏢</div>
+                    <div class="name">${b.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function openBuilding(id) {
+            activeBldId = String(id);
+            const b = data.buildings.find(b => String(b.id) === String(id));
+            document.getElementById('activeBldName').innerText = b?.name || '';
+            document.getElementById('bldListScreen').style.display = 'none';
+            document.getElementById('aptListScreen').style.display = 'block';
+            renderApartments();
+        }
+
+        function backToBuildings() {
+            activeBldId = null;
+            document.getElementById('aptListScreen').style.display = 'none';
+            document.getElementById('bldListScreen').style.display = 'block';
+        }
+
+        function renderApartments() {
+            const query = document.getElementById('aptSearch').value.toLowerCase();
+            const grid = document.getElementById('apartmentsGrid');
+            const adminMode = isAdmin();
+            grid.innerHTML = data.apartments.filter(a => String(a.buildingId) === String(activeBldId) && a.name.toLowerCase().includes(query)).map(a => `
+                <div class="item-card" onclick="openAptDetails('${a.id}')">
+                    ${adminMode ? `
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => renameItem('${a.id}', 'apt'))">✏️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => deleteItem('${a.id}', 'apt'))">🗑️</button>
+                    </div>` : ''}
+                    <div class="icon">🏠</div>
+                    <div class="name">${a.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function openAptDetails(id) {
+            activeAptId = String(id);
+            const a = data.apartments.find(a => String(a.id) === String(id));
+            document.getElementById('activeAptName').innerText = a?.name || '';
+            document.getElementById('resNameLabel').innerText = a?.residentName || 'None';
+            document.getElementById('resPhoneLabel').innerText = a?.residentPhone || 'No phone';
+            document.getElementById('aptListScreen').style.display = 'none';
+            document.getElementById('aptDetailsScreen').style.display = 'block';
+            renderAptPayments();
+        }
+
+        function backToApartments() {
+            activeAptId = null;
+            document.getElementById('aptDetailsScreen').style.display = 'none';
+            document.getElementById('aptListScreen').style.display = 'block';
+        }
+
+        function renderAptPayments() {
+            const year = document.getElementById('aptYear').value;
+            const grid = document.getElementById('aptPaymentGrid');
+            grid.innerHTML = t('months').map((m, i) => {
+                const month = i + 1;
+                const paid = data.payments[`${activeAptId}_${year}_${month}`] || 0;
+                return `
+                    <div class="item-card ${paid ? 'paid-bg' : ''}" style="height: auto; padding: 15px;" onclick="${isAdmin() ? `requireAuth(() => openPayModal('${activeAptId}', ${year}, ${month}, ${paid}))` : ''}">
+                        <div style="font-weight:700;">${m}</div>
+                        <div style="color: ${paid ? 'var(--success)' : 'var(--danger)'}; font-size: 13px;">${paid ? paid + ' ' + t('curr') : t('unpaid')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // FULL TABLE
+        function renderFullBuildings() {
+            // Reset: hide table content, show building selector
+            const selector = document.getElementById('fullBldSelector');
+            const tableContent = document.getElementById('fullTableContent');
+            if (selector) selector.style.display = 'grid';
+            if (tableContent) tableContent.style.display = 'none';
+            window.activeFullBldId = null;
+
+            console.log('renderFullBuildings called. data.buildings:', JSON.stringify(data.buildings));
+            console.log('isLoaded:', isLoaded, '| userAccount:', userAccount ? userAccount.email : 'null');
+
+            if (!selector) {
+                console.error('fullBldSelector element NOT FOUND!');
+                return;
+            }
+
+            if (!isLoaded) {
+                selector.innerHTML = `<p style="color:#94a3b8; text-align:center; padding:30px; width:100%;">⏳ جاري تحميل البيانات...</p>`;
+                return;
+            }
+
+            selector.innerHTML = data.buildings.length === 0
+                ? `<div style="text-align:center; padding:40px; width:100%; color:#94a3b8;">
+                      <div style="font-size:40px; margin-bottom:10px;">🏢</div>
+                      <p>لا توجد عمارات مسجلة</p>
+                      <button class="btn btn-primary" onclick="renderFullBuildings()" style="margin-top:10px;">🔄 تحديث</button>
+                   </div>`
+                : data.buildings.map(b => `
+                    <div class="item-card" onclick="showFullTableForBld('${b.id}')">
+                        <div class="icon">🏢</div><div class="name">${b.name}</div>
+                    </div>
+                `).join('');
+        }
+
+
+        function showFullTableForBld(id) {
+            console.log("Selecting building ID:", id);
+            document.getElementById('fullBldSelector').style.display = 'none';
+            document.getElementById('fullTableContent').style.display = 'block';
+
+            const b = data.buildings.find(b => String(b.id) === String(id));
+            if (!b) {
+                console.error("Building not found for ID:", id);
+                console.log("Available buildings:", data.buildings);
+            }
+            document.getElementById('fullTableBldName').innerText = b?.name || 'Building Not Found';
+            window.activeFullBldId = id;
+            renderFullTable();
+        }
+
+        function renderFullTable() {
+            const ySelect = document.getElementById('fullYear');
+            const y = ySelect ? ySelect.value : new Date().getFullYear();
+            const bldId = window.activeFullBldId;
+
+            console.log("Rendering Full Table - Year:", y, "Building ID:", bldId);
+
+            // Defensively handle a.buildingId possibly being string or number
+            const apts = data.apartments.filter(a => String(a.buildingId) == String(bldId));
+
+            const head = document.getElementById('fullTableHead');
+            const body = document.getElementById('fullTableBody');
+
+            // Header matching screenshot: "الشقة / الشهر" then Jan, Feb...
+            head.innerHTML = `<th>${t('th_apt')}</th>` + t('months').map(m => `<th>${m}</th>`).join('');
+
+            if (apts.length === 0) {
+                body.innerHTML = `<tr><td colspan="13" style="padding:40px; text-align:center; color:#94a3b8;">${t('no_apts') || 'No apartments found'}</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = apts.map(a => {
+                let row = `<tr style="border-bottom: 8px solid #f1f5f9;"><td style="font-weight:700; color: #1e293b; padding: 15px; background: white;">${a.name}</td>`;
+                for (let m = 1; m <= 12; m++) {
+                    const key = `${a.id}_${y}_${m}`;
+                    const amt = data.payments[key] || 0;
+                    const isPaid = amt > 0;
+
+                    row += `<td style="background: white; padding: 10px;">
+                        <div class="payment-badge ${isPaid ? 'paid' : 'unpaid'}">
+                            ${isPaid ? amt : 'x'}
+                        </div>
+                    </td>`;
+                }
+                return row + `</tr>`;
+            }).join('');
+        }
+
+        // EXPORT TO EXCEL WITH YEAR & MONTH SELECTION
+        function openExportModal(defaultType = 'bilan') {
+            const currentY = (document.getElementById('dashStatYear') && document.getElementById('dashStatYear').value)
+                ? parseInt(document.getElementById('dashStatYear').value)
+                : new Date().getFullYear();
+            const currentM = (document.getElementById('dashStatMonth') && document.getElementById('dashStatMonth').value)
+                ? document.getElementById('dashStatMonth').value
+                : 'all';
+
+            // Generate Year options (2014 to 2040)
+            let yearsHtml = '';
+            for (let y = 2014; y <= 2040; y++) {
+                yearsHtml += `<option value="${y}" ${y === currentY ? 'selected' : ''}>${y}</option>`;
+            }
+
+            // Month options
+            const monthNames = [
+                "01 - Jan (يناير)",
+                "02 - Fév (فبراير)",
+                "03 - Mar (مارس)",
+                "04 - Avr (أبريل)",
+                "05 - Mai (ماي)",
+                "06 - Juin (يونيو)",
+                "07 - Juil (يوليوز)",
+                "08 - Août (غشت)",
+                "09 - Sep (شتنبر)",
+                "10 - Oct (أكتوبر)",
+                "11 - Nov (نونبر)",
+                "12 - Déc (دجنبر)"
+            ];
+
+            let monthsHtml = `<option value="all" ${currentM === 'all' ? 'selected' : ''}>${t('opt_all_months') || 'جميع الشهور (السنة كاملة)'}</option>`;
+            monthNames.forEach((name, idx) => {
+                const mVal = String(idx + 1);
+                monthsHtml += `<option value="${mVal}" ${currentM === mVal ? 'selected' : ''}>${name}</option>`;
+            });
+
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="font-size: 38px;">📊</span>
+                    <h3 style="margin: 8px 0 4px 0; color: var(--primary);">${t('title_export_excel') || 'تحميل ملف Excel'}</h3>
+                    <p style="margin:0; font-size: 13px; color: #6b7280;">يرجى تحديد السنة والشهر للتحميل</p>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; margin-bottom: 5px; display: block;">${t('lbl_export_year') || 'السنة :'}</label>
+                    <select id="exportYearSel" class="modern-select" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px;">
+                        ${yearsHtml}
+                    </select>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; margin-bottom: 5px; display: block;">${t('lbl_export_month') || 'الشهر :'}</label>
+                    <select id="exportMonthSel" class="modern-select" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px;">
+                        ${monthsHtml}
+                    </select>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; margin-bottom: 5px; display: block;">${t('lbl_export_type') || 'نوع التقرير :'}</label>
+                    <select id="exportTypeSel" class="modern-select" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px;">
+                        <option value="bilan" ${defaultType === 'bilan' ? 'selected' : ''}>${t('opt_export_bilan') || 'الحصيلة كاملة (المصاريف + المداخيل + الملخص)'}</option>
+                        <option value="payments" ${defaultType === 'payments' || defaultType === 'fullTable' ? 'selected' : ''}>${t('opt_export_payments') || 'سجل الأداءات فقط'}</option>
+                        <option value="expenses" ${defaultType === 'expenses' ? 'selected' : ''}>${t('opt_export_expenses') || 'سجل المصاريف فقط'}</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-success" style="flex: 2; padding: 12px; font-weight: bold; font-size: 15px;" onclick="executeExport('excel')">
+                        📥 تحميل Excel
+                    </button>
+                    <button class="btn btn-success" style="flex: 2; padding: 12px; font-weight: bold; font-size: 15px; background: #ef4444;" onclick="executeExport('pdf')">
+                        📄 تحميل PDF
+                    </button>
+                    <button class="btn" style="flex: 1; background: #e5e7eb; color: #4b5563;" onclick="closeModal()">
+                        إلغاء
+                    </button>
+                </div>
+            `;
+            document.getElementById('universalModal').style.display = 'flex';
+        }
+
+        function executeExport(format = 'excel') {
+            const y = parseInt(document.getElementById('exportYearSel').value) || new Date().getFullYear();
+            const m = document.getElementById('exportMonthSel').value; // 'all' or 1..12
+            const expType = document.getElementById('exportTypeSel').value || 'bilan';
+            const monthNum = m === 'all' ? null : parseInt(m);
+
+            let wb = XLSX.utils.book_new();
+
+            const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "ماي", "يونيو", "يوليوز", "غشت", "شتنبر", "أكتوبر", "نونبر", "دجنبر"];
+            const currentMonthLabel = monthNum === null
+                ? (t('opt_all_months') || "جميع الشهور")
+                : `${monthNamesEn[monthNum - 1]} (${monthNamesAr[monthNum - 1]})`;
+
+            // 1. FILTER EXPENSES
+            let filteredExpenses = (data.expenses || []).filter(e => {
+                let parts = (e.date || '').split('-');
+                if (parts.length >= 2) {
+                    let ey = parseInt(parts[0]);
+                    let em = parseInt(parts[1]);
+                    if (!isNaN(ey) && !isNaN(em)) {
+                        if (ey === y) {
+                            return monthNum === null || em === monthNum;
+                        }
+                        return false;
+                    }
+                }
+                let d = new Date(e.date);
+                if (!isNaN(d.getFullYear())) {
+                    if (d.getFullYear() === y) {
+                        return monthNum === null || (d.getMonth() + 1) === monthNum;
+                    }
+                }
+                return false;
+            });
+
+            let totalExpenses = 0;
+            let expensesData = filteredExpenses.map(e => {
+                let amt = parseFloat(e.amount) || 0;
+                totalExpenses += amt;
+                return {
+                    "التاريخ (Date)": e.date,
+                    "البيان (Description)": e.desc,
+                    "المبلغ (Montant)": amt,
+                    "بالتوصيل (Avec Reçu)": e.hasReceipt ? "Oui" : "Non"
+                };
+            });
+            if (expensesData.length > 0) {
+                expensesData.push({
+                    "التاريخ (Date)": "المجموع (Total)",
+                    "البيان (Description)": "",
+                    "المبلغ (Montant)": totalExpenses,
+                    "بالتوصيل (Avec Reçu)": ""
+                });
+            }
+
+            // 2. PAYMENTS DATA
+            let paymentsData = [];
+            let totalPayments = 0;
+
+            if (monthNum === null) {
+                // ALL MONTHS
+                (data.apartments || []).forEach(a => {
+                    let b = (data.buildings || []).find(bld => String(bld.id) === String(a.buildingId));
+                    let row = {
+                        "العمارة (Immeuble)": b ? b.name : "N/A",
+                        "الشقة (Appartement)": a.name
+                    };
+                    let aptTotal = 0;
+                    for (let mo = 1; mo <= 12; mo++) {
+                        let key = `${a.id}_${y}_${mo}`;
+                        let amt = parseFloat(data.payments[key]) || 0;
+                        let moName = t('months')[mo - 1] || `M${mo}`;
+                        row[moName] = amt > 0 ? amt : 0;
+                        aptTotal += amt;
+                    }
+                    row["المجموع (Total)"] = aptTotal;
+                    totalPayments += aptTotal;
+                    paymentsData.push(row);
+                });
+                if (paymentsData.length > 0) {
+                    let totalRow = {
+                        "العمارة (Immeuble)": "المجموع العام (Total Général)",
+                        "الشقة (Appartement)": ""
+                    };
+                    for (let mo = 1; mo <= 12; mo++) {
+                        let moName = t('months')[mo - 1] || `M${mo}`;
+                        let moSum = (data.apartments || []).reduce((sum, a) => {
+                            let key = `${a.id}_${y}_${mo}`;
+                            return sum + (parseFloat(data.payments[key]) || 0);
+                        }, 0);
+                        totalRow[moName] = moSum;
+                    }
+                    totalRow["المجموع (Total)"] = totalPayments;
+                    paymentsData.push(totalRow);
+                }
+            } else {
+                // SPECIFIC MONTH
+                (data.apartments || []).forEach(a => {
+                    let b = (data.buildings || []).find(bld => String(bld.id) === String(a.buildingId));
+                    let key = `${a.id}_${y}_${monthNum}`;
+                    let amt = parseFloat(data.payments[key]) || 0;
+                    totalPayments += amt;
+                    paymentsData.push({
+                        "العمارة (Immeuble)": b ? b.name : "N/A",
+                        "الشقة (Appartement)": a.name,
+                        [`المبلغ المؤدى (${currentMonthLabel})`]: amt > 0 ? amt : 0,
+                        "الحالة (Statut)": amt > 0 ? "خالص (Payé)" : "غير مؤدى (Non payé)"
+                    });
+                });
+                if (paymentsData.length > 0) {
+                    paymentsData.push({
+                        "العمارة (Immeuble)": "المجموع (Total)",
+                        "الشقة (Appartement)": "",
+                        [`المبلغ المؤدى (${currentMonthLabel})`]: totalPayments,
+                        "الحالة (Statut)": ""
+                    });
+                }
+            }
+
+            // 3. RESUME DATA
+            let resumeData = [
+                { "البند (Rubrique)": "السنة (Année)", "القيمة (Valeur)": y },
+                { "البند (Rubrique)": "الشهر (Mois)", "القيمة (Valeur)": currentMonthLabel },
+                { "البند (Rubrique)": "مجموع المداخيل (Total Recettes)", "القيمة (Valeur)": totalPayments },
+                { "البند (Rubrique)": "مجموع المصاريف (Total Dépenses)", "القيمة (Valeur)": totalExpenses },
+                { "البند (Rubrique)": "الرصيد الصافي (Solde Net)", "القيمة (Valeur)": (totalPayments - totalExpenses) }
+            ];
+
+            const fileSuffix = monthNum === null ? `_Annee_${y}_Complet` : `_Annee_${y}_Mois_${monthNum}`;
+            let title = '';
+            if (expType === 'expenses') title = 'سجل المصاريف المفصل';
+            else if (expType === 'payments' || expType === 'fullTable') title = 'سجل الأداءات المفصل';
+            else title = 'الحصيلة المالية الشاملة';
+
+            if (format === 'pdf') {
+                const printWindow = window.open('', '_blank');
+                let htmlContent = `
+                    <html lang="ar" dir="rtl">
+                    <head>
+                        <title>${title}</title>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+                            body { font-family: 'Tajawal', sans-serif; padding: 30px; direction: rtl; color: #333; }
+                            h1 { color: #1e3a8a; text-align: center; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 5px; }
+                            h2 { color: #1e3a8a; margin-top: 30px; }
+                            .date-label { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; margin-bottom: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+                            th { background-color: #f8fafc; color: #1e3a8a; font-weight: bold; }
+                            tr:nth-child(even) { background-color: #f9fafb; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${title} - إقامة زينب 4</h1>
+                        <div class="date-label">تاريخ التقرير: ${new Date().toLocaleDateString('ar-MA')} | للفترة: ${currentMonthLabel} ${y}</div>
+                `;
+
+                // Add Resume Table if Bilan
+                if (expType === 'bilan') {
+                    htmlContent += `<h2>الملخص المالي</h2><table><thead><tr><th>البند</th><th>القيمة</th></tr></thead><tbody>`;
+                    resumeData.forEach(r => { htmlContent += `<tr><td>${r["البند (Rubrique)"]}</td><td>${r["القيمة (Valeur)"]}</td></tr>`; });
+                    htmlContent += `</tbody></table>`;
+                }
+
+                // Add Payments Table
+                if (expType === 'bilan' || expType === 'payments' || expType === 'fullTable') {
+                    htmlContent += `<h2>الأداءات</h2><table><thead><tr>`;
+                    if (paymentsData.length > 0) {
+                        Object.keys(paymentsData[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                        htmlContent += `</tr></thead><tbody>`;
+                        paymentsData.forEach(r => {
+                            htmlContent += `<tr>`;
+                            Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                            htmlContent += `</tr>`;
+                        });
+                    }
+                    htmlContent += `</tbody></table>`;
+                }
+
+                // Add Full Year Table if Bilan with specific month
+                if (expType === 'bilan' && monthNum !== null && typeof fullYearPay !== 'undefined' && fullYearPay.length > 0) {
+                    htmlContent += `<h2>الجدول السنوي</h2><table><thead><tr>`;
+                    Object.keys(fullYearPay[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                    htmlContent += `</tr></thead><tbody>`;
+                    fullYearPay.forEach(r => {
+                        htmlContent += `<tr>`;
+                        Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                        htmlContent += `</tr>`;
+                    });
+                    htmlContent += `</tbody></table>`;
+                }
+
+                // Add Expenses Table
+                if (expType === 'bilan' || expType === 'expenses') {
+                    htmlContent += `<h2>المصاريف</h2><table><thead><tr>`;
+                    if (expensesData.length > 0) {
+                        Object.keys(expensesData[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                        htmlContent += `</tr></thead><tbody>`;
+                        expensesData.forEach(r => {
+                            htmlContent += `<tr>`;
+                            Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                            htmlContent += `</tr>`;
+                        });
+                    }
+                    htmlContent += `</tbody></table>`;
+                }
+
+                htmlContent += `</body></html>`;
+                printWindow.document.write(htmlContent);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
+
+            } else {
+                if (expType === 'expenses') {
+                    let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
+                    XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
+                    XLSX.writeFile(wb, `Syndic_Depenses${fileSuffix}.xlsx`);
+                } else if (expType === 'payments' || expType === 'fullTable') {
+                    let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
+                    XLSX.utils.book_append_sheet(wb, wsPay, `الأداءات (Paiements)`);
+                    XLSX.writeFile(wb, `Syndic_Paiements${fileSuffix}.xlsx`);
+                } else {
+                    let wsRes = XLSX.utils.json_to_sheet(resumeData);
+                    XLSX.utils.book_append_sheet(wb, wsRes, "الملخص المالي (Résumé)");
+
+                    let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
+                    XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
+
+                    let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
+                    XLSX.utils.book_append_sheet(wb, wsPay, "الأداءات (Paiements)");
+
+                    if (monthNum !== null) {
+                        let fullYearPay = [];
+                        (data.apartments || []).forEach(a => {
+                            let b = (data.buildings || []).find(bld => String(bld.id) === String(a.buildingId));
+                            let row = {
+                                "العمارة (Immeuble)": b ? b.name : "N/A",
+                                "الشقة (Appartement)": a.name
+                            };
+                            let aptTotal = 0;
+                            for (let mo = 1; mo <= 12; mo++) {
+                                let key = `${a.id}_${y}_${mo}`;
+                                let amt = parseFloat(data.payments[key]) || 0;
+                                let moName = t('months')[mo - 1] || `M${mo}`;
+                                row[moName] = amt > 0 ? amt : 0;
+                                aptTotal += amt;
+                            }
+                            row["المجموع (Total)"] = aptTotal;
+                            fullYearPay.push(row);
+                        });
+                        if (fullYearPay.length > 0) {
+                            let wsFull = XLSX.utils.json_to_sheet(fullYearPay);
+                            XLSX.utils.book_append_sheet(wb, wsFull, `الجدول السنوي ${y}`);
+                        }
+                    }
+
+                    XLSX.writeFile(wb, `Syndic_Bilan${fileSuffix}.xlsx`);
+                }
+            }
+
+            closeModal();
+        }
+
+        // ACTIONS
+        function addBuilding() {
+            let name = prompt("Building Name:");
+            if (!name) return;
+            data.buildings.push({ id: Date.now(), name });
+            saveData();
+            renderBuildings();
+        }
+
+        function addApartment() {
+            let name = prompt("Apartment Name/No:");
+            if (!name) return;
+            data.apartments.push({ id: Date.now(), buildingId: activeBldId, name });
+            saveData();
+            renderApartments();
+        }
+
+        function openPayModal(aptId, y, m, current) {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3>Paiement ${t('months')[m - 1]} ${y}</h3>
+                <input type="number" id="payAmt" value="${current || ''}" placeholder="Amount (${t('curr')})">
+                <div style="display:flex; gap: 10px; margin-top:15px;">
+                    <button class="btn btn-success" style="flex:1" onclick="confirmPayment('${aptId}', ${y}, ${m})">Save</button>
+                    ${current ? `<button class="btn btn-danger" onclick="clearPayment('${aptId}', ${y}, ${m})">Reset</button>` : ''}
+                </div>
+            `;
+            window.confirmPayment = (id, year, month) => {
+                let v = parseFloat(document.getElementById('payAmt').value);
+                if (isNaN(v) || v <= 0) {
+                    clearPayment(id, year, month);
+                    return;
+                }
+                data.payments[`${id}_${year}_${month}`] = v;
+                // Reliable apartment lookup with == for type flexibility
+                let apt = data.apartments.find(a => a.id == id);
+                if (apt) {
+                    apt.lastPaidTime = Date.now();
+                    apt.lastTotal = v;
+                }
+                saveData();
+                closeModal();
+                renderAptPayments();
+            };
+            window.clearPayment = (id, year, month) => {
+                delete data.payments[`${id}_${year}_${month}`];
+                saveData();
+                closeModal();
+                renderAptPayments();
+            };
+            document.getElementById('universalModal').style.display = 'flex';
+        }
+
+        function openResidentModal() {
+            const apt = data.apartments.find(a => a.id == activeAptId);
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3>Resident Details</h3>
+                <div class="input-group"><label>Name</label><input type="text" id="editResName" value="${apt.residentName || ''}"></div>
+                <div class="input-group"><label>Phone</label><input type="text" id="editResPhone" value="${apt.residentPhone || ''}"></div>
+                <button class="btn btn-success" style="width:100%" onclick="saveResident()">Save</button>
+            `;
+            window.saveResident = () => {
+                apt.residentName = document.getElementById('editResName').value;
+                apt.residentPhone = document.getElementById('editResPhone').value;
+                saveData();
+                closeModal();
+                openAptDetails(activeAptId);
+            };
+            document.getElementById('universalModal').style.display = 'flex';
+        }
+
+        // EXPENSES
+        // EXPENSES
+        function openAddExpenseModal() {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="color:var(--primary);" data-i18n="add_expense">${t('add_expense')}</h3>
+                <div class="input-group"><label>${t('th_date')}</label><input type="date" id="expD" value="${new Date().toISOString().split('T')[0]}"></div>
+                <div class="input-group"><label>${t('th_desc')}</label><input type="text" id="expL" placeholder="Description"></div>
+                <div class="input-group"><label>${t('th_amount')}</label><input type="number" id="expA" placeholder="Amount"></div>
+                <div class="input-group">
+                    <label>📸 التوصيل (Image)</label>
+                    <input type="file" id="expFile" accept="image/*" style="padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1; width:100%;">
+                </div>
+                <button id="btnSaveExp" class="btn btn-success" style="width:100%; margin-top:15px;" onclick="saveNewExpense()" data-i18n="add_expense">${t('add_expense')}</button>
+            `;
+            window.saveNewExpense = async () => {
+                let d = document.getElementById('expD').value;
+                let l = document.getElementById('expL').value;
+                let a = parseFloat(document.getElementById('expA').value);
+                let file = document.getElementById('expFile').files[0];
+
+                if (d && l && !isNaN(a)) {
+                    const btn = document.getElementById('btnSaveExp');
+                    btn.disabled = true;
+                    btn.innerText = "جاري الحفظ...";
+
+                    const expenseId = Date.now();
+                    let hasReceipt = false;
+
+                    if (file) {
+                        try {
+                            const base64 = await processImage(file);
+                            await db.collection("syndic_receipts").doc(expenseId.toString()).set({ image: base64 });
+                            hasReceipt = true;
+                        } catch (err) {
+                            console.error("Image process error:", err);
+                        }
+                    }
+
+                    data.expenses.push({ id: expenseId, date: d, desc: l, amount: a, hasReceipt: hasReceipt });
+                    saveData();
+                    closeModal();
+                    renderExpenses();
+                }
+            };
+            document.getElementById('universalModal').style.display = 'flex';
+        }
+
+        async function processImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const max = 1200;
+                        if (width > max || height > max) {
+                            if (width > height) { height *= max / width; width = max; }
+                            else { width *= max / height; height = max; }
+                        }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                };
+                reader.onerror = reject;
+            });
+        }
+
+        function renderExpenses() {
+            const m = document.getElementById('expMonth').value;
+            const y = document.getElementById('expYear').value;
+            const body = document.getElementById('expensesTableBody');
+            const adminMode = isAdmin();
+
+            let filtered = data.expenses.filter(e => {
+                let d = new Date(e.date);
+                return d.getFullYear() == y && (m == 'all' || (d.getMonth() + 1) == m);
+            }).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            body.innerHTML = filtered.map(e => `
+                <tr>
+                    <td>${e.date}</td>
+                    <td style="text-align:start;">${e.desc}</td>
+                    <td style="color:var(--danger); font-weight:800;">${e.amount}</td>
+                    <td>
+                        ${e.hasReceipt ?
+                    `<span style="cursor:pointer; font-size:20px;" onclick="viewReceipt('${e.id}')">🖼️</span>` :
+                    `<span style="cursor:pointer; font-size:18px; filter:grayscale(1); opacity:0.5;" onclick="requireAuth(() => openAddReceiptOnly('${e.id}'))">➕📸</span>`
+                }
+                    </td>
+                    <td><button onclick="requireAuth(() => deleteExpense('${e.id}'))" style="border:none; background:none; cursor:pointer;">🗑️</button></td>
+                </tr>
+            `).join('');
+        }
+
+        window.openAddReceiptOnly = (id) => {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="color:var(--primary);">إضافة توصيل</h3>
+                <div class="input-group">
+                    <label>اختار صورة التوصيل</label>
+                    <input type="file" id="receiptOnlyFile" accept="image/*" style="padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1; width:100%;">
+                </div>
+                <button id="btnSaveR" class="btn btn-success" style="width:100%; margin-top:15px;" onclick="saveReceiptOnly(${id})">حفظ التوصيل</button>
+            `;
+            window.saveReceiptOnly = async (expId) => {
+                const file = document.getElementById('receiptOnlyFile').files[0];
+                if (file) {
+                    const btn = document.getElementById('btnSaveR');
+                    btn.disabled = true;
+                    btn.innerText = "جاري التحميل...";
+                    try {
+                        const base64 = await processImage(file);
+                        await db.collection("syndic_receipts").doc(expId.toString()).set({ image: base64 });
+                        const exp = data.expenses.find(e => e.id == expId);
+                        if (exp) exp.hasReceipt = true;
+                        saveData();
+                        closeModal();
+                        renderExpenses();
+                    } catch (err) {
+                        alert("خطأ في التحميل: " + err.message);
+                        btn.disabled = false;
+                        btn.innerText = "حفظ التوصيل";
+                    }
+                }
+            };
+            document.getElementById('universalModal').style.display = 'flex';
+        };
+
+        window.deleteExpense = (id) => {
+            data.expenses = data.expenses.filter(e => e.id != id);
+            db.collection("syndic_receipts").doc(id.toString()).delete().catch(() => { });
+            saveData();
+            renderExpenses();
+        }
+
+        window.viewReceipt = (expenseId) => {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <div style="text-align:center; position:relative;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+                        <button onclick="closeModal()" style="background:var(--danger); color:white; border:none; border-radius:8px; width:30px; height:30px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center;">✖</button>
+                        <h3 style="margin:0; color:var(--primary);">${t('th_receipt')}</h3>
+                    </div>
+                    
+                    <div id="receiptLoading" style="padding: 40px;">
+                        <div class="spinner" style="margin: 0 auto;"></div>
+                        <p style="margin-top:10px; color:#666;">جاري التحميل...</p>
+                    </div>
+                    
+                    <div id="receiptContainer" style="display:none;">
+                        <img id="receiptImg" style="width:100%; border-radius:12px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05); margin-bottom:15px;">
+                        <a id="receiptDownload" href="#" download="receipt.jpg" style="display:flex; align-items:center; justify-content:center; gap:8px; color:var(--secondary); font-weight:bold; text-decoration:none; font-size:16px;">
+                            <span>تحميل التوصيل</span>
+                            <span style="background:var(--secondary); color:white; border-radius:4px; padding:2px 5px; font-size:12px;">⬇️</span>
+                        </a>
+                    </div>
+                    
+                    <div id="receiptError" style="color:var(--danger); display:none; padding:20px; font-weight:bold;">
+                        ❌ لا يوجد صورة أو تعذر التحميل
+                    </div>
+                </div>
+            `;
+            document.getElementById('universalModal').style.display = 'flex';
+
+            db.collection("syndic_receipts").doc(expenseId.toString()).get()
+                .then(doc => {
+                    document.getElementById('receiptLoading').style.display = 'none';
+                    if (doc.exists && doc.data().image) {
+                        let base64Data = doc.data().image;
+                        // Strip any potential whitespace/newlines from Android Base64.DEFAULT
+                        base64Data = base64Data.replace(/\s/g, '');
+
+                        const fullDataUrl = base64Data.startsWith('data:') ? base64Data : "data:image/jpeg;base64," + base64Data;
+
+                        const img = document.getElementById('receiptImg');
+                        img.src = fullDataUrl;
+                        img.onerror = () => {
+                            document.getElementById('receiptContainer').style.display = 'none';
+                            document.getElementById('receiptError').style.display = 'block';
+                            document.getElementById('receiptError').innerText = "❌ خطأ في تنسيق الصورة (Invalid Base64)";
+                        };
+
+                        const download = document.getElementById('receiptDownload');
+                        download.href = fullDataUrl;
+
+                        document.getElementById('receiptContainer').style.display = 'block';
+                    } else {
+                        document.getElementById('receiptError').style.display = 'block';
+                        document.getElementById('receiptError').innerText = "❌ لا يوجد توصيل مسجل لهذا المصروف";
+                    }
+                })
+                .catch(err => {
+                    console.error("Firestore Error:", err);
+                    document.getElementById('receiptLoading').style.display = 'none';
+                    document.getElementById('receiptError').style.display = 'block';
+                    document.getElementById('receiptError').innerText = "❌ مشكل في الاتصال: " + (err.code === 'permission-denied' ? "يجب تفعيل الصلاحيات (Firestore Rules)" : err.message);
+                });
+        };
+
+        function renderAnnouncements() {
+            const list = document.getElementById('announcementsList');
+            const adminMode = isAdmin();
+            list.innerHTML = data.announcements.map(ann => `
+                <div class="announce-item" style="background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; position:relative;" onclick="openAnnounceDetail(${ann.id})">
+                    ${adminMode ? `<button onclick="event.stopPropagation(); requireAuth(() => deleteAnnouncement(${ann.id}))" style="position:absolute; top:5px; left:5px; border:none; background:none; cursor:pointer; opacity:0.5;">🗑️</button>` : ''}
+                    <h4 style="margin:0; color: var(--primary);">${ann.title}</h4>
+                    <p style="margin:5px 0 10px 0; font-size:14px; color: #4b5563; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${ann.msg}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#94a3b8;">🕒 ${ann.date || ''}</span>
+                        <span style="font-size:12px; font-weight:700; color:var(--secondary);">${t('btn_details')}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openAnnounceDetail = (annId) => {
+            const ann = data.announcements.find(a => a.id == annId);
+            if (!ann) return;
+
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <div class="announce-detail-view" style="max-height: 80vh; overflow-y: auto; padding-left: 5px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
+                        <h2 style="margin:0; color:var(--primary); font-size:22px;">${ann.title}</h2>
+                        <span style="font-size:12px; color:#94a3b8; background:#f1f5f9; padding:4px 8px; border-radius:6px;">🕒 ${ann.date || ''}</span>
+                    </div>
+
+                    <div id="annDetailContent" style="font-size:16px; line-height:1.6; color:var(--dark); margin-bottom:20px; white-space: pre-wrap;">${ann.msg}</div>
+
+                    <div id="annDetailImgBox" style="display:none;">
+                        <div id="annDetailImgLoading" style="text-align:center; padding:20px;"><div class="spinner" style="margin:0 auto;"></div></div>
+                        <img id="annDetailImg" class="announce-detail-img" style="display:none;">
+                    </div>
+
+                    <div class="comments-section">
+                        <h4 style="margin-bottom:15px;">${t('title_comments')}</h4>
+                        <div id="commentsList">
+                            ${(ann.comments || []).map(c => `
+                                <div class="comment-item">
+                                    <div class="comment-header">
+                                        <span class="comment-name">${c.name}</span>
+                                        <span class="comment-date">${c.date}</span>
+                                    </div>
+                                    <div class="comment-text">${c.text}</div>
+                                    <button class="comment-delete-btn" style="${isAdmin() ? 'display:block' : ''}" onclick="deleteComment(${annId}, ${c.id})">🗑️ Delete</button>
+                                </div>
+                            `).join('') || `<p style="color:#94a3b8; font-size:14px; text-align:center;">${t('no_comments')}</p>`}
+                        </div>
+
+                        <div class="comment-form">
+                            <div style="display:flex; gap:10px;">
+                                <textarea id="commText" placeholder="${t('ph_comment')}" style="flex:1; border-radius:8px; padding:10px; border:1px solid #cbd5e1;" rows="2"></textarea>
+                                <button class="btn btn-primary" onclick="addComment(${annId})">🚀</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('universalModal').style.display = 'flex';
+
+            if (ann.hasImage) {
+                const imgBox = document.getElementById('annDetailImgBox');
+                imgBox.style.display = 'block';
+                db.collection("syndic_announcements_images").doc(annId.toString()).get().then(doc => {
+                    document.getElementById('annDetailImgLoading').style.display = 'none';
+                    if (doc.exists && doc.data().image) {
+                        const img = document.getElementById('annDetailImg');
+                        img.src = "data:image/jpeg;base64," + doc.data().image.replace(/\s/g, '');
+                        img.style.display = 'block';
+                    }
+                });
+            }
+        };
+
+        window.addComment = (annId) => {
+            const displayName = isAdmin() ? "Admin" : (userAccount ? userAccount.name : "Resident");
+            const text = document.getElementById('commText').value.trim();
+            if (!text) return;
+
+            const annRef = db.collection("syndic_announcements").doc(annId.toString());
+            db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(annRef);
+                const currentComments = doc.data().comments || [];
+                const newComment = {
+                    id: Number(Date.now()),
+                    name: displayName,
+                    text: text,
+                    date: new Date().toLocaleString([], { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                };
+                transaction.update(annRef, { comments: [...currentComments, newComment] });
+            }).then(() => {
+                openAnnounceDetail(annId); // Refresh modal
+            });
+        };
+
+        window.deleteComment = (annId, commId) => {
+            requireAuth(() => {
+                const annRef = db.collection("syndic_announcements").doc(annId.toString());
+                db.runTransaction(async (transaction) => {
+                    const doc = await transaction.get(annRef);
+                    const currentComments = doc.data().comments || [];
+                    const filtered = currentComments.filter(c => c.id != commId);
+                    transaction.update(annRef, { comments: filtered });
+                }).then(() => {
+                    openAnnounceDetail(annId); // Refresh modal
+                });
+            });
+        };
+
+        window.openAddAnnounceModal = () => {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="color:var(--primary);">${t('title_new_ann')}</h3>
+                <div class="input-group"><label>${t('lbl_ann_title')}</label><input type="text" id="annT" placeholder="Title"></div>
+                <div class="input-group"><label>${t('lbl_ann_msg')}</label><textarea id="annM" rows="3" placeholder="Message"></textarea></div>
+                <div class="input-group">
+                    <label>${t('lbl_ann_photo')}</label>
+                    <input type="file" id="annFile" accept="image/*" style="padding:10px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1; width:100%;">
+                </div>
+                <button id="btnSaveAnn" class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="saveAnnouncement()">${t('btn_publish')}</button>
+            `;
+            window.saveAnnouncement = async () => {
+                let titleVal = document.getElementById('annT').value;
+                let msgVal = document.getElementById('annM').value;
+                let file = document.getElementById('annFile').files[0];
+
+                if (titleVal && msgVal) {
+                    const btn = document.getElementById('btnSaveAnn');
+                    btn.disabled = true;
+                    btn.innerText = t('publishing');
+
+                    const annId = Date.now();
+                    let hasImage = false;
+
+                    if (file) {
+                        try {
+                            const base64 = await processImage(file);
+                            await db.collection("syndic_announcements_images").doc(annId.toString()).set({ image: base64 });
+                            hasImage = true;
+                        } catch (err) {
+                            console.error("Announce Image error:", err);
+                        }
+                    }
+
+                    const newAnn = {
+                        id: Number(annId),
+                        title: titleVal,
+                        msg: msgVal,
+                        date: new Date().toLocaleDateString(),
+                        hasImage: hasImage,
+                        comments: []
+                    };
+
+                    db.collection("syndic_announcements").doc(annId.toString()).set(newAnn).then(() => {
+                        closeModal();
+                    });
+                }
+            };
+            document.getElementById('universalModal').style.display = 'flex';
+        };
+
+        window.deleteAnnouncement = (id) => {
+            db.collection("syndic_announcements").doc(id.toString()).delete().then(() => {
+                db.collection("syndic_announcements_images").doc(id.toString()).delete().catch(() => { });
+            });
+        };
+
+        window.viewAnnounceImage = (annId) => {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <div style="text-align:center;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+                        <button onclick="closeModal()" style="background:var(--danger); color:white; border:none; border-radius:8px; width:30px; height:30px; cursor:pointer;">✖</button>
+                        <h3 style="margin:0; color:var(--primary);">${t('title_ann_photo')}</h3>
+                    </div>
+                    <div id="annImgLoading" style="padding:40px;"><div class="spinner" style="margin:0 auto;"></div></div>
+                    <div id="annImgContainer" style="display:none;">
+                        <img id="annImg" style="width:100%; border-radius:12px; margin-bottom:15px;">
+                        <a id="annImgDownload" href="#" download="announcement.jpg" class="btn btn-secondary" style="color:var(--secondary); text-decoration:none; font-weight:bold;">${t('btn_download')}</a>
+                    </div>
+                    <div id="annImgError" style="color:var(--danger); display:none; padding:20px;">${t('err_load_photo')}</div>
+                </div>
+            `;
+            document.getElementById('universalModal').style.display = 'flex';
+
+            db.collection("syndic_announcements_images").doc(annId.toString()).get().then(doc => {
+                document.getElementById('annImgLoading').style.display = 'none';
+                if (doc.exists && doc.data().image) {
+                    const fullDataUrl = "data:image/jpeg;base64," + doc.data().image.replace(/\s/g, '');
+                    const img = document.getElementById('annImg');
+                    img.src = fullDataUrl;
+                    document.getElementById('annImgDownload').href = fullDataUrl;
+                    document.getElementById('annImgContainer').style.display = 'block';
+                } else {
+                    document.getElementById('annImgError').style.display = 'block';
+                }
+            }).catch(err => {
+                document.getElementById('annImgLoading').style.display = 'none';
+                document.getElementById('annImgError').style.display = 'block';
+            });
+        };
+
+        function sendChat() {
+            const m = document.getElementById('chatInput').value.trim();
+            const isPrivate = document.getElementById('chatIsPrivate').checked;
+
+            if (!m) return;
+
+            const displayName = isAdmin() ? "Admin" : (userAccount ? userAccount.name : "Resident");
+            const messageId = Date.now();
+            const message = {
+                id: Number(messageId),
+                name: displayName,
+                msg: m,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                isPrivate: isPrivate,
+                senderUid: userAccount ? userAccount.uid : '',
+                likes: 0,
+                dislikes: 0,
+                replies: []
+            };
+
+            db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
+                document.getElementById('chatInput').value = '';
+                document.getElementById('chatIsPrivate').checked = false;
+            }).catch(e => alert(e.message));
+        }
+
+        function renderChat() {
+            const c = document.getElementById('chatContainer');
+            const currentUserUid = userAccount ? userAccount.uid : '';
+            const isAdmin = userAccount ? userAccount.role === 'admin' : false;
+
+            const filteredChat = data.chat.filter(m => {
+                if (!m.isPrivate) return true;
+                return m.senderUid === currentUserUid || isAdmin;
+            });
+
+            c.innerHTML = filteredChat.map(m => `
+                <div class="chat-msg" style="margin-bottom: 20px; position: relative; ${m.isPrivate ? 'border: 2px solid #ef4444; background: #fff5f5;' : ''}">
+                    <button class="delete-btn" onclick="requireAuth(() => deleteChatMessage('${m.id}'))">🗑️</button>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="sender">${m.name}</span>
+                        ${m.isPrivate ? '<span style="color: #ef4444; font-size: 11px; font-weight: 800; background: white; padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; gap: 2px;">🔒 Private</span>' : ''}
+                    </div>
+                    <p class="text">${m.msg}</p>
+                    <span class="time">${m.time}</span>
+                    
+                    <div class="chat-actions" style="display: flex; gap: 15px; margin-top: 5px; font-size: 13px;">
+                        <span style="cursor: pointer; color: var(--primary); font-weight: bold; display: flex; align-items: center; gap: 4px;" onclick="likeChatMessage('${m.id}')">👍 ${m.likes || 0}</span>
+                        <span style="cursor: pointer; color: #64748b; display: flex; align-items: center; gap: 4px;" onclick="dislikeChatMessage('${m.id}')">👎 ${m.dislikes || 0}</span>
+                        ${!m.isPrivate ? `<span style="cursor: pointer; color: var(--secondary); font-weight: bold; display: flex; align-items: center; gap: 4px;" onclick="openChatReplyModal('${m.id}')">💬 ${t('btn_reply')}</span>` : ''}
+                    </div>
+
+                    ${(m.replies || []).length > 0 ? `
+                        <div class="chat-replies" style="margin-top: 10px; padding-left: 20px; border-left: 2px solid #e2e8f0; margin-left: 10px;">
+                            ${m.replies.map(r => `
+                                <div style="background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 5px; font-size: 13px; position: relative; border: 1px solid #f1f5f9;">
+                                    ${isAdmin() ? `<button onclick="deleteChatReply('${m.id}', '${r.id}')" style="position: absolute; top: 2px; right: 2px; border: none; background: none; cursor: pointer; color: #ef4444; font-size: 10px;">🗑️</button>` : ''}
+                                    <div style="font-weight: bold; color: var(--secondary); margin-bottom: 2px;">${r.name}</div>
+                                    <div>${r.text}</div>
+                                    <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">${r.date}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+            c.scrollTop = c.scrollHeight;
+        }
+
+        function deleteChatMessage(id) {
+            db.collection("syndic_chat").doc(id.toString()).delete();
+        }
+
+        window.likeChatMessage = (id) => {
+            const msgRef = db.collection("syndic_chat").doc(id.toString());
+            db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(msgRef);
+                const currentLikes = doc.data().likes || 0;
+                transaction.update(msgRef, { likes: currentLikes + 1 });
+            });
+        };
+
+        window.dislikeChatMessage = (id) => {
+            const msgRef = db.collection("syndic_chat").doc(id.toString());
+            db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(msgRef);
+                const currentDislikes = doc.data().dislikes || 0;
+                transaction.update(msgRef, { dislikes: currentDislikes + 1 });
+            });
+        };
+
+        window.openChatReplyModal = (id) => {
+            let modal = document.getElementById('modalBody');
+            modal.innerHTML = `
+                <h3 style="color:var(--secondary);">${t('title_add_reply')}</h3>
+                <div class="input-group"><label>${t('btn_reply')}</label><textarea id="repText" rows="2" placeholder="..."></textarea></div>
+                <button class="btn btn-secondary" style="width:100%; margin-top:15px;" onclick="addChatReply('${id}')">${t('btn_send_chat') || 'Send'}</button>
+            `;
+            document.getElementById('universalModal').style.display = 'flex';
+        };
+
+        window.addChatReply = (msgId) => {
+            const displayName = isAdmin() ? "Admin" : (userAccount ? userAccount.name : "Resident");
+            const text = document.getElementById('repText').value.trim();
+            if (!text) return;
+
+            const msgRef = db.collection("syndic_chat").doc(msgId.toString());
+            db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(msgRef);
+                const currentReplies = doc.data().replies || [];
+                const newReply = {
+                    id: Number(Date.now()),
+                    name: displayName,
+                    text: text,
+                    date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                transaction.update(msgRef, { replies: [...currentReplies, newReply] });
+            }).then(() => {
+                closeModal();
+            });
+        };
+
+        window.deleteChatReply = (msgId, repId) => {
+            requireAuth(() => {
+                const msgRef = db.collection("syndic_chat").doc(msgId.toString());
+                db.runTransaction(async (transaction) => {
+                    const doc = await transaction.get(msgRef);
+                    const currentReplies = doc.data().replies || [];
+                    const filtered = currentReplies.filter(r => r.id != repId);
+                    transaction.update(msgRef, { replies: filtered });
+                });
+            });
+        };
+
+        // UTILS
+        function changeLanguage() { currentLang = document.getElementById('langSelect').value; localStorage.setItem('syndicLang', currentLang); applyLanguage(); }
+        function renderUsers() {
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+
+            const pending = allUsers.filter(u => !u.approved);
+            const approved = allUsers.filter(u => u.approved);
+
+            let html = '';
+            if (pending.length > 0) {
+                html += `<h3 style="color: var(--secondary); margin-bottom: 15px;">طلبات معلقة (${pending.length})</h3>`;
+                pending.forEach(u => html += createUserCard(u, true));
+            }
+            if (approved.length > 0) {
+                html += `<h3 style="color: var(--primary); margin-top: 30px; margin-bottom: 15px;">المستخدمون المعتمدون (${approved.length})</h3>`;
+                approved.forEach(u => html += createUserCard(u, false));
+            }
+            container.innerHTML = html || '<p>لا يوجد مستخدمون حاليا.</p>';
+        }
+
+        function createUserCard(u, isPending) {
+            const isAdm = u.role === 'admin';
+            return `
+                <div class="card" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                    <div>
+                        <div style="font-weight: bold; font-size: 16px;">${u.email}</div>
+                        <div style="color: var(--secondary); font-size: 14px;">${u.name || '---'} | ${u.building || '-'} | ${u.apartment || '-'}</div>
+                        <div style="font-size: 12px; color: ${isAdm ? 'var(--primary)' : 'gray'};">${isAdm ? 'مسؤول (Admin)' : 'ساكن (Resident)'}</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        ${isPending ? `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.uid}')">${t('btn_approve')}</button>` : ''}
+                        ${(!isAdm && !isPending) ? `<button class="btn btn-secondary btn-sm" onclick="makeAdmin('${u.uid}')">${t('btn_make_admin')}</button>` : ''}
+                        <button class="btn btn-danger btn-sm" onclick="deleteUserRow('${u.uid}')">${t('btn_delete_user')}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function approveUser(uid) {
+            if (confirm("هل أنت متأكد من الموافقة على هذا المستخدم؟")) {
+                await db.collection("users").doc(uid).update({ approved: true });
+            }
+        }
+        async function makeAdmin(uid) {
+            if (confirm("هل أنت متأكد من جعل هذا المستخدم مسؤولاً؟")) {
+                await db.collection("users").doc(uid).update({ role: 'admin' });
+            }
+        }
+        async function deleteUserRow(uid) {
+            if (confirm("هل أنت متأكد من حذف هذا المستخدم؟")) {
+                await db.collection("users").doc(uid).delete();
+            }
+        }
+        function applyLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key) el.innerText = t(key);
+            });
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+
+            // Show/Hide Users link based on role
+            const navUsers = document.getElementById('navUsersLink');
+            if (navUsers) navUsers.style.display = isAdmin() ? 'inline-block' : 'none';
+
+            refreshCurrentView();
+        }
+        function renameItem(id, type) { /* Implement Rename logic */ }
+        function deleteItem(id, type) { /* Implement Delete logic */ }
+
+        window.onload = () => { if (!localStorage.getItem('syndicLocalData')) localStorage.setItem('syndicLocalData', JSON.stringify(data)); };
+    </script>
+</body>
+
+</html>
