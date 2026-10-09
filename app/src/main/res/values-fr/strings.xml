@@ -166,4 +166,36 @@
     <string name="lbl_export_year">Sélectionner l\'année</string>
     <string name="lbl_export_month">Sélectionner le mois</string>
     <string name="btn_export_download">Télécharger &amp; Partager PDF</string>
+
+    <!-- Admin & User Management -->
+    <string name="admin_users_title">Gestion des utilisateurs</string>
+    <string name="admin_pending_requests">Demandes en attente</string>
+    <string name="admin_approved_users">Utilisateurs approuvés</string>
+    <string name="btn_approve">Approuver</string>
+    <string name="btn_reject">Refuser</string>
+    <string name="dialog_reject_title">Refuser la demande</string>
+    <string name="dialog_delete_title">Supprimer l\'utilisateur</string>
+    <string name="dialog_reject_confirm">Voulez-vous vraiment refuser la demande de %1$s ?</string>
+    <string name="dialog_delete_confirm">Voulez-vous vraiment supprimer le compte de %1$s ?</string>
+    <string name="role_admin_badge">Admin</string>
+    <string name="role_resident_badge">Résident</string>
+
+    <!-- Pending Approval -->
+    <string name="pending_approval_title">Compte en attente de validation</string>
+    <string name="pending_approval_desc">Merci pour votre inscription. Votre compte est en attente d\'approbation par le syndic.</string>
+    <string name="btn_logout">Déconnexion</string>
+
+    <!-- Month Names -->
+    <string name="month_1">Jan</string>
+    <string name="month_2">Fév</string>
+    <string name="month_3">Mar</string>
+    <string name="month_4">Avr</string>
+    <string name="month_5">Mai</string>
+    <string name="month_6">Juin</string>
+    <string name="month_7">Juil</string>
+    <string name="month_8">Août</string>
+    <string name="month_9">Sep</string>
+    <string name="month_10">Oct</string>
+    <string name="month_11">Nov</string>
+    <string name="month_12">Déc</string>
 </resources>

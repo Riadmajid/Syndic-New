@@ -185,4 +185,36 @@
     <string name="lbl_export_year">Select Year</string>
     <string name="lbl_export_month">Select Month</string>
     <string name="btn_export_download">Download &amp; Share PDF</string>
+
+    <!-- Admin & User Management -->
+    <string name="admin_users_title">User Management</string>
+    <string name="admin_pending_requests">Pending Join Requests</string>
+    <string name="admin_approved_users">Approved Users</string>
+    <string name="btn_approve">Approve</string>
+    <string name="btn_reject">Reject</string>
+    <string name="dialog_reject_title">Reject Request</string>
+    <string name="dialog_delete_title">Delete User</string>
+    <string name="dialog_reject_confirm">Are you sure you want to reject join request of %1$s?</string>
+    <string name="dialog_delete_confirm">Are you sure you want to permanently delete account of %1$s?</string>
+    <string name="role_admin_badge">Admin</string>
+    <string name="role_resident_badge">Resident</string>
+
+    <!-- Pending Approval -->
+    <string name="pending_approval_title">Account Under Review</string>
+    <string name="pending_approval_desc">Thank you for registering. Your account is pending admin approval. Please check back later or contact management.</string>
+    <string name="btn_logout">Logout</string>
+
+    <!-- Month Names -->
+    <string name="month_1">Jan</string>
+    <string name="month_2">Feb</string>
+    <string name="month_3">Mar</string>
+    <string name="month_4">Apr</string>
+    <string name="month_5">May</string>
+    <string name="month_6">Jun</string>
+    <string name="month_7">Jul</string>
+    <string name="month_8">Aug</string>
+    <string name="month_9">Sep</string>
+    <string name="month_10">Oct</string>
+    <string name="month_11">Nov</string>
+    <string name="month_12">Dec</string>
 </resources>

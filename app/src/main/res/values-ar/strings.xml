@@ -186,4 +186,36 @@
     <string name="lbl_export_year">اختر السنة</string>
     <string name="lbl_export_month">اختر الشهر</string>
     <string name="btn_export_download">تحميل ومشاركة PDF</string>
+
+    <!-- Admin & User Management -->
+    <string name="admin_users_title">إدارة المستخدمين</string>
+    <string name="admin_pending_requests">طلبات الانضمام المعلقة</string>
+    <string name="admin_approved_users">المستخدمون المعتمدون</string>
+    <string name="btn_approve">موافقة</string>
+    <string name="btn_reject">إلغاء</string>
+    <string name="dialog_reject_title">رفض الطلب</string>
+    <string name="dialog_delete_title">حذف المستخدم</string>
+    <string name="dialog_reject_confirm">هل أنت متأكد من رفض طلب انضمام %1$s؟</string>
+    <string name="dialog_delete_confirm">هل أنت متأكد من حذف حساب %1$s نهائياً؟</string>
+    <string name="role_admin_badge">مسؤول (Admin)</string>
+    <string name="role_resident_badge">ساكن (Resident)</string>
+
+    <!-- Pending Approval -->
+    <string name="pending_approval_title">الحساب قيد المراجعة</string>
+    <string name="pending_approval_desc">شكراً لتسجيلك. حسابك في حالة انتظار موافقة المسؤول (السانديك). يرجى العودة لاحقاً أو التواصل مع الإدارة.</string>
+    <string name="btn_logout">تسجيل الخروج</string>
+
+    <!-- Month Names -->
+    <string name="month_1">يناير</string>
+    <string name="month_2">فبراير</string>
+    <string name="month_3">مارس</string>
+    <string name="month_4">أبريل</string>
+    <string name="month_5">ماي</string>
+    <string name="month_6">يونيو</string>
+    <string name="month_7">يوليوز</string>
+    <string name="month_8">غشت</string>
+    <string name="month_9">شتنبر</string>
+    <string name="month_10">أكتوبر</string>
+    <string name="month_11">نونبر</string>
+    <string name="month_12">دجنبر</string>
 </resources>

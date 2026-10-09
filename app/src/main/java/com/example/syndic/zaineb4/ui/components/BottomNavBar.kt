@@ -2,10 +2,10 @@ package com.example.syndic.zaineb4.ui.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -33,8 +33,8 @@ fun BottomNavBar(navController: NavController) {
 
     val items = listOf(
         Screen.Dashboard to Pair(stringResource(R.string.nav_dashboard), Icons.Default.Home),
-        Screen.Apartments to Pair(stringResource(R.string.nav_apartments), Icons.Default.Place),
-        Screen.Expenses to Pair(stringResource(R.string.nav_expenses), Icons.Default.AccountBox),
+        Screen.Apartments to Pair(stringResource(R.string.nav_apartments), Icons.Default.Apartment),
+        Screen.Expenses to Pair(stringResource(R.string.nav_expenses), Icons.Default.ReceiptLong),
         Screen.Communication to Pair(stringResource(R.string.nav_communication), Icons.Default.Email),
     )
 

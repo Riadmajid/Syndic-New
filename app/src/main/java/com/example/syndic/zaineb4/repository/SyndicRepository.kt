@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import android.content.Context
 import android.util.Log
 import com.example.syndic.zaineb4.utils.NotificationHelper
+import com.example.syndic.zaineb4.utils.IdGenerator
 import com.google.firebase.auth.FirebaseAuth
 
 private const val TAG = "SyndicRepo"
@@ -162,13 +163,13 @@ class SyndicRepository {
                             }
                             var buildings = current.buildings
                             if (building == null) {
-                                building = Building(id = System.currentTimeMillis(), name = buildingName)
+                                building = Building(id = IdGenerator.generateId(), name = buildingName)
                                 buildings = buildings + building
                                 Log.d(TAG, "Created new building: ${building.name}")
                             }
                             val buildingId = building.id
 
-                            val aptId = System.currentTimeMillis() + 1
+                            val aptId = IdGenerator.generateId()
 
                             // Find or create the apartment within that building
                             val existingApt = current.apartments.find { apt ->
@@ -525,7 +526,7 @@ class SyndicRepository {
     fun addBuilding(name: String) {
         val current = _appData.value
         val newBuilding = Building(
-            id = System.currentTimeMillis(),
+            id = IdGenerator.generateId(),
             name = name
         )
         val updated = current.copy(buildings = current.buildings + newBuilding)
@@ -563,7 +564,7 @@ class SyndicRepository {
     fun addApartment(buildingId: Long, name: String) {
         val current = _appData.value
         val newApartment = Apartment(
-            id = System.currentTimeMillis(),
+            id = IdGenerator.generateId(),
             buildingId = buildingId,
             name = name
         )

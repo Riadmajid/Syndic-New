@@ -5,18 +5,16 @@ import com.google.firebase.firestore.PropertyName
  * Chat message/رسالة دردشة data model
  */
 data class ChatMessage(
-    var id: Long = 0L,
-    var name: String = "",
-    var msg: String = "",
-    var time: String = "",
-    var likes: Int = 0,
-    var dislikes: Int = 0,
-    var replies: List<Comment> = emptyList(),
+    val id: Long = 0L,
+    val name: String = "",
+    val msg: String = "",
+    val time: String = "",
+    val likes: Int = 0,
+    val dislikes: Int = 0,
+    val replies: List<Comment> = emptyList(),
     @get:PropertyName("isPrivate")
-    @set:PropertyName("isPrivate")
-    var isPrivate: Boolean = false,
-    var senderUid: String = ""
+    val isPrivate: Boolean = false,
+    val senderUid: String = ""
 ) {
     constructor() : this(0L, "", "", "", 0, 0, emptyList(), false, "")
 }
-

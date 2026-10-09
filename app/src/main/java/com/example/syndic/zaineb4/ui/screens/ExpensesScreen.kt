@@ -397,7 +397,7 @@ fun ExpensesScreen(viewModel: SyndicViewModel) {
                                         val amt = amount.toDoubleOrNull()
                                         if (amt != null && amt > 0) {
                                             val expense = Expense(
-                                                id = System.currentTimeMillis(),
+                                                id = com.example.syndic.zaineb4.utils.IdGenerator.generateId(),
                                                 desc = desc,
                                                 amount = amt,
                                                 date = date,

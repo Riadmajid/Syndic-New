@@ -70,6 +70,7 @@ import com.example.syndic.zaineb4.data.ChatMessage
 import com.example.syndic.zaineb4.data.Comment
 import com.example.syndic.zaineb4.data.UserAccount
 import com.example.syndic.zaineb4.viewmodel.SyndicViewModel
+import com.example.syndic.zaineb4.utils.IdGenerator
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -255,7 +256,7 @@ fun CommunicationScreen(viewModel: SyndicViewModel) {
                             if (isAdmin) {
                                 if (title.isNotBlank() && message.isNotBlank()) {
                                     val dateStr = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
-                                    val annId = System.currentTimeMillis()
+                                    val annId = IdGenerator.generateId()
                                     val announcement = Announcement(
                                         id = annId,
                                         title = title,
@@ -411,7 +412,7 @@ fun CommunicationScreen(viewModel: SyndicViewModel) {
                                 }
                                     val dateStr = java.text.SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(Date())
                                     val reply = Comment(
-                                        id = System.currentTimeMillis(),
+                                        id = IdGenerator.generateId(),
                                         name = displayName,
                                         text = text,
                                         date = dateStr
@@ -510,7 +511,7 @@ fun CommunicationScreen(viewModel: SyndicViewModel) {
                                     else -> userAccount?.name ?: "Resident"
                                 }
                                 val message = ChatMessage(
-                                    id = System.currentTimeMillis(),
+                                    id = IdGenerator.generateId(),
                                     name = displayName,
                                     msg = chatMessage,
                                     time = timeStr,
@@ -552,7 +553,7 @@ fun CommunicationScreen(viewModel: SyndicViewModel) {
                         else -> userAccount?.name ?: "Resident"
                     }
                     val comment = Comment(
-                        id = System.currentTimeMillis(),
+                        id = IdGenerator.generateId(),
                         name = displayName,
                         text = text,
                         date = dateStr

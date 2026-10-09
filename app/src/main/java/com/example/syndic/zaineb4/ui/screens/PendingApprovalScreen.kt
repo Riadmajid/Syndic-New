@@ -14,10 +14,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.syndic.zaineb4.R
 import com.example.syndic.zaineb4.viewmodel.SyndicViewModel
 
 @Composable
@@ -47,7 +49,7 @@ fun PendingApprovalScreen(viewModel: SyndicViewModel) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "الحساب قيد المراجعة",
+                text = stringResource(R.string.pending_approval_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF2C3E50)
@@ -56,7 +58,7 @@ fun PendingApprovalScreen(viewModel: SyndicViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "شكراً لتسجيلك. حسابك في حالة انتظار موافقة المسؤول (السانديك). يرجى العودة لاحقاً أو التواصل مع الإدارة.",
+                text = stringResource(R.string.pending_approval_desc),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 color = Color.Gray,
@@ -72,7 +74,7 @@ fun PendingApprovalScreen(viewModel: SyndicViewModel) {
             ) {
                 Icon(Icons.Default.Logout, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("تسجيل الخروج", fontSize = 16.sp)
+                Text(stringResource(R.string.btn_logout), fontSize = 16.sp)
             }
         }
     }

@@ -87,8 +87,18 @@ fun DashboardScreen(
     var monthFilter by remember { mutableStateOf("all") }
 
     val months = listOf(
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        stringResource(R.string.month_1),
+        stringResource(R.string.month_2),
+        stringResource(R.string.month_3),
+        stringResource(R.string.month_4),
+        stringResource(R.string.month_5),
+        stringResource(R.string.month_6),
+        stringResource(R.string.month_7),
+        stringResource(R.string.month_8),
+        stringResource(R.string.month_9),
+        stringResource(R.string.month_10),
+        stringResource(R.string.month_11),
+        stringResource(R.string.month_12)
     )
 
     val years = (2014..2040).toList()

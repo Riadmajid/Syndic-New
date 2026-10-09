@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.syndic.zaineb4.R
 import com.example.syndic.zaineb4.data.UserAccount
 import com.example.syndic.zaineb4.viewmodel.SyndicViewModel
 
@@ -38,7 +40,7 @@ fun AdminScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("إدارة المستخدمين", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.admin_users_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -62,7 +64,7 @@ fun AdminScreen(
         ) {
             if (pendingUsers.isNotEmpty()) {
                 item {
-                    SectionHeader("طلبات الانضمام المعلقة", Color(0xFFE67E22))
+                    SectionHeader(stringResource(R.string.admin_pending_requests), Color(0xFFE67E22))
                 }
                 items(pendingUsers) { user ->
                     UserCard(user, viewModel, isPending = true, onDeleteClick = {
@@ -74,7 +76,7 @@ fun AdminScreen(
 
             if (approvedUsers.isNotEmpty()) {
                 item {
-                    SectionHeader("المستخدمون المعتمدون", Color(0xFF27AE60))
+                    SectionHeader(stringResource(R.string.admin_approved_users), Color(0xFF27AE60))
                 }
                 items(approvedUsers) { user ->
                     UserCard(user, viewModel, isPending = false, onDeleteClick = {
@@ -87,11 +89,12 @@ fun AdminScreen(
 
         if (showDeleteDialog && userToDelete != null) {
             val isPending = !userToDelete!!.approved
+            val email = userToDelete!!.email
             DeleteDialog(
-                title = if (isPending) "رفض الطلب" else "حذف المستخدم",
+                title = if (isPending) stringResource(R.string.dialog_reject_title) else stringResource(R.string.dialog_delete_title),
                 message = if (isPending) 
-                    "هل أنت متأكد من رفض طلب انضمام ${userToDelete!!.email}؟" 
-                    else "هل أنت متأكد من حذف حساب ${userToDelete!!.email} نهائياً؟",
+                    stringResource(R.string.dialog_reject_confirm, email) 
+                    else stringResource(R.string.dialog_delete_confirm, email),
                 onConfirm = {
                     viewModel.deleteUser(userToDelete!!.uid)
                     showDeleteDialog = false
@@ -205,7 +208,7 @@ fun UserCard(
                         }
                     }
                     Text(
-                        text = if (user.role == "admin") "مسؤول (Admin)" else "ساكن (Resident)",
+                        text = if (user.role == "admin") stringResource(R.string.role_admin_badge) else stringResource(R.string.role_resident_badge),
                         color = if (user.role == "admin") Color(0xFF1E3C72) else Color.Gray,
                         fontSize = 12.sp
                     )
@@ -221,7 +224,7 @@ fun UserCard(
                         ) {
                             Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("موافقة", fontSize = 14.sp)
+                            Text(stringResource(R.string.btn_approve), fontSize = 14.sp)
                         }
                         
                         OutlinedButton(
@@ -235,7 +238,7 @@ fun UserCard(
                         ) {
                             Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("إلغاء", fontSize = 14.sp)
+                            Text(stringResource(R.string.btn_reject), fontSize = 14.sp)
                         }
                     }
                 } else {
