@@ -53,6 +53,22 @@ fun LoginScreen(viewModel: SyndicViewModel) {
     var apartment by remember { mutableStateOf("") }
     var building by remember { mutableStateOf("") }
 
+    val customTextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black,
+        focusedBorderColor = Color(0xFF1E3C72),
+        unfocusedBorderColor = Color.Gray,
+        focusedLabelColor = Color(0xFF1E3C72),
+        unfocusedLabelColor = Color.Gray,
+        cursorColor = Color(0xFF1E3C72),
+        focusedLeadingIconColor = Color(0xFF1E3C72),
+        unfocusedLeadingIconColor = Color.Gray,
+        focusedTrailingIconColor = Color(0xFF1E3C72),
+        unfocusedTrailingIconColor = Color.Gray,
+        focusedPlaceholderColor = Color.Gray,
+        unfocusedPlaceholderColor = Color.Gray
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -140,7 +156,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         label = { Text(stringResource(R.string.lbl_name)) },
                         placeholder = { Text(stringResource(R.string.ph_name)) },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        colors = customTextFieldColors
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
@@ -150,7 +167,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         placeholder = { Text(stringResource(R.string.ph_phone)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        colors = customTextFieldColors
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
@@ -159,7 +177,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         label = { Text(stringResource(R.string.lbl_building)) },
                         placeholder = { Text(stringResource(R.string.ph_building)) },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        colors = customTextFieldColors
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
@@ -168,7 +187,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         label = { Text(stringResource(R.string.lbl_apartment)) },
                         placeholder = { Text(stringResource(R.string.ph_apartment)) },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        colors = customTextFieldColors
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -181,7 +201,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    singleLine = true
+                    singleLine = true,
+                    colors = customTextFieldColors
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -202,7 +223,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
+                    singleLine = true,
+                    colors = customTextFieldColors
                 )
 
                 if (!isRegisterMode) {
@@ -214,9 +236,10 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
                                 checked = rememberMe,
-                                onCheckedChange = { rememberMe = it }
+                                onCheckedChange = { rememberMe = it },
+                                colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1E3C72), checkmarkColor = Color.White, uncheckedColor = Color.Gray)
                             )
-                            Text(stringResource(R.string.lbl_remember_me), fontSize = 14.sp)
+                            Text(stringResource(R.string.lbl_remember_me), fontSize = 14.sp, color = Color.Black)
                         }
                         TextButton(onClick = { showForgotPasswordDialog = true }) {
                             Text(stringResource(R.string.btn_forgot_password), fontSize = 14.sp)
@@ -316,7 +339,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         value = resetEmail,
                         onValueChange = { resetEmail = it },
                         label = { Text(stringResource(R.string.lbl_email)) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = customTextFieldColors
                     )
                     if (resetError != null) {
                         Text(resetError!!, color = Color.Red, fontSize = 12.sp)
