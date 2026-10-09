@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.syndic" />
-                  <option name="mobileSdkAppId" value="1:123699844262:android:be1ea4a20d1b9ab6511067" />
-                  <option name="projectId" value="syndic3" />
-                  <option name="projectNumber" value="123699844262" />
+                  <option name="appId" value="com.example.syndic.zaineb4" />
+                  <option name="mobileSdkAppId" value="1:221199418649:android:9c5360162da7fca90af188" />
+                  <option name="projectId" value="syndic-54327" />
+                  <option name="projectNumber" value="221199418649" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

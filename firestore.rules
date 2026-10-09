@@ -1,0 +1,154 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ════════════════════════════════════════════════════════════
+    //  دوال مساعدة — Helper Functions
+    // ════════════════════════════════════════════════════════════
+
+    // هل المستخدم مسجّل الدخول؟
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // هل يوجد وثيقة للمستخدم في Firestore؟
+    function userExists() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    // جلب بيانات المستخدم الحالي
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // هل المستخدم مسؤول (admin)؟
+    function isAdmin() {
+      return isAuthenticated() && userExists() && getUserData().role == "admin";
+    }
+
+    // هل المستخدم معتمد من المسؤول؟
+    function isApproved() {
+      return isAuthenticated() && userExists() && getUserData().approved == true;
+    }
+
+    // هل المستخدم مسؤول ومعتمد في نفس الوقت؟
+    function isAdminAndApproved() {
+      return isApproved() && isAdmin();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  مجموعة المستخدمين — /users/{userId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:
+    //    - المستخدم يقرأ ملفه الشخصي فقط
+    //    - المسؤول يقرأ ملفات جميع المستخدمين (لوحة الإدارة)
+    //
+    //  الكتابة:
+    //    - المستخدم يكتب على ملفه فقط (للتسجيل وتحديث البيانات)
+    //    - المسؤول يكتب على أي ملف (الموافقة، ترقية المسؤول)
+    //
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == userId || isAdmin()
+      );
+      allow write: if isAuthenticated() && (
+        request.auth.uid == userId || isAdmin()
+      );
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  البيانات الرئيسية — /syndic_data/**
+    //  (المباني، الشقق، المدفوعات، المصاريف)
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة: أي مستخدم معتمد (ساكن أو مسؤول)
+    //  الكتابة: المسؤول المعتمد فقط
+    //  المستخدم غير المعتمد لا يصل لأي بيانات
+    //
+    match /syndic_data/{document=**} {
+      allow read: if isApproved();
+      allow write: if isAdminAndApproved();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  الدردشة — /syndic_chat/{messageId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:  أي مستخدم معتمد
+    //  الإنشاء:  أي مستخدم معتمد (إرسال رسالة)
+    //  التعديل:  المسؤول، أو صاحب الرسالة (likes/replies)
+    //  الحذف:    المسؤول، أو صاحب الرسالة فقط
+    //
+    match /syndic_chat/{messageId} {
+      allow read:   if isApproved();
+      allow create: if isApproved();
+      allow update: if isApproved() && (
+        isAdmin() || resource.data.senderUid == request.auth.uid
+      );
+      allow delete: if isApproved() && (
+        isAdmin() || resource.data.senderUid == request.auth.uid
+      );
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  الإعلانات — /syndic_announcements/{announcementId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:  أي مستخدم معتمد
+    //  الإنشاء:  المسؤول فقط (نشر إعلان جديد)
+    //  التعديل:  أي مستخدم معتمد (إضافة/حذف تعليق)
+    //  الحذف:    المسؤول فقط
+    //
+    match /syndic_announcements/{announcementId} {
+      allow read:   if isApproved();
+      allow create: if isAdminAndApproved();
+      allow update: if isApproved();
+      allow delete: if isAdminAndApproved();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  وصولات المصاريف — /syndic_receipts/{receiptId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:  أي مستخدم معتمد (لعرض الوصل)
+    //  الكتابة:  المسؤول فقط (رفع الوصل عند إضافة مصروف)
+    //
+    match /syndic_receipts/{receiptId} {
+      allow read:  if isApproved();
+      allow write: if isAdminAndApproved();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  وصولات الدفع الشهري — /syndic_payment_receipts/{receiptId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:  أي مستخدم معتمد (الساكن يرى وصل دفعته)
+    //  الكتابة:  المسؤول فقط (تسجيل الدفع)
+    //
+    match /syndic_payment_receipts/{receiptId} {
+      allow read:  if isApproved();
+      allow write: if isAdminAndApproved();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    //  صور الإعلانات — /syndic_announcements_images/{imageId}
+    // ════════════════════════════════════════════════════════════
+    //
+    //  القراءة:  أي مستخدم معتمد
+    //  الكتابة:  المسؤول فقط
+    //
+    match /syndic_announcements_images/{imageId} {
+      allow read:  if isApproved();
+      allow write: if isAdminAndApproved();
+    }
+
+  }
+}

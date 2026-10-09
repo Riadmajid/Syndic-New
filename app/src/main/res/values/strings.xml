@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Syndic Manager</string>
+    <string name="app_name">ZAINEB 4</string>
 
     <!-- Navigation -->
     <string name="nav_dashboard">Dashboard</string>
@@ -91,6 +91,10 @@
     <string name="ph_chat_name">Name</string>
     <string name="ph_chat_msg">Message...</string>
     <string name="btn_send_chat">Send</string>
+    <string name="btn_like">Like</string>
+    <string name="btn_dislike">Dislike</string>
+    <string name="btn_reply">Reply</string>
+    <string name="title_add_reply">Add Reply</string>
 
     <!-- Common Buttons -->
     <string name="btn_save">Save</string>
@@ -136,4 +140,49 @@
     <string name="btn_add_photo">Add Image</string>
     <string name="btn_edit_photo">Change Image</string>
     <string name="btn_del_comment">Delete</string>
+
+    <!-- Auth Enhancements -->
+    <string name="lbl_remember_me">Remember Me</string>
+    <string name="btn_forgot_password">Forgot Password?</string>
+    <string name="title_reset_pwd">Reset Password</string>
+    <string name="desc_reset_pwd">Enter your email to receive a reset link:</string>
+    <string name="btn_send">Send</string>
+    <string name="msg_reset_sent">A reset link has been sent to your email</string>
+    <string name="err_reset_failed">Failed to send email</string>
+    <string name="lbl_email">Email</string>
+    <string name="lbl_password">Password</string>
+    <string name="ph_email_hint">example@domain.com</string>
+    <string name="auth_login_title">Secure Login</string>
+    <string name="auth_register_title">Create New Account</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
+    <string name="msg_have_account">Already have an account? Login</string>
+    <string name="msg_no_account">Don\'t have an account? Register</string>
+    <string name="err_auth_failed">Login failed</string>
+    <string name="err_reg_failed">Registration failed</string>
+    <string name="err_fill_auth">Please enter email and password</string>
+    <string name="lbl_private_to_admin">Send Private Message to Admin</string>
+    <string name="badge_private">Private</string>
+
+    <!-- New Registration Fields -->
+    <string name="lbl_name">Name</string>
+    <string name="lbl_phone">Phone Number</string>
+    <string name="lbl_building">Building</string>
+    <string name="lbl_apartment">Apartment</string>
+    <string name="ph_name">Your Name</string>
+    <string name="ph_phone">E.g. 0612345678</string>
+    <string name="ph_building">E.g. Building A</string>
+    <string name="ph_apartment">E.g. Apt 1</string>
+
+    <!-- Logout Confirmation -->
+    <string name="logout_confirm_title">Logout</string>
+    <string name="logout_confirm_msg">Are you sure you want to logout?</string>
+    <string name="logout_confirm_yes">Yes, Logout</string>
+    <string name="logout_confirm_no">Cancel</string>
+
+    <!-- PDF Export -->
+    <string name="dialog_export_excel_title">Export PDF Report</string>
+    <string name="lbl_export_year">Select Year</string>
+    <string name="lbl_export_month">Select Month</string>
+    <string name="btn_export_download">Download &amp; Share PDF</string>
 </resources>

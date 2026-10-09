@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">تسيير السانديك</string>
+    <string name="app_name">ZAINEB 4</string>
 
     <!-- Navigation -->
     <string name="nav_dashboard">الرئيسية</string>
@@ -92,6 +92,10 @@
     <string name="ph_chat_name">الاسم</string>
     <string name="ph_chat_msg">اكتب رسالتك هنا...</string>
     <string name="btn_send_chat">إرسال</string>
+    <string name="btn_like">إعجاب</string>
+    <string name="btn_dislike">لم يعجبني</string>
+    <string name="btn_reply">رد</string>
+    <string name="title_add_reply">إضافة رد</string>
 
     <!-- Common Buttons -->
     <string name="btn_save">حفظ</string>
@@ -137,4 +141,49 @@
     <string name="btn_add_photo">إضافة صورة</string>
     <string name="btn_edit_photo">تغيير الصورة</string>
     <string name="btn_del_comment">مسح</string>
+
+    <!-- Auth Enhancements -->
+    <string name="lbl_remember_me">تذكرني</string>
+    <string name="btn_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="title_reset_pwd">إعادة تعيين كلمة المرور</string>
+    <string name="desc_reset_pwd">أدخل بريدك الإلكتروني لإرسال رابط إعادة التعيين:</string>
+    <string name="btn_send">إرسال</string>
+    <string name="msg_reset_sent">تم إرسال رابط إعادة التعيين إلى بريدك</string>
+    <string name="lbl_private_to_admin">إرسال كرسالة خاصة للمسؤول</string>
+    <string name="badge_private">خاص</string>
+    <string name="err_reset_failed">فشل إرسال البريد</string>
+    <string name="lbl_email">البريد الإلكتروني</string>
+    <string name="lbl_password">كلمة المرور</string>
+    <string name="ph_email_hint">example@domain.com</string>
+    <string name="auth_login_title">تسجيل الدخول الآمن</string>
+    <string name="auth_register_title">إنشاء حساب جديد</string>
+    <string name="btn_login">دخول</string>
+    <string name="btn_register">إنشاء حساب</string>
+    <string name="msg_have_account">لديك حساب بالفعل؟ سجل دخولك</string>
+    <string name="msg_no_account">ليس لديك حساب؟ أنشئ حساباً جديداً</string>
+    <string name="err_auth_failed">فشل تسجيل الدخول</string>
+    <string name="err_reg_failed">فشل إنشاء الحساب</string>
+    <string name="err_fill_auth">يرجى ملء جميع الحقول المطلوبة</string>
+
+    <!-- New Registration Fields -->
+    <string name="lbl_name">الاسم الكامل</string>
+    <string name="lbl_phone">رقم الهاتف</string>
+    <string name="lbl_building">العمارة</string>
+    <string name="lbl_apartment">الشقة</string>
+    <string name="ph_name">اسمك الكامل</string>
+    <string name="ph_phone">مثال: 0612345678</string>
+    <string name="ph_building">مثال: عمارة A</string>
+    <string name="ph_apartment">مثال: شقة 1</string>
+
+    <!-- Logout Confirmation -->
+    <string name="logout_confirm_title">تسجيل الخروج</string>
+    <string name="logout_confirm_msg">واش متأكد باغي تخرج؟</string>
+    <string name="logout_confirm_yes">نعم، خروج</string>
+    <string name="logout_confirm_no">إلغاء</string>
+
+    <!-- PDF Export -->
+    <string name="dialog_export_excel_title">تصدير التقرير المالي (PDF)</string>
+    <string name="lbl_export_year">اختر السنة</string>
+    <string name="lbl_export_month">اختر الشهر</string>
+    <string name="btn_export_download">تحميل ومشاركة PDF</string>
 </resources>

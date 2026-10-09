@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.syndic"
+    namespace = "com.example.syndic.zaineb4"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.syndic"
+        applicationId = "com.example.syndic.zaineb4"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -21,7 +21,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -60,6 +61,10 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    
+    // Excel Export
+    implementation("net.sourceforge.jexcelapi:jxl:2.6.12")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

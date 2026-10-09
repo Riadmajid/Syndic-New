@@ -1,21 +1,22 @@
 {
   "project_info": {
-    "project_number": "123699844262",
-    "project_id": "syndic3",
-    "storage_bucket": "syndic3.firebasestorage.app"
+    "project_number": "221199418649",
+    "firebase_url": "https://syndic-54327-default-rtdb.firebaseio.com",
+    "project_id": "syndic-54327",
+    "storage_bucket": "syndic-54327.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123699844262:android:be1ea4a20d1b9ab6511067",
+        "mobilesdk_app_id": "1:221199418649:android:9c5360162da7fca90af188",
         "android_client_info": {
-          "package_name": "com.example.syndic"
+          "package_name": "com.example.syndic.zaineb4"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA4Dmqv3SrrZgpFm01DYt72OuFnZlqEw8w"
+          "current_key": "AIzaSyArFiSUvAMx5fCi0ks6szW3wj6bPcwd6SU"
         }
       ],
       "services": {

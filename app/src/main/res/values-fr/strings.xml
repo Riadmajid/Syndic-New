@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gestion Syndic</string>
+    <string name="app_name">ZAINEB 4</string>
 
     <!-- Navigation -->
     <string name="nav_dashboard">Tableau de bord</string>
@@ -121,4 +121,49 @@
     <string name="alert_pwd_mismatch">Les mots de passe ne correspondent pas!</string>
     <string name="modal_rename_title">Renommer</string>
     <string name="ph_rename">Nouveau nom...</string>
+
+    <!-- Auth Enhancements -->
+    <string name="lbl_remember_me">Se souvenir de moi</string>
+    <string name="btn_forgot_password">Mot de passe oublié ?</string>
+    <string name="title_reset_pwd">Réinitialiser le mot de passe</string>
+    <string name="desc_reset_pwd">Entrez votre email pour recevoir un lien de réinitialisation :</string>
+    <string name="btn_send">Envoyer</string>
+    <string name="msg_reset_sent">Le lien de réinitialisation a été envoyé à votre e-mail</string>
+    <string name="lbl_private_to_admin">Envoyer en message privé au Syndic</string>
+    <string name="badge_private">Privé</string>
+    <string name="err_reset_failed">Échec de l\'envoi de l\'email</string>
+    <string name="lbl_email">Email</string>
+    <string name="lbl_password">Mot de passe</string>
+    <string name="ph_email_hint">exemple@domaine.com</string>
+    <string name="auth_login_title">Connexion sécurisée</string>
+    <string name="auth_register_title">Créer un compte</string>
+    <string name="btn_login">Connexion</string>
+    <string name="btn_register">S\'inscrire</string>
+    <string name="msg_have_account">Déjà un compte ? Connectez-vous</string>
+    <string name="msg_no_account">Pas de compte ? Inscrivez-vous</string>
+    <string name="err_auth_failed">Échec de la connexion</string>
+    <string name="err_reg_failed">Échec de la création du compte</string>
+    <string name="err_fill_auth">Veuillez remplir tous les champs obligatoires</string>
+
+    <!-- New Registration Fields -->
+    <string name="lbl_name">Nom complet</string>
+    <string name="lbl_phone">Numéro de téléphone</string>
+    <string name="lbl_building">Immeuble</string>
+    <string name="lbl_apartment">Appartement</string>
+    <string name="ph_name">Votre nom complet</string>
+    <string name="ph_phone">Ex. 0612345678</string>
+    <string name="ph_building">Ex. Immeuble A</string>
+    <string name="ph_apartment">Ex. Apt 1</string>
+
+    <!-- Logout Confirmation -->
+    <string name="logout_confirm_title">Déconnexion</string>
+    <string name="logout_confirm_msg">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="logout_confirm_yes">Oui, Déconnecter</string>
+    <string name="logout_confirm_no">Annuler</string>
+
+    <!-- PDF Export -->
+    <string name="dialog_export_excel_title">Exporter le Bilan (PDF)</string>
+    <string name="lbl_export_year">Sélectionner l\'année</string>
+    <string name="lbl_export_month">Sélectionner le mois</string>
+    <string name="btn_export_download">Télécharger &amp; Partager PDF</string>
 </resources>
