@@ -23,6 +23,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.ui.res.stringResource
 import com.example.syndic.zaineb4.R
 import com.example.syndic.zaineb4.utils.AuthPreferences
@@ -72,7 +75,8 @@ fun LoginScreen(viewModel: SyndicViewModel) {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(24.dp),
+                    .padding(24.dp)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Surface(
@@ -94,50 +98,42 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                     text = "Bellouzou",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1E3C72)
+                    color = Color(0xFF1E3C72),
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
                 
-                Text(
-                    text = if (isRegisterMode) stringResource(R.string.auth_register_title) else stringResource(R.string.auth_login_title),
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(bottom = 24.dp),
-                    color = Color.Gray
-                )
-
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(stringResource(R.string.lbl_email)) },
-                    placeholder = { Text(stringResource(R.string.ph_email_hint)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(stringResource(R.string.lbl_password)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                contentDescription = null
-                            )
-                        }
+                TabRow(
+                    selectedTabIndex = if (isRegisterMode) 1 else 0,
+                    containerColor = Color.Transparent,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.tabIndicatorOffset(tabPositions[if (isRegisterMode) 1 else 0]),
+                            color = Color(0xFF1E3C72)
+                        )
                     },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
-                )
+                    modifier = Modifier.padding(bottom = 24.dp)
+                ) {
+                    Tab(
+                        selected = !isRegisterMode,
+                        onClick = { 
+                            isRegisterMode = false
+                            errorMessage = null
+                            successMessage = null
+                        },
+                        text = { Text(stringResource(R.string.auth_login_title), color = if (!isRegisterMode) Color(0xFF1E3C72) else Color.Gray, fontWeight = FontWeight.Bold) }
+                    )
+                    Tab(
+                        selected = isRegisterMode,
+                        onClick = { 
+                            isRegisterMode = true
+                            errorMessage = null
+                            successMessage = null
+                        },
+                        text = { Text(stringResource(R.string.auth_register_title), color = if (isRegisterMode) Color(0xFF1E3C72) else Color.Gray, fontWeight = FontWeight.Bold) }
+                    )
+                }
 
                 if (isRegisterMode) {
-                    Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
@@ -174,7 +170,40 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.lbl_email)) },
+                    placeholder = { Text(stringResource(R.string.ph_email_hint)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.lbl_password)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    singleLine = true
+                )
 
                 if (!isRegisterMode) {
                     Row(
@@ -266,20 +295,7 @@ fun LoginScreen(viewModel: SyndicViewModel) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TextButton(
-                    onClick = { 
-                        isRegisterMode = !isRegisterMode
-                        errorMessage = null
-                        successMessage = null
-                    }
-                ) {
-                    Text(
-                        text = if (isRegisterMode) stringResource(R.string.msg_have_account) else stringResource(R.string.msg_no_account),
-                        color = Color(0xFF1E3C72)
-                    )
-                }
+                // Removed the redundant text button since we use Tabs now
             }
         }
     }
