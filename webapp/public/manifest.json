@@ -1,10 +1,10 @@
 {
-  "id": "/Syndic-New/",
+  "id": "https://riadmajid.github.io/Syndic-New/",
   "name": "ZAINEB 4 السانديك",
   "short_name": "ZAINEB 4",
   "description": "تطبيق تسيير السانديك وإدارة الإقامة ZAINEB 4",
-  "start_url": "index.html",
-  "scope": "./",
+  "start_url": "https://riadmajid.github.io/Syndic-New/",
+  "scope": "https://riadmajid.github.io/Syndic-New/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1e3a8a",
@@ -12,55 +12,61 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-48.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-48.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-72.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-96.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-144.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://riadmajid.github.io/Syndic-New/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "apple-touch-icon.png",
+      "src": "https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://riadmajid.github.io/Syndic-New/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
