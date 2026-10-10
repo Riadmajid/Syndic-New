@@ -1225,7 +1225,7 @@
                     <div class="search-box">
                         <input type="text" id="bldSearch" placeholder="Search buildings..." oninput="renderBuildings()">
                     </div>
-                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(addBuilding)"
+                    <button class="btn btn-success btn-admin-only" onclick="requireAdmin(addBuilding)"
                         data-i18n="add_building">${t('add_building')}</button>
                 </div>
                 <div id="buildingsGrid" class="grid-cards"></div>
@@ -1242,7 +1242,7 @@
                         <input type="text" id="aptSearch" placeholder="Search apartments..."
                             oninput="renderApartments()">
                     </div>
-                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(addApartment)"
+                    <button class="btn btn-success btn-admin-only" onclick="requireAdmin(addApartment)"
                         data-i18n="add_apartment">${t('add_apartment')}</button>
                 </div>
                 <div id="apartmentsGrid" class="grid-cards"></div>
@@ -1283,7 +1283,7 @@
                     <select id="expYear" class="modern-select" onchange="renderExpenses()"></select>
                     <button class="btn btn-success" onclick="openExportModal('expenses')" title="Export">📊 Excel /
                         PDF</button>
-                    <button class="btn btn-success btn-admin-only" onclick="requireAuth(openAddExpenseModal)">+
+                    <button class="btn btn-success btn-admin-only" onclick="requireAdmin(openAddExpenseModal)">+
                         Add</button>
                 </div>
             </div>
@@ -1310,7 +1310,7 @@
                     style="background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow);">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <h3 style="margin:0;" data-i18n="title_announcements">Announcements</h3>
-                        <button class="btn btn-primary btn-admin-only" onclick="requireAuth(openAddAnnounceModal)">+
+                        <button class="btn btn-primary btn-admin-only" onclick="requireAdmin(openAddAnnounceModal)">+
                             New</button>
                     </div>
                     <div id="announcementsList"
@@ -1464,6 +1464,11 @@
         function closeModal() { document.getElementById('universalModal').style.display = 'none'; }
 
         function requireAuth(callback) {
+            if (userAccount && userAccount.approved) return callback();
+            alert("🔒 يجب أن يكون حسابك مفعلاً من قبل الإدارة لتنفيذ هذه العملية.");
+        }
+
+        function requireAdmin(callback) {
             if (userAccount && userAccount.role === 'admin') return callback();
             alert("🔒 هذه العملية متاحة للمسؤول (Admin) فقط.");
         }
@@ -2078,8 +2083,8 @@
                 <div class="item-card" onclick="openBuilding('${b.id}')">
                     ${adminMode ? `
                     <div class="card-actions">
-                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => renameItem('${b.id}', 'bld'))">✏️</button>
-                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => deleteItem('${b.id}', 'bld'))">🗑️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAdmin(() => renameItem('${b.id}', 'bld'))">✏️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAdmin(() => deleteItem('${b.id}', 'bld'))">🗑️</button>
                     </div>` : ''}
                     <div class="icon">🏢</div>
                     <div class="name">${b.name}</div>
@@ -2110,8 +2115,8 @@
                 <div class="item-card" onclick="openAptDetails('${a.id}')">
                     ${adminMode ? `
                     <div class="card-actions">
-                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => renameItem('${a.id}', 'apt'))">✏️</button>
-                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAuth(() => deleteItem('${a.id}', 'apt'))">🗑️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAdmin(() => renameItem('${a.id}', 'apt'))">✏️</button>
+                        <button class="card-action-btn" onclick="event.stopPropagation(); requireAdmin(() => deleteItem('${a.id}', 'apt'))">🗑️</button>
                     </div>` : ''}
                     <div class="icon">🏠</div>
                     <div class="name">${a.name}</div>
@@ -2143,7 +2148,7 @@
                 const month = i + 1;
                 const paid = data.payments[`${activeAptId}_${year}_${month}`] || 0;
                 return `
-                    <div class="item-card ${paid ? 'paid-bg' : ''}" style="height: auto; padding: 15px;" onclick="${isAdmin() ? `requireAuth(() => openPayModal('${activeAptId}', ${year}, ${month}, ${paid}))` : ''}">
+                    <div class="item-card ${paid ? 'paid-bg' : ''}" style="height: auto; padding: 15px;" onclick="${isAdmin() ? `requireAdmin(() => openPayModal('${activeAptId}', ${year}, ${month}, ${paid}))` : ''}">
                         <div style="font-weight:700;">${m}</div>
                         <div style="color: ${paid ? 'var(--success)' : 'var(--danger)'}; font-size: 13px;">${paid ? paid + ' ' + t('curr') : t('unpaid')}</div>
                     </div>
@@ -2754,10 +2759,10 @@
                     <td>
                         ${e.hasReceipt ?
                     `<span style="cursor:pointer; font-size:20px;" onclick="viewReceipt('${e.id}')">🖼️</span>` :
-                    `<span style="cursor:pointer; font-size:18px; filter:grayscale(1); opacity:0.5;" onclick="requireAuth(() => openAddReceiptOnly('${e.id}'))">➕📸</span>`
+                    `<span style="cursor:pointer; font-size:18px; filter:grayscale(1); opacity:0.5;" onclick="requireAdmin(() => openAddReceiptOnly('${e.id}'))">➕📸</span>`
                 }
                     </td>
-                    <td><button onclick="requireAuth(() => deleteExpense('${e.id}'))" style="border:none; background:none; cursor:pointer;">🗑️</button></td>
+                    <td><button onclick="requireAdmin(() => deleteExpense('${e.id}'))" style="border:none; background:none; cursor:pointer;">🗑️</button></td>
                 </tr>
             `).join('');
         }
@@ -2872,7 +2877,7 @@
             const adminMode = isAdmin();
             list.innerHTML = data.announcements.map(ann => `
                 <div class="announce-item" style="background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; position:relative;" onclick="openAnnounceDetail(${ann.id})">
-                    ${adminMode ? `<button onclick="event.stopPropagation(); requireAuth(() => deleteAnnouncement(${ann.id}))" style="position:absolute; top:5px; left:5px; border:none; background:none; cursor:pointer; opacity:0.5;">🗑️</button>` : ''}
+                    ${adminMode ? `<button onclick="event.stopPropagation(); requireAdmin(() => deleteAnnouncement(${ann.id}))" style="position:absolute; top:5px; left:5px; border:none; background:none; cursor:pointer; opacity:0.5;">🗑️</button>` : ''}
                     <h4 style="margin:0; color: var(--primary);">${ann.title}</h4>
                     <p style="margin:5px 0 10px 0; font-size:14px; color: #4b5563; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${ann.msg}</p>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -3095,16 +3100,21 @@
             };
 
             const sendBtn = document.querySelector('button[onclick="sendChat()"]');
-            if (sendBtn) sendBtn.disabled = true;
+            if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = '⏳'; }
 
             db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
                 if (inputEl) inputEl.value = '';
                 if (privateCheckbox) privateCheckbox.checked = false;
+                // Auto-scroll to bottom after sending
+                setTimeout(() => {
+                    const chatBox = document.getElementById('chatContainer');
+                    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+                }, 100);
             }).catch(e => {
                 console.error("Chat send error:", e);
                 alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
             }).finally(() => {
-                if (sendBtn) sendBtn.disabled = false;
+                if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
             });
         }
 
@@ -3159,7 +3169,8 @@
                 </div>
             `;
             }).join('');
-            setTimeout(() => { c.scrollTop = c.scrollHeight; }, 50);
+            // Scroll to bottom to show latest messages
+            setTimeout(() => { c.scrollTop = c.scrollHeight; }, 80);
         }
 
         function deleteChatMessage(id) {
@@ -3216,7 +3227,7 @@
         };
 
         window.deleteChatReply = (msgId, repId) => {
-            requireAuth(() => {
+            requireAdmin(() => {
                 const msgRef = db.collection("syndic_chat").doc(msgId.toString());
                 db.runTransaction(async (transaction) => {
                     const doc = await transaction.get(msgRef);
