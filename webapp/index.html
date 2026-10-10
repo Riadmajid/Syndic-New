@@ -16,11 +16,11 @@
 
     <!-- Microsoft Edge & Windows Tiles Support -->
     <meta name="msapplication-TileColor" content="#1e3a8a">
-    <meta name="msapplication-TileImage" content="./mstile-144x144.png">
-    <meta name="msapplication-square70x70logo" content="./icon-72.png">
-    <meta name="msapplication-square150x150logo" content="./mstile-150x150.png">
-    <meta name="msapplication-square310x310logo" content="./icon-512.png">
-    <meta name="msapplication-config" content="./browserconfig.xml">
+    <meta name="msapplication-TileImage" content="icon-144.png">
+    <meta name="msapplication-square70x70logo" content="icon-72.png">
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png">
+    <meta name="msapplication-square310x310logo" content="icon-512.png">
+    <meta name="msapplication-config" content="browserconfig.xml">
     <meta name="msapplication-navbutton-color" content="#1e3a8a">
 
     <!-- Open Graph (Edge & mobile shortcuts preview) -->
@@ -31,28 +31,30 @@
     <meta property="og:image:height" content="512">
     <meta property="og:type" content="website">
 
-    <!-- Multi-resolution Icons -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="./icon-48.png">
-    <link rel="icon" type="image/png" sizes="72x72" href="./icon-72.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="./icon-96.png">
-    <link rel="icon" type="image/png" sizes="144x144" href="./icon-144.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
-    <link rel="shortcut icon" href="./favicon.png" type="image/png">
+    <!-- Multi-resolution Icons (Local & CDN) -->
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="icon-144.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="icon-96.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="icon-72.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="icon-48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media" type="image/png">
 
     <!-- Apple Touch Icons (iOS Safari & Edge iOS/Android) -->
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="./icon-72.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./icon-72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./icon-144.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="./icon-144.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-    <link rel="apple-touch-icon-precomposed" href="./apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icon-144.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="icon-144.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="icon-72.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media">
 
     <!-- Web App Manifest -->
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -1004,6 +1006,7 @@
                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/3062/3062334.png'">
             <h2 data-i18n="app_title">🏢 ZAINEB 4 السانديك</h2>
             <div class="auth-controls">
+                <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 11px; padding: 4px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage()">
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
@@ -1031,12 +1034,27 @@
 
     <!-- NEW: Login Screen -->
     <div id="loginScreen" class="page"
-        style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh;">
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; padding: 20px 10px;">
+        
+        <!-- PWA Install Banner on Mobile -->
+        <div id="pwaInstallBanner" style="display: flex; align-items: center; justify-content: space-between; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 12px 16px; border-radius: 14px; margin-bottom: 20px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 42px; height: 42px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Logo">
+                <div style="text-align: right;">
+                    <div style="font-weight: bold; color: var(--primary); font-size: 14px;">تطبيق ZAINEB 4</div>
+                    <div style="font-size: 12px; color: #64748b;">تثبيت على شاشة الهاتف باللوغو</div>
+                </div>
+            </div>
+            <button onclick="installPWA()" style="background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                📲 تثبيت
+            </button>
+        </div>
+
         <div
-            style="background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); width: 100%; max-width: 400px; text-align: center;">
+            style="background: white; padding: 35px 30px; border-radius: 20px; box-shadow: var(--card-shadow); width: 100%; max-width: 400px; text-align: center;">
             <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media"
-                style="width: 100px; margin-bottom: 20px;" alt="Logo">
-            <h2 id="authTitle" style="color: var(--primary); margin-bottom: 30px;" data-i18n="title_login">ZAINEB 4</h2>
+                style="width: 90px; margin-bottom: 15px; border-radius: 16px;" alt="Logo" onerror="this.src='icon-192.png'">
+            <h2 id="authTitle" style="color: var(--primary); margin-bottom: 25px;" data-i18n="title_login">ZAINEB 4</h2>
 
             <div id="loginFields">
                 <div class="input-group">
@@ -3280,14 +3298,74 @@
 
             refreshCurrentView();
         }
-        function renameItem(id, type) { /* Implement Rename logic */ }
-        function deleteItem(id, type) { /* Implement Delete logic */ }
+        // PWA Install Logic
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const b = document.getElementById('pwaInstallBanner');
+            if (b) b.style.display = 'flex';
+            const nb = document.getElementById('pwaNavInstallBtn');
+            if (nb) nb.style.display = 'inline-flex';
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        const b = document.getElementById('pwaInstallBanner');
+                        if (b) b.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showInstallGuide();
+            }
+        }
+
+        function showInstallGuide() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            let instructions = '';
+            if (isIOS) {
+                instructions = `
+                    <div style="text-align: center; padding: 10px;">
+                        <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 70px; height: 70px; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">تثبيت التطبيق على شاشة الهاتف (iOS)</h3>
+                        <div style="font-size: 14px; line-height: 2; color: #334155; text-align: right; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            1️⃣ اضغط على زر المشاركة <b>(Partager ⎋)</b> في شريط Safari السفلي.<br>
+                            2️⃣ مرر للأسفل واضغط على <b>"Sur l'écran d'accueil" ➕</b>.<br>
+                            3️⃣ اضغط <b>"Ajouter"</b> في الأعلى وسيظهر التطبيق باللوغو الرسمي على شاشتك.
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="closeModal()">فهمت</button>
+                    </div>
+                `;
+            } else {
+                instructions = `
+                    <div style="text-align: center; padding: 10px;">
+                        <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 70px; height: 70px; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">تثبيت التطبيق على شاشة الهاتف</h3>
+                        <div style="font-size: 14px; line-height: 2; color: #334155; text-align: right; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            1️⃣ اضغط على قائمة المتصفح <b>(3 نقاط ⋮ أو ⋯)</b> في Edge أو Chrome.<br>
+                            2️⃣ اختر <b>"Ajouter à l'écran d'accueil"</b> أو <b>"Installer l'application" 📲</b>.<br>
+                            3️⃣ اضغط <b>"Ajouter / Installer"</b> وسيظهر التطبيق باللوغو الرسمي فوراً.
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="closeModal()">فهمت</button>
+                    </div>
+                `;
+            }
+            const modalBody = document.getElementById('modalBody');
+            if (modalBody) {
+                modalBody.innerHTML = instructions;
+                document.getElementById('universalModal').style.display = 'flex';
+            }
+        }
 
         window.onload = () => {
             if (!localStorage.getItem('syndicLocalData')) localStorage.setItem('syndicLocalData', JSON.stringify(data));
             // Register Service Worker for PWA / Shortcut support
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration error:', err));
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration error:', err));
             }
         };
     </script>
