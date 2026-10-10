@@ -1664,21 +1664,34 @@
             // Chat Sync (Dedicated Collection)
             if (!chatSyncListener) {
                 chatSyncListener = db.collection("syndic_chat").orderBy("id").limitToLast(100).onSnapshot(snap => {
-                    const messages = snap.docs.map(doc => doc.data());
+                    const messages = snap.docs.map(doc => {
+                        const d = doc.data();
+                        return {
+                            ...d,
+                            firebaseDocId: doc.id,
+                            id: Number(d.id || doc.id)
+                        };
+                    });
+                    messages.sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0));
                     const oldChatCount = data.chat.length;
                     data.chat = messages;
 
                     if (isLoaded && data.chat.length > oldChatCount && oldChatCount > 0) {
-                        const isOnCommPage = document.getElementById('communication').classList.contains('active');
+                        const commEl = document.getElementById('communication');
+                        const isOnCommPage = commEl && commEl.classList.contains('active');
                         if (!isOnCommPage) {
                             const newMsg = data.chat[data.chat.length - 1];
+                            const currentUid = userAccount ? userAccount.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : '');
                             // Only notify for public or relevant private messages
-                            if (!newMsg.isPrivate || newMsg.senderUid === userAccount.uid || isAdmin()) {
+                            if (!newMsg.isPrivate || newMsg.senderUid === currentUid || isAdmin()) {
                                 showChatNotification(newMsg.name, newMsg.msg);
                             }
                         }
                     }
-                    if (document.getElementById('communication').classList.contains('active')) renderChat();
+                    const commEl = document.getElementById('communication');
+                    if (commEl && commEl.classList.contains('active')) renderChat();
+                }, err => {
+                    console.error("Chat sync error:", err);
                 });
             }
 
@@ -2984,12 +2997,16 @@
         };
 
         function sendChat() {
-            const m = document.getElementById('chatInput').value.trim();
-            const isPrivate = document.getElementById('chatIsPrivate').checked;
+            const inputEl = document.getElementById('chatInput');
+            const m = inputEl ? inputEl.value.trim() : '';
+            const privateCheckbox = document.getElementById('chatIsPrivate');
+            const isPrivate = privateCheckbox ? privateCheckbox.checked : false;
 
             if (!m) return;
 
-            const displayName = isAdmin() ? "Admin" : (userAccount ? userAccount.name : "Resident");
+            const currentUser = firebase.auth().currentUser;
+            const currentUserUid = (userAccount && userAccount.uid) ? userAccount.uid : (currentUser ? currentUser.uid : '');
+            const displayName = isAdmin() ? "Admin" : (userAccount?.name || (currentUser?.displayName) || "Resident");
             const messageId = Date.now();
             const message = {
                 id: Number(messageId),
@@ -2997,36 +3014,54 @@
                 msg: m,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 isPrivate: isPrivate,
-                senderUid: userAccount ? userAccount.uid : '',
+                senderUid: currentUserUid,
                 likes: 0,
                 dislikes: 0,
                 replies: []
             };
 
+            const sendBtn = document.querySelector('button[onclick="sendChat()"]');
+            if (sendBtn) sendBtn.disabled = true;
+
             db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
-                document.getElementById('chatInput').value = '';
-                document.getElementById('chatIsPrivate').checked = false;
-            }).catch(e => alert(e.message));
+                if (inputEl) inputEl.value = '';
+                if (privateCheckbox) privateCheckbox.checked = false;
+            }).catch(e => {
+                console.error("Chat send error:", e);
+                alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
+            }).finally(() => {
+                if (sendBtn) sendBtn.disabled = false;
+            });
         }
 
         function renderChat() {
             const c = document.getElementById('chatContainer');
-            const currentUserUid = userAccount ? userAccount.uid : '';
-            const isAdmin = userAccount ? userAccount.role === 'admin' : false;
+            if (!c) return;
+            const currentUser = firebase.auth().currentUser;
+            const currentUserUid = (userAccount && userAccount.uid) ? userAccount.uid : (currentUser ? currentUser.uid : '');
+            const userIsAdmin = isAdmin();
 
-            const filteredChat = data.chat.filter(m => {
+            const filteredChat = (data.chat || []).filter(m => {
                 if (!m.isPrivate) return true;
-                return m.senderUid === currentUserUid || isAdmin;
+                return (currentUserUid && m.senderUid === currentUserUid) || userIsAdmin;
             });
 
-            c.innerHTML = filteredChat.map(m => `
+            if (filteredChat.length === 0) {
+                c.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 30px;">لا توجد رسائل حالياً.</div>';
+                return;
+            }
+
+            c.innerHTML = filteredChat.map(m => {
+                const isMyMessage = currentUserUid && m.senderUid === currentUserUid;
+                const canDelete = userIsAdmin || isMyMessage;
+                return `
                 <div class="chat-msg" style="margin-bottom: 20px; position: relative; ${m.isPrivate ? 'border: 2px solid #ef4444; background: #fff5f5;' : ''}">
-                    <button class="delete-btn" onclick="requireAuth(() => deleteChatMessage('${m.id}'))">🗑️</button>
+                    ${canDelete ? `<button class="delete-btn" onclick="requireAuth(() => deleteChatMessage('${m.id}'))" title="حذف الرسالة">🗑️</button>` : ''}
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="sender">${m.name}</span>
+                        <span class="sender" style="${isMyMessage ? 'color: var(--secondary); font-weight: bold;' : ''}">${m.name} ${isMyMessage ? '(أنت)' : ''}</span>
                         ${m.isPrivate ? '<span style="color: #ef4444; font-size: 11px; font-weight: 800; background: white; padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; gap: 2px;">🔒 Private</span>' : ''}
                     </div>
-                    <p class="text">${m.msg}</p>
+                    <p class="text" style="white-space: pre-wrap; word-break: break-word;">${m.msg}</p>
                     <span class="time">${m.time}</span>
                     
                     <div class="chat-actions" style="display: flex; gap: 15px; margin-top: 5px; font-size: 13px;">
@@ -3039,7 +3074,7 @@
                         <div class="chat-replies" style="margin-top: 10px; padding-left: 20px; border-left: 2px solid #e2e8f0; margin-left: 10px;">
                             ${m.replies.map(r => `
                                 <div style="background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 5px; font-size: 13px; position: relative; border: 1px solid #f1f5f9;">
-                                    ${isAdmin() ? `<button onclick="deleteChatReply('${m.id}', '${r.id}')" style="position: absolute; top: 2px; right: 2px; border: none; background: none; cursor: pointer; color: #ef4444; font-size: 10px;">🗑️</button>` : ''}
+                                    ${userIsAdmin ? `<button onclick="deleteChatReply('${m.id}', '${r.id}')" style="position: absolute; top: 2px; right: 2px; border: none; background: none; cursor: pointer; color: #ef4444; font-size: 10px;">🗑️</button>` : ''}
                                     <div style="font-weight: bold; color: var(--secondary); margin-bottom: 2px;">${r.name}</div>
                                     <div>${r.text}</div>
                                     <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">${r.date}</div>
@@ -3048,8 +3083,9 @@
                         </div>
                     ` : ''}
                 </div>
-            `).join('');
-            c.scrollTop = c.scrollHeight;
+            `;
+            }).join('');
+            setTimeout(() => { c.scrollTop = c.scrollHeight; }, 50);
         }
 
         function deleteChatMessage(id) {
