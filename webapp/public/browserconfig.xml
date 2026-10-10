@@ -2,9 +2,9 @@
 <browserconfig>
     <msapplication>
         <tile>
-            <square70x70logo src="https://riadmajid.github.io/Syndic-New/icon-72.png"/>
-            <square150x150logo src="https://riadmajid.github.io/Syndic-New/mstile-150x150.png"/>
-            <square310x310logo src="https://riadmajid.github.io/Syndic-New/icon-512.png"/>
+            <square70x70logo src="icon-72.png"/>
+            <square150x150logo src="mstile-150x150.png"/>
+            <square310x310logo src="icon-512.png"/>
             <TileColor>#1e3a8a</TileColor>
         </tile>
     </msapplication>
