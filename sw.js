@@ -1,5 +1,5 @@
 // Service Worker for SYNDIC BELLOUZOU 4 PWA
-const CACHE_NAME = 'bellouzou4-cache-v1';
+const CACHE_NAME = 'bellouzou4-cache-v2';
 const ASSETS_TO_CACHE = [
   'index.html',
   'manifest.json',
