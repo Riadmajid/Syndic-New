@@ -1,5 +1,5 @@
 // Service Worker for ZAINEB 4 PWA
-const CACHE_NAME = 'zaineb4-cache-v2';
+const CACHE_NAME = 'zaineb4-cache-v3';
 const ASSETS_TO_CACHE = [
   'index.html',
   'manifest.json',
