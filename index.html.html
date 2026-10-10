@@ -1007,6 +1007,10 @@
                         <input type="text" id="regName" placeholder="Full Name">
                     </div>
                     <div class="input-group">
+                        <label data-i18n="lbl_phone">رقم الهاتف / Phone</label>
+                        <input type="tel" id="regPhone" placeholder="0612345678">
+                    </div>
+                    <div class="input-group">
                         <label data-i18n="lbl_building">العمارة / Building</label>
                         <input type="text" id="regBuilding" placeholder="Building A">
                     </div>
@@ -1341,7 +1345,7 @@
                 title_comments: "💬 التعليقات", no_comments: "لا توجد تعليقات بعد.", ph_comment: "اكتب تعليقك هنا...", btn_details: "عرض التفاصيل ←",
                 btn_like: "إعجاب", btn_dislike: "لم يعجبني", btn_reply: "رد", title_add_reply: "إضافة رد",
                 title_new_ann: "إعلان جديد", lbl_ann_title: "العنوان", lbl_ann_msg: "نص الإعلان", lbl_ann_photo: "📸 إرفاق صورة (اختياري)", btn_publish: "نشر الإعلان", publishing: "جاري النشر...", title_ann_photo: "صورة الإعلان", btn_download: "تحميل الصورة ⬇️", err_load_photo: "❌ تعذر تحميل الصورة",
-                lbl_email: "البريد الإلكتروني", lbl_password: "كلمة المرور", lbl_name: "الاسم الكامل", lbl_building: "العمارة", lbl_apartment: "رقم الشقة",
+                lbl_email: "البريد الإلكتروني", lbl_password: "كلمة المرور", lbl_name: "الاسم الكامل", lbl_phone: "رقم الهاتف", lbl_building: "العمارة", lbl_apartment: "رقم الشقة",
                 lbl_remember_me: "تذكرني", btn_forgot_pwd: "نسيت كلمة السر؟", btn_login: "تسجيل الدخول", btn_register: "إنشاء حساب",
                 btn_login_mode: "ليس لديك حساب؟ إنشاء حساب", btn_register_mode: "لديك حساب؟ تسجيل الدخول", title_register: "إنشاء حساب جديد", title_login: "تسجيل الدخول",
                 btn_approve: "موافقة", btn_make_admin: "إعطاء صلاحية مسؤل", btn_delete_user: "حذف",
@@ -1361,7 +1365,7 @@
                 title_comments: "💬 Commentaires", no_comments: "Pas encore de commentaires.", ph_comment: "Écrivez votre commentaire...", btn_details: "Voir détails ←",
                 btn_like: "J'aime", btn_dislike: "Je n'aime pas", btn_reply: "Répondre", title_add_reply: "Ajouter une réponse",
                 title_new_ann: "Nouvel Annonce", lbl_ann_title: "Titre", lbl_ann_msg: "Message", lbl_ann_photo: "📸 Joindre une image (optionnel)", btn_publish: "Publier", publishing: "Publication...", title_ann_photo: "Image de l'annonce", btn_download: "Télécharger ⬇️", err_load_photo: "❌ Échec du chargement",
-                lbl_email: "Email", lbl_password: "Mot de passe", lbl_name: "Nom complet", lbl_building: "Bâtiment", lbl_apartment: "Appartement",
+                lbl_email: "Email", lbl_password: "Mot de passe", lbl_name: "Nom complet", lbl_phone: "Numéro de téléphone", lbl_building: "Bâtiment", lbl_apartment: "Appartement",
                 lbl_remember_me: "Se souvenir de moi", btn_forgot_pwd: "Mot de passe oublié?", btn_login: "Connexion", btn_register: "S'inscrire",
                 btn_login_mode: "Déjà un compte? Se connecter", btn_register_mode: "Pas de compte? S'inscrire", title_register: "Créer un compte", title_login: "Connexion",
                 title_users: "Gestion des utilisateurs", btn_approve: "Approuver", btn_make_admin: "Rendre Admin", btn_delete_user: "Supprimer",
@@ -1380,7 +1384,7 @@
                 change_pwd: "Change Password", old_pwd: "Old Password", new_pwd: "New Password", confirm_pwd: "Confirm Password", pwd_success: "Password changed successfully!", pwd_mismatch: "Passwords do not match or invalid!", old_pwd_wrong: "Incorrect old password!", btn_save: "Save",
                 btn_like: "Like", btn_dislike: "Dislike", btn_reply: "Reply", title_add_reply: "Add Reply",
                 title_new_ann: "New Announcement", lbl_ann_title: "Title", lbl_ann_msg: "Message", lbl_ann_photo: "📸 Attach image (optional)", btn_publish: "Publish", publishing: "Publishing...", title_ann_photo: "Announcement Image", btn_download: "Download ⬇️", err_load_photo: "❌ Load failed",
-                lbl_email: "Email", lbl_password: "Password", lbl_name: "Full Name", lbl_building: "Building", lbl_apartment: "Apartment",
+                lbl_email: "Email", lbl_password: "Password", lbl_name: "Full Name", lbl_phone: "Phone Number", lbl_building: "Building", lbl_apartment: "Apartment",
                 lbl_remember_me: "Remember Me", btn_forgot_pwd: "Forgot Password?", btn_login: "Login", btn_register: "Register",
                 btn_login_mode: "Already have an account? Login", btn_register_mode: "Don't have an account? Register", title_register: "Create New Account", title_login: "Secure Login",
                 btn_approve: "Approve", btn_make_admin: "Make Admin", btn_delete_user: "Delete",
@@ -1442,15 +1446,16 @@
         }
 
         async function handleRegister() {
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const pwd = document.getElementById('loginPwd').value;
-            const name = document.getElementById('regName').value;
-            const building = document.getElementById('regBuilding').value;
-            const apartment = document.getElementById('regApartment').value;
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const building = document.getElementById('regBuilding').value.trim();
+            const apartment = document.getElementById('regApartment').value.trim();
             const errEl = document.getElementById('loginError');
 
-            if (!email || !pwd || !name || !building || !apartment) {
-                errEl.innerText = "يرجى ملء جميع الحقول";
+            if (!email || !pwd || !name || !phone || !building || !apartment) {
+                errEl.innerText = "يرجى ملء جميع الحقول بما فيها رقم الهاتف";
                 errEl.style.display = 'block';
                 return;
             }
@@ -1464,8 +1469,10 @@
                     role: 'resident',
                     approved: false,
                     name: name,
+                    phone: phone,
                     building: building,
-                    apartment: apartment
+                    apartment: apartment,
+                    createdAt: Date.now()
                 };
                 await db.collection("users").doc(uid).set(newAcc);
             } catch (err) {
@@ -3176,12 +3183,16 @@
 
         function createUserCard(u, isPending) {
             const isAdm = u.role === 'admin';
+            const cleanPhone = u.phone ? u.phone.replace(/[^0-9+]/g, '') : '';
             return `
-                <div class="card" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                <div class="card" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; padding: 15px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <div style="font-weight: bold; font-size: 16px;">${u.email}</div>
-                        <div style="color: var(--secondary); font-size: 14px;">${u.name || '---'} | ${u.building || '-'} | ${u.apartment || '-'}</div>
-                        <div style="font-size: 12px; color: ${isAdm ? 'var(--primary)' : 'gray'};">${isAdm ? 'مسؤول (Admin)' : 'ساكن (Resident)'}</div>
+                        <div style="font-weight: bold; font-size: 16px;">${u.name || '---'} <span style="font-size: 13px; color: #64748b; font-weight: normal;">(${u.email})</span></div>
+                        <div style="color: var(--secondary); font-size: 14px; margin-top: 3px;">
+                            🏢 ${u.building || '-'} | 🚪 ${u.apartment || '-'}
+                            ${u.phone ? ` | 📞 <a href="tel:${cleanPhone}" style="color: var(--secondary); text-decoration: none; font-weight: bold;">${u.phone}</a> <a href="https://api.whatsapp.com/send?phone=${cleanPhone}" target="_blank" style="text-decoration: none; margin-left: 5px;" title="WhatsApp">💬</a>` : ''}
+                        </div>
+                        <div style="font-size: 12px; color: ${isAdm ? 'var(--primary)' : 'gray'}; margin-top: 2px;">${isAdm ? 'مسؤول (Admin)' : 'ساكن (Resident)'}</div>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         ${isPending ? `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.uid}')">${t('btn_approve')}</button>` : ''}
