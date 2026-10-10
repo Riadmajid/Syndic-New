@@ -987,8 +987,154 @@
             color: #4b5563;
             margin: 0;
             overflow: hidden;
-            text-overflow: ellipsis;
+        /* APK Download Banner & Card */
+        .apk-download-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+            color: #ffffff;
+            border-radius: 18px;
+            padding: 22px 26px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .apk-download-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .apk-card-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .apk-card-icon {
+            width: 58px;
+            height: 58px;
+            min-width: 58px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .apk-card-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .apk-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .apk-card-header h3 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+        }
+
+        .apk-version-badge {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .apk-card-text p {
+            margin: 0;
+            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.88);
+            line-height: 1.5;
+        }
+
+        .apk-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            margin-top: 2px;
+            flex-wrap: wrap;
+        }
+
+        .apk-card-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-apk-dl {
+            background: #10b981;
+            color: #ffffff !important;
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14.5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
             white-space: nowrap;
+        }
+
+        .btn-apk-dl:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.55);
+        }
+
+        .btn-apk-guide {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 11px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-apk-guide:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -1008,6 +1154,7 @@
             <h2 data-i18n="app_title">🏢 ZAINEB 4 السانديك</h2>
             <div class="auth-controls">
                 <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 11px; padding: 4px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
+                <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: #10b981; color: white; text-decoration: none; border: none; border-radius: 8px; font-size: 11px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px; font-weight: bold;" title="تحميل تطبيق الأندرويد APK">📥 تحميل APK</a>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage()">
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
@@ -1038,7 +1185,7 @@
         style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; padding: 20px 10px;">
         
         <!-- PWA Install Banner on Mobile -->
-        <div id="pwaInstallBanner" style="display: flex; align-items: center; justify-content: space-between; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 12px 16px; border-radius: 14px; margin-bottom: 20px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div id="pwaInstallBanner" style="display: flex; align-items: center; justify-content: space-between; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 12px 16px; border-radius: 14px; margin-bottom: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 42px; height: 42px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Logo">
                 <div style="text-align: right;">
@@ -1049,6 +1196,25 @@
             <button onclick="installPWA()" style="background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                 📲 تثبيت
             </button>
+        </div>
+
+        <!-- NEW: APK Download Banner on Mobile Login -->
+        <div id="loginApkBanner" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 12px 16px; border-radius: 14px; margin-bottom: 20px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 26px; background: rgba(255,255,255,0.18); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">🤖</div>
+                <div style="text-align: right;">
+                    <div style="font-weight: bold; font-size: 14px; color: white;">تطبيق Android (APK)</div>
+                    <div style="font-size: 11px; color: #cbd5e1;">تحميل وتثبيت مباشر • 24.9 MB</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <a href="zaineb4.apk" download="zaineb4.apk" class="apk-download-link" style="background: #10b981; color: white; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(16,185,129,0.3);">
+                    📥 تحميل
+                </a>
+                <button type="button" onclick="showApkInstallGuide()" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: bold;" title="طريقة التثبيت">
+                    ❓
+                </button>
+            </div>
         </div>
 
         <div
@@ -1128,6 +1294,36 @@
 
         <!-- PAGE 1: DASHBOARD -->
         <div id="dashboard" class="page active">
+
+            <!-- ANDROID APK DOWNLOAD CARD (ACCUEIL) -->
+            <div class="apk-download-card">
+                <div class="apk-card-left">
+                    <div class="apk-card-icon">🤖</div>
+                    <div class="apk-card-text">
+                        <div class="apk-card-header">
+                            <h3 data-i18n="apk_title">📲 تحميل تطبيق الأندرويد الرسمي (APK)</h3>
+                            <span class="apk-version-badge">v1.0 APK</span>
+                        </div>
+                        <p data-i18n="apk_desc">حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.</p>
+                        <div class="apk-card-meta">
+                            <span>📦 24.9 MB</span>
+                            <span>•</span>
+                            <span>📱 متوافق مع Android 7.0+</span>
+                            <span>•</span>
+                            <span>⚡ تثبيت مباشر وآمن</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="apk-card-right">
+                    <a href="zaineb4.apk" download="zaineb4.apk" class="btn-apk-dl apk-download-link" id="apkDashDownloadBtn">
+                        <span style="font-size: 18px;">📥</span>
+                        <span data-i18n="apk_btn">تحميل التطبيق (APK)</span>
+                    </a>
+                    <button type="button" class="btn-apk-guide" onclick="showApkInstallGuide()" data-i18n="apk_guide_btn">
+                        💡 طريقة التثبيت
+                    </button>
+                </div>
+            </div>
 
             <div class="header-action">
                 <h3 data-i18n="title_stats_filter">📅 ملخص المالية :</h3>
@@ -1416,7 +1612,8 @@
                 lbl_remember_me: "تذكرني", btn_forgot_pwd: "نسيت كلمة السر؟", btn_login: "تسجيل الدخول", btn_register: "إنشاء حساب",
                 btn_login_mode: "ليس لديك حساب؟ إنشاء حساب", btn_register_mode: "لديك حساب؟ تسجيل الدخول", title_register: "إنشاء حساب جديد", title_login: "تسجيل الدخول",
                 btn_approve: "موافقة", btn_make_admin: "إعطاء صلاحية مسؤل", btn_delete_user: "حذف",
-                title_export_excel: "تحميل ملف Excel", lbl_export_year: "اختر السنة :", lbl_export_month: "اختر الشهر :", lbl_export_type: "نوع التقرير :", opt_export_bilan: "الحصيلة كاملة (المصاريف + المداخيل + الملخص)", opt_export_payments: "سجل الأداءات فقط", opt_export_expenses: "سجل المصاريف فقط", btn_download_excel: "تحميل Excel 📥"
+                title_export_excel: "تحميل ملف Excel", lbl_export_year: "اختر السنة :", lbl_export_month: "اختر الشهر :", lbl_export_type: "نوع التقرير :", opt_export_bilan: "الحصيلة كاملة (المصاريف + المداخيل + الملخص)", opt_export_payments: "سجل الأداءات فقط", opt_export_expenses: "سجل المصاريف فقط", btn_download_excel: "تحميل Excel 📥",
+                apk_title: "📲 تحميل تطبيق الأندرويد الرسمي (APK)", apk_desc: "حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.", apk_btn: "تحميل التطبيق (APK)", apk_guide_btn: "💡 طريقة التثبيت"
             },
             fr: {
                 app_title: "🏢 ZAINEB 4", nav_dashboard: "Tableau de bord", nav_apartments: "Immeubles", nav_expenses: "Dépenses", nav_comm: "Comm.", nav_users: "Utilisateurs",
@@ -1436,7 +1633,8 @@
                 lbl_remember_me: "Se souvenir de moi", btn_forgot_pwd: "Mot de passe oublié?", btn_login: "Connexion", btn_register: "S'inscrire",
                 btn_login_mode: "Déjà un compte? Se connecter", btn_register_mode: "Pas de compte? S'inscrire", title_register: "Créer un compte", title_login: "Connexion",
                 title_users: "Gestion des utilisateurs", btn_approve: "Approuver", btn_make_admin: "Rendre Admin", btn_delete_user: "Supprimer",
-                title_export_excel: "Télécharger Excel", lbl_export_year: "Sélectionner l'année :", lbl_export_month: "Sélectionner le mois :", lbl_export_type: "Type de rapport :", opt_export_bilan: "Bilan complet (Dépenses + Recettes + Résumé)", opt_export_payments: "Paiements uniquement", opt_export_expenses: "Dépenses uniquement", btn_download_excel: "Télécharger Excel 📥"
+                title_export_excel: "Télécharger Excel", lbl_export_year: "Sélectionner l'année :", lbl_export_month: "Sélectionner le mois :", lbl_export_type: "Type de rapport :", opt_export_bilan: "Bilan complet (Dépenses + Recettes + Résumé)", opt_export_payments: "Paiements uniquement", opt_export_expenses: "Dépenses uniquement", btn_download_excel: "Télécharger Excel 📥",
+                apk_title: "📲 Télécharger l'application Android (APK)", apk_desc: "Téléchargez l'application officielle ZAINEB 4 directement sur votre smartphone pour un accès plus rapide.", apk_btn: "Télécharger APK", apk_guide_btn: "💡 Guide d'installation"
             },
             en: {
                 app_title: "🏢 Syndic", nav_dashboard: "Dashboard", nav_apartments: "Buildings", nav_expenses: "Expenses", nav_comm: "Comm.", nav_users: "Users",
@@ -1455,7 +1653,8 @@
                 lbl_remember_me: "Remember Me", btn_forgot_pwd: "Forgot Password?", btn_login: "Login", btn_register: "Register",
                 btn_login_mode: "Already have an account? Login", btn_register_mode: "Don't have an account? Register", title_register: "Create New Account", title_login: "Secure Login",
                 btn_approve: "Approve", btn_make_admin: "Make Admin", btn_delete_user: "Delete",
-                title_export_excel: "Download Excel", lbl_export_year: "Select Year:", lbl_export_month: "Select Month:", lbl_export_type: "Report Type:", opt_export_bilan: "Full Bilan (Expenses + Incomes + Summary)", opt_export_payments: "Payments only", opt_export_expenses: "Expenses only", btn_download_excel: "Download Excel 📥"
+                title_export_excel: "Download Excel", lbl_export_year: "Select Year:", lbl_export_month: "Select Month:", lbl_export_type: "Report Type:", opt_export_bilan: "Full Bilan (Expenses + Incomes + Summary)", opt_export_payments: "Payments only", opt_export_expenses: "Expenses only", btn_download_excel: "Download Excel 📥",
+                apk_title: "📲 Download Android App (APK)", apk_desc: "Download official ZAINEB 4 app directly on your smartphone for faster access and smooth experience.", apk_btn: "Download APK", apk_guide_btn: "💡 Install Guide"
             }
         };
 
@@ -1854,6 +2053,7 @@
             });
 
             applyLanguage();
+            updateApkLinks();
             updateDashboard();
         }
 
@@ -3388,8 +3588,90 @@
             }
         }
 
+        function getApkUrl() {
+            const path = window.location.pathname;
+            if (path.includes('/Syndic-New')) {
+                return '/Syndic-New/zaineb4.apk';
+            }
+            return './zaineb4.apk';
+        }
+
+        function updateApkLinks() {
+            const url = getApkUrl();
+            document.querySelectorAll('.apk-download-link').forEach(link => {
+                link.href = url;
+            });
+        }
+
+        function showApkInstallGuide() {
+            const isAr = currentLang === 'ar';
+            const isFr = currentLang === 'fr';
+            const apkUrl = getApkUrl();
+            let instructions = isAr ? `
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 50px; margin-bottom: 10px;">🤖</div>
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">طريقة تثبيت تطبيق الأندرويد (APK)</h3>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">حجم الملف: 24.9 MB • متوافق مع Android 7.0+</p>
+                    <div style="font-size: 14px; line-height: 2; color: #334155; text-align: right; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                        1️⃣ اضغط على زر <b>تحميل التطبيق (APK)</b> أدناه.<br>
+                        2️⃣ إذا ظهر لك تنبيه بالمتصفح <i>"قد يكون هذا الملف ضاراً"</i>، اضغط على <b>"تنزيل على أي حال" (Télécharger quand même)</b>.<br>
+                        3️⃣ بعد اكتمال التنزيل، اضغط على الملف لفتحه ثم اختر <b>"تثبيت" (Installer)</b>.<br>
+                        4️⃣ إذا طلب منك الهاتف تفعيل <i>"تثبيت التطبيقات من مصادر غير معروفة"</i>، فعّل الخيار وسيتم التثبيت بنجاح.
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <a href="${apkUrl}" download="zaineb4.apk" class="btn btn-success" style="padding: 12px 24px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            📥 ابدأ التحميل الآن
+                        </a>
+                        <button class="btn btn-secondary" style="padding: 12px 20px;" onclick="closeModal()">إغلاق</button>
+                    </div>
+                </div>
+            ` : (isFr ? `
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 50px; margin-bottom: 10px;">🤖</div>
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">Installation de l'application Android (APK)</h3>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Taille : 24.9 Mo • Compatible Android 7.0+</p>
+                    <div style="font-size: 14px; line-height: 2; color: #334155; text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                        1️⃣ Cliquez sur le bouton <b>Télécharger APK</b> ci-dessous.<br>
+                        2️⃣ Si le navigateur affiche <i>"Fichier potentiellement dangereux"</i>, choisissez <b>"Télécharger quand même"</b>.<br>
+                        3️⃣ Une fois le téléchargement terminé, ouvrez le fichier et appuyez sur <b>"Installer"</b>.<br>
+                        4️⃣ Si demandé, autorisez l'installation d'applications de sources inconnues.
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <a href="${apkUrl}" download="zaineb4.apk" class="btn btn-success" style="padding: 12px 24px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            📥 Télécharger maintenant
+                        </a>
+                        <button class="btn btn-secondary" style="padding: 12px 20px;" onclick="closeModal()">Fermer</button>
+                    </div>
+                </div>
+            ` : `
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 50px; margin-bottom: 10px;">🤖</div>
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">Install Android Application (APK)</h3>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">File size: 24.9 MB • Android 7.0+ compatible</p>
+                    <div style="font-size: 14px; line-height: 2; color: #334155; text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                        1️⃣ Click on <b>Download APK</b> below.<br>
+                        2️⃣ If prompted with <i>"File might be harmful"</i>, select <b>"Download anyway"</b>.<br>
+                        3️⃣ Once downloaded, open the file and tap <b>"Install"</b>.<br>
+                        4️⃣ Enable <i>"Install unknown apps"</i> for your browser if requested.
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <a href="${apkUrl}" download="zaineb4.apk" class="btn btn-success" style="padding: 12px 24px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            📥 Download Now
+                        </a>
+                        <button class="btn btn-secondary" style="padding: 12px 20px;" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            `);
+            const modalBody = document.getElementById('modalBody');
+            if (modalBody) {
+                modalBody.innerHTML = instructions;
+                document.getElementById('universalModal').style.display = 'flex';
+            }
+        }
+
         window.onload = () => {
             if (!localStorage.getItem('syndicLocalData')) localStorage.setItem('syndicLocalData', JSON.stringify(data));
+            updateApkLinks();
             // Register Service Worker for PWA / Shortcut support
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration error:', err));
