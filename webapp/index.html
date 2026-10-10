@@ -1324,7 +1324,7 @@
                     <div class="chat-box" id="chatContainer"></div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat();}">
-                        <button class="btn btn-primary" onclick="sendChat()">🚀</button>
+                        <button id="chatSendBtn" class="btn btn-primary" onclick="sendChat()">🚀</button>
                     </div>
                     <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px;">
                         <input type="checkbox" id="chatIsPrivate" style="width: 18px; height: 18px; cursor: pointer;">
@@ -1741,8 +1741,10 @@
             });
 
             // Chat Sync (Dedicated Collection)
+            // NOTE: No orderBy() here to avoid requiring a Composite Index.
+            // Sorting is done client-side in JS.
             if (!chatSyncListener) {
-                chatSyncListener = db.collection("syndic_chat").orderBy("id").limitToLast(100).onSnapshot(snap => {
+                chatSyncListener = db.collection("syndic_chat").limit(150).onSnapshot(snap => {
                     const messages = snap.docs.map(doc => {
                         const d = doc.data();
                         return {
@@ -1751,26 +1753,31 @@
                             id: Number(d.id || doc.id)
                         };
                     });
+                    // Sort by id numerically (ascending = oldest first)
                     messages.sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0));
+
                     const oldChatCount = data.chat.length;
                     data.chat = messages;
 
-                    if (isLoaded && data.chat.length > oldChatCount && oldChatCount > 0) {
+                    // Notification for new messages (not on first load)
+                    if (oldChatCount > 0 && data.chat.length > oldChatCount) {
                         const commEl = document.getElementById('communication');
                         const isOnCommPage = commEl && commEl.classList.contains('active');
                         if (!isOnCommPage) {
                             const newMsg = data.chat[data.chat.length - 1];
                             const currentUid = userAccount ? userAccount.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : '');
-                            // Only notify for public or relevant private messages
                             if (!newMsg.isPrivate || newMsg.senderUid === currentUid || isAdmin()) {
                                 showChatNotification(newMsg.name, newMsg.msg);
                             }
                         }
                     }
+
+                    // Always re-render if user is on communication page
                     const commEl = document.getElementById('communication');
                     if (commEl && commEl.classList.contains('active')) renderChat();
+
                 }, err => {
-                    console.error("Chat sync error:", err);
+                    console.error("Chat sync error:", err.code, err.message);
                 });
             }
 
@@ -3099,7 +3106,7 @@
                 replies: []
             };
 
-            const sendBtn = document.querySelector('button[onclick="sendChat()"]');
+            const sendBtn = document.getElementById('chatSendBtn');
             if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = '⏳'; }
 
             db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
