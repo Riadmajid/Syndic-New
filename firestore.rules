@@ -86,9 +86,9 @@ service cloud.firestore {
     match /syndic_chat/{messageId} {
       allow read:   if isApproved();
       allow create: if isApproved();
-      allow update: if isApproved() && (
-        isAdmin() || resource.data.senderUid == request.auth.uid
-      );
+      // Any approved user can update (for likes, dislikes, replies by others)
+      allow update: if isApproved();
+      // Only admin or message owner can delete
       allow delete: if isApproved() && (
         isAdmin() || resource.data.senderUid == request.auth.uid
       );

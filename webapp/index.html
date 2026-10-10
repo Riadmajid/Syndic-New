@@ -3109,20 +3109,21 @@
             const sendBtn = document.getElementById('chatSendBtn');
             if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = '⏳'; }
 
-            db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
-                if (inputEl) inputEl.value = '';
-                if (privateCheckbox) privateCheckbox.checked = false;
-                // Auto-scroll to bottom after sending
-                setTimeout(() => {
-                    const chatBox = document.getElementById('chatContainer');
-                    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
-                }, 100);
-            }).catch(e => {
-                console.error("Chat send error:", e);
-                alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
-            }).finally(() => {
-                if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
-            });
+            db.collection("syndic_chat").doc(messageId.toString()).set(message)
+                .then(() => {
+                    if (inputEl) inputEl.value = '';
+                    if (privateCheckbox) privateCheckbox.checked = false;
+                    if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
+                    setTimeout(() => {
+                        const chatBox = document.getElementById('chatContainer');
+                        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+                    }, 100);
+                })
+                .catch(e => {
+                    console.error("Chat send error:", e);
+                    if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
+                    alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
+                });
         }
 
         function renderChat() {
@@ -3217,6 +3218,9 @@
             const text = document.getElementById('repText').value.trim();
             if (!text) return;
 
+            const replyBtn = document.querySelector('#universalModal .btn-secondary');
+            if (replyBtn) { replyBtn.disabled = true; replyBtn.innerText = '⏳'; }
+
             const msgRef = db.collection("syndic_chat").doc(msgId.toString());
             db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(msgRef);
@@ -3230,8 +3234,13 @@
                 transaction.update(msgRef, { replies: [...currentReplies, newReply] });
             }).then(() => {
                 closeModal();
+            }).catch(e => {
+                console.error("Reply error:", e);
+                if (replyBtn) { replyBtn.disabled = false; replyBtn.innerText = t('btn_send_chat') || 'Send'; }
+                alert("تعذر إرسال الرد: " + (e.message || "يرجى المحاولة مجدداً."));
             });
         };
+
 
         window.deleteChatReply = (msgId, repId) => {
             requireAdmin(() => {
