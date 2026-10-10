@@ -3106,25 +3106,24 @@
                 replies: []
             };
 
-            const sendBtn = document.getElementById('chatSendBtn');
-            if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = '⏳'; }
+            // Clear input and reset button IMMEDIATELY (optimistic UI)
+            if (inputEl) inputEl.value = '';
+            if (privateCheckbox) privateCheckbox.checked = false;
 
+            // Send to Firestore — onSnapshot listener will update the chat display
             db.collection("syndic_chat").doc(messageId.toString()).set(message)
-                .then(() => {
-                    if (inputEl) inputEl.value = '';
-                    if (privateCheckbox) privateCheckbox.checked = false;
-                    if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
-                    setTimeout(() => {
-                        const chatBox = document.getElementById('chatContainer');
-                        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
-                    }, 100);
-                })
                 .catch(e => {
                     console.error("Chat send error:", e);
-                    if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = '🚀'; }
                     alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
                 });
+
+            // Scroll to bottom
+            setTimeout(() => {
+                const chatBox = document.getElementById('chatContainer');
+                if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+            }, 200);
         }
+
 
         function renderChat() {
             const c = document.getElementById('chatContainer');
