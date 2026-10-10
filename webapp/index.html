@@ -57,8 +57,10 @@
     <!-- Web App Manifest -->
     <link rel="manifest" href="/Syndic-New/manifest.json">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Cairo, Plus Jakarta Sans, Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <!-- Firebase (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -987,57 +989,112 @@
             color: #4b5563;
             margin: 0;
             overflow: hidden;
-        /* APK Download Banner & Card */
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ===================================================
+           PREMIUM APK DOWNLOAD SHOWCASE CARD
+           =================================================== */
         .apk-download-card {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
-            color: #ffffff;
-            border-radius: 18px;
-            padding: 22px 26px;
+            background: linear-gradient(135deg, #091e3a 0%, #173878 50%, #1e40af 100%);
+            border-radius: 20px;
+            padding: 22px 28px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.35);
+            box-shadow: 0 14px 35px -8px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .apk-download-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px -8px rgba(15, 23, 42, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
         }
 
         .apk-download-card::before {
             content: '';
             position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            top: -60px;
+            right: -40px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(59, 130, 246, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
+            filter: blur(20px);
+        }
+
+        .apk-download-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 10%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(25px);
         }
 
         .apk-card-left {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
             flex: 1;
-            min-width: 280px;
+            min-width: 300px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .apk-card-icon-wrapper {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .apk-card-icon {
-            width: 58px;
-            height: 58px;
-            min-width: 58px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            overflow: hidden;
+            padding: 7px;
+        }
+
+        .apk-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .apk-os-badge {
+            position: absolute;
+            bottom: -3px;
+            left: -3px;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+            border: 2px solid #091e3a;
         }
 
         .apk-card-text {
@@ -1053,88 +1110,165 @@
             flex-wrap: wrap;
         }
 
-        .apk-card-header h3 {
+        .apk-card-title {
             margin: 0;
-            font-size: 19px;
+            font-size: 21px;
             font-weight: 800;
             color: #ffffff;
-            letter-spacing: -0.2px;
+            letter-spacing: -0.3px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            line-height: 1.25;
         }
 
-        .apk-version-badge {
-            background: rgba(16, 185, 129, 0.25);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.4);
+        .apk-version-chip {
+            background: rgba(16, 185, 129, 0.18);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.35);
             padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            border-radius: 999px;
+            font-size: 11px;
             font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .apk-card-text p {
+        .apk-card-desc {
             margin: 0;
             font-size: 13.5px;
-            color: rgba(255, 255, 255, 0.88);
-            line-height: 1.5;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-weight: 500;
+            max-width: 580px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
         }
 
-        .apk-card-meta {
+        .apk-pills-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.75);
-            margin-top: 2px;
+            gap: 8px;
+            margin-top: 4px;
             flex-wrap: wrap;
+        }
+
+        .apk-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #e2e8f0;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+        }
+
+        .apk-pill.featured {
+            background: rgba(59, 130, 246, 0.22);
+            border-color: rgba(96, 165, 250, 0.45);
+            color: #93c5fd;
+        }
+
+        .apk-pill-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
         .apk-card-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
 
-        .btn-apk-dl {
-            background: #10b981;
+        .btn-apk-dl-premium {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff !important;
             padding: 12px 22px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 800;
-            font-size: 14.5px;
+            font-size: 15px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+            gap: 10px;
+            box-shadow: 0 6px 18px -2px rgba(16, 185, 129, 0.45);
             transition: all 0.25s ease;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.25);
             cursor: pointer;
             white-space: nowrap;
         }
 
-        .btn-apk-dl:hover {
-            background: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.55);
+        .btn-apk-dl-premium:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 24px -2px rgba(16, 185, 129, 0.6);
+            color: #ffffff !important;
         }
 
-        .btn-apk-guide {
-            background: rgba(255, 255, 255, 0.15);
+        .btn-apk-dl-premium:active {
+            transform: translateY(0) scale(0.99);
+        }
+
+        .btn-apk-guide-premium {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 11px 16px;
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 12px 18px;
+            border-radius: 14px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 13.5px;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
         }
 
-        .btn-apk-guide:hover {
-            background: rgba(255, 255, 255, 0.25);
+        .btn-apk-guide-premium:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
             transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .apk-download-card {
+                padding: 18px 20px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            .apk-card-left {
+                min-width: 100%;
+            }
+            .apk-card-right {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-apk-dl-premium, .btn-apk-guide-premium {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1153,8 +1287,8 @@
                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/3062/3062334.png'">
             <h2 data-i18n="app_title">🏢 ZAINEB 4 السانديك</h2>
             <div class="auth-controls">
-                <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 11px; padding: 4px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
-                <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: #10b981; color: white; text-decoration: none; border: none; border-radius: 8px; font-size: 11px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px; font-weight: bold;" title="تحميل تطبيق الأندرويد APK">📥 تحميل APK</a>
+                <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 700; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25); transition: all 0.2s ease;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
+                <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: linear-gradient(135deg, #10b981, #047857); color: white !important; text-decoration: none; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s ease;" title="تحميل تطبيق الأندرويد APK">📥 تحميل APK</a>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage()">
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
@@ -1185,34 +1319,39 @@
         style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; padding: 20px 10px;">
         
         <!-- PWA Install Banner on Mobile -->
-        <div id="pwaInstallBanner" style="display: flex; align-items: center; justify-content: space-between; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 12px 16px; border-radius: 14px; margin-bottom: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 42px; height: 42px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Logo">
+        <div id="pwaInstallBanner" style="display: flex; align-items: center; justify-content: space-between; background: #f0fdf4; border: 1.5px solid #86efac; padding: 12px 18px; border-radius: 16px; margin-bottom: 14px; width: 100%; max-width: 420px; box-shadow: 0 4px 15px rgba(22, 101, 52, 0.08);">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <img src="icon-192.png" onerror="this.src='https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media'" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12);" alt="Logo">
                 <div style="text-align: right;">
-                    <div style="font-weight: bold; color: var(--primary); font-size: 14px;">تطبيق ZAINEB 4</div>
-                    <div style="font-size: 12px; color: #64748b;">تثبيت على شاشة الهاتف باللوغو</div>
+                    <div style="font-weight: 800; color: #15803d; font-size: 14.5px;">تطبيق ZAINEB 4</div>
+                    <div style="font-size: 11.5px; color: #4b5563;">تثبيت مباشر على الهاتف بدون متصفح</div>
                 </div>
             </div>
-            <button onclick="installPWA()" style="background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <button onclick="installPWA()" style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 800; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
                 📲 تثبيت
             </button>
         </div>
 
         <!-- NEW: APK Download Banner on Mobile Login -->
-        <div id="loginApkBanner" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 12px 16px; border-radius: 14px; margin-bottom: 20px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="font-size: 26px; background: rgba(255,255,255,0.18); border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">🤖</div>
+        <div id="loginApkBanner" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%); color: white; padding: 14px 18px; border-radius: 18px; margin-bottom: 22px; width: 100%; max-width: 420px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255,255,255,0.15) inset; position: relative; overflow: hidden;">
+            <div style="display: flex; align-items: center; gap: 14px; position: relative; z-index: 1;">
+                <div style="position: relative; flex-shrink: 0;">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); overflow: hidden; padding: 4px;">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media" style="width: 100%; height: 100%; object-fit: cover; border-radius: 9px;" onerror="this.src='icon-192.png'" alt="App Icon">
+                    </div>
+                    <span style="position: absolute; bottom: -3px; left: -3px; background: #10b981; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #0f172a;">🤖</span>
+                </div>
                 <div style="text-align: right;">
-                    <div style="font-weight: bold; font-size: 14px; color: white;">تطبيق Android (APK)</div>
-                    <div style="font-size: 11px; color: #cbd5e1;">تحميل وتثبيت مباشر • 24.9 MB</div>
+                    <div style="font-weight: 800; font-size: 14.5px; color: #ffffff; letter-spacing: -0.2px;">تطبيق Android (APK)</div>
+                    <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 2px;">تثبيت سريع • 24.9 MB • آمن ⚡</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 6px; align-items: center;">
-                <a href="zaineb4.apk" download="zaineb4.apk" class="apk-download-link" style="background: #10b981; color: white; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(16,185,129,0.3);">
-                    📥 تحميل
+            <div style="display: flex; gap: 8px; align-items: center; position: relative; z-index: 1;">
+                <a href="zaineb4.apk" download="zaineb4.apk" class="apk-download-link" style="background: linear-gradient(135deg, #10b981, #059669); color: white !important; text-decoration: none; padding: 9px 16px; border-radius: 12px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(16,185,129,0.4); border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s ease;">
+                    📥 <span data-i18n="apk_btn">تحميل</span>
                 </a>
-                <button type="button" onclick="showApkInstallGuide()" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: bold;" title="طريقة التثبيت">
-                    ❓
+                <button type="button" onclick="showApkInstallGuide()" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); color: white; border: 1px solid rgba(255,255,255,0.22); padding: 9px 12px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 700; transition: all 0.2s ease;" title="طريقة التثبيت">
+                    💡
                 </button>
             </div>
         </div>
@@ -1298,28 +1437,31 @@
             <!-- ANDROID APK DOWNLOAD CARD (ACCUEIL) -->
             <div class="apk-download-card">
                 <div class="apk-card-left">
-                    <div class="apk-card-icon">🤖</div>
+                    <div class="apk-card-icon-wrapper">
+                        <div class="apk-card-icon">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media" alt="App Logo" onerror="this.src='icon-192.png'">
+                        </div>
+                        <div class="apk-os-badge" title="Android APK">🤖</div>
+                    </div>
                     <div class="apk-card-text">
                         <div class="apk-card-header">
-                            <h3 data-i18n="apk_title">📲 تحميل تطبيق الأندرويد الرسمي (APK)</h3>
-                            <span class="apk-version-badge">v1.0 APK</span>
+                            <h3 class="apk-card-title" data-i18n="apk_title">📲 تحميل تطبيق الأندرويد الرسمي (APK)</h3>
+                            <span class="apk-version-chip">v1.0 APK</span>
                         </div>
-                        <p data-i18n="apk_desc">حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.</p>
-                        <div class="apk-card-meta">
-                            <span>📦 24.9 MB</span>
-                            <span>•</span>
-                            <span>📱 متوافق مع Android 7.0+</span>
-                            <span>•</span>
-                            <span>⚡ تثبيت مباشر وآمن</span>
+                        <p class="apk-card-desc" data-i18n="apk_desc">حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.</p>
+                        <div class="apk-pills-row">
+                            <span class="apk-pill featured"><span class="apk-pill-dot"></span> ⚡ تثبيت مباشر وآمن</span>
+                            <span class="apk-pill">📦 24.9 MB</span>
+                            <span class="apk-pill">📱 Android 7.0+</span>
                         </div>
                     </div>
                 </div>
                 <div class="apk-card-right">
-                    <a href="zaineb4.apk" download="zaineb4.apk" class="btn-apk-dl apk-download-link" id="apkDashDownloadBtn">
-                        <span style="font-size: 18px;">📥</span>
+                    <a href="zaineb4.apk" download="zaineb4.apk" class="btn-apk-dl-premium apk-download-link" id="apkDashDownloadBtn">
+                        <span style="font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">📥</span>
                         <span data-i18n="apk_btn">تحميل التطبيق (APK)</span>
                     </a>
-                    <button type="button" class="btn-apk-guide" onclick="showApkInstallGuide()" data-i18n="apk_guide_btn">
+                    <button type="button" class="btn-apk-guide-premium" onclick="showApkInstallGuide()" data-i18n="apk_guide_btn">
                         💡 طريقة التثبيت
                     </button>
                 </div>
