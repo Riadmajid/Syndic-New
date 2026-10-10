@@ -1288,7 +1288,8 @@
             <h2 data-i18n="app_title">🏢 ZAINEB 4 السانديك</h2>
             <div class="auth-controls">
                 <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 700; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25); transition: all 0.2s ease;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
-                <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: linear-gradient(135deg, #10b981, #047857); color: white !important; text-decoration: none; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s ease;" title="تحميل تطبيق الأندرويد APK">📥 تحميل APK</a>
+                <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: linear-gradient(135deg, #10b981, #047857); color: white !important; text-decoration: none; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s ease;" title="تحميل تطبيق الأندرويد APK">📥 <span data-i18n="apk_btn">تحميل APK</span></a>
+                <button type="button" class="btn btn-sm" onclick="showApkInstallGuide()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transition: all 0.2s ease;" title="طريقة التثبيت" data-i18n="apk_guide_btn">💡 طريقة التثبيت</button>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage()">
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
@@ -1433,39 +1434,6 @@
 
         <!-- PAGE 1: DASHBOARD -->
         <div id="dashboard" class="page active">
-
-            <!-- ANDROID APK DOWNLOAD CARD (ACCUEIL) -->
-            <div class="apk-download-card">
-                <div class="apk-card-left">
-                    <div class="apk-card-icon-wrapper">
-                        <div class="apk-card-icon">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/syndic-54327.firebasestorage.app/o/app_icon.png?alt=media" alt="App Logo" onerror="this.src='icon-192.png'">
-                        </div>
-                        <div class="apk-os-badge" title="Android APK">🤖</div>
-                    </div>
-                    <div class="apk-card-text">
-                        <div class="apk-card-header">
-                            <h3 class="apk-card-title" data-i18n="apk_title">📲 تحميل تطبيق الأندرويد الرسمي (APK)</h3>
-                            <span class="apk-version-chip">v1.0 APK</span>
-                        </div>
-                        <p class="apk-card-desc" data-i18n="apk_desc">حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.</p>
-                        <div class="apk-pills-row">
-                            <span class="apk-pill featured"><span class="apk-pill-dot"></span> ⚡ تثبيت مباشر وآمن</span>
-                            <span class="apk-pill">📦 24.9 MB</span>
-                            <span class="apk-pill">📱 Android 7.0+</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="apk-card-right">
-                    <a href="zaineb4.apk" download="zaineb4.apk" class="btn-apk-dl-premium apk-download-link" id="apkDashDownloadBtn">
-                        <span style="font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">📥</span>
-                        <span data-i18n="apk_btn">تحميل التطبيق (APK)</span>
-                    </a>
-                    <button type="button" class="btn-apk-guide-premium" onclick="showApkInstallGuide()" data-i18n="apk_guide_btn">
-                        💡 طريقة التثبيت
-                    </button>
-                </div>
-            </div>
 
             <div class="header-action">
                 <h3 data-i18n="title_stats_filter">📅 ملخص المالية :</h3>
