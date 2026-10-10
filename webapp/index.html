@@ -1290,6 +1290,7 @@
                 <button id="pwaNavInstallBtn" class="btn btn-sm" onclick="installPWA()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 700; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25); transition: all 0.2s ease;" title="تثبيت التطبيق على شاشة الهاتف">📲 تثبيت التطبيق</button>
                 <a href="zaineb4.apk" download="zaineb4.apk" class="btn btn-sm apk-download-link" style="background: linear-gradient(135deg, #10b981, #047857); color: white !important; text-decoration: none; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s ease;" title="تحميل تطبيق الأندرويد APK">📥 <span data-i18n="apk_btn">تحميل APK</span></a>
                 <button type="button" class="btn btn-sm" onclick="showApkInstallGuide()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transition: all 0.2s ease;" title="طريقة التثبيت" data-i18n="apk_guide_btn">💡 طريقة التثبيت</button>
+                <button type="button" class="btn btn-sm" onclick="showQrCodeModal()" style="background: linear-gradient(135deg, #6366f1, #4338ca); color: white; border: none; border-radius: 20px; font-size: 11.5px; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); transition: all 0.2s ease;" title="رمز QR للموقع" data-i18n="qr_code_btn">📷 رمز QR</button>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage()">
                     <option value="ar">العربية</option>
                     <option value="fr">Français</option>
@@ -1353,6 +1354,9 @@
                 </a>
                 <button type="button" onclick="showApkInstallGuide()" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); color: white; border: 1px solid rgba(255,255,255,0.22); padding: 9px 12px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 700; transition: all 0.2s ease;" title="طريقة التثبيت">
                     💡
+                </button>
+                <button type="button" onclick="showQrCodeModal()" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); color: white; border: 1px solid rgba(255,255,255,0.22); padding: 9px 12px; border-radius: 12px; font-size: 13px; cursor: pointer; font-weight: 700; transition: all 0.2s ease;" title="رمز QR للموقع">
+                    📷
                 </button>
             </div>
         </div>
@@ -1723,7 +1727,7 @@
                 btn_login_mode: "ليس لديك حساب؟ إنشاء حساب", btn_register_mode: "لديك حساب؟ تسجيل الدخول", title_register: "إنشاء حساب جديد", title_login: "تسجيل الدخول",
                 btn_approve: "موافقة", btn_make_admin: "إعطاء صلاحية مسؤل", btn_delete_user: "حذف",
                 title_export_excel: "تحميل ملف Excel", lbl_export_year: "اختر السنة :", lbl_export_month: "اختر الشهر :", lbl_export_type: "نوع التقرير :", opt_export_bilan: "الحصيلة كاملة (المصاريف + المداخيل + الملخص)", opt_export_payments: "سجل الأداءات فقط", opt_export_expenses: "سجل المصاريف فقط", btn_download_excel: "تحميل Excel 📥",
-                apk_title: "📲 تحميل تطبيق الأندرويد الرسمي (APK)", apk_desc: "حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.", apk_btn: "تحميل التطبيق (APK)", apk_guide_btn: "💡 طريقة التثبيت"
+                apk_title: "📲 تحميل تطبيق الأندرويد الرسمي (APK)", apk_desc: "حمّل تطبيق ZAINEB 4 مباشرة على هاتفك لتجربة أسرع وسهلة الاستخدام وتصفح بدون متصفح.", apk_btn: "تحميل التطبيق (APK)", apk_guide_btn: "💡 طريقة التثبيت", qr_code_btn: "📷 رمز QR"
             },
             fr: {
                 app_title: "🏢 ZAINEB 4", nav_dashboard: "Tableau de bord", nav_apartments: "Immeubles", nav_expenses: "Dépenses", nav_comm: "Comm.", nav_users: "Utilisateurs",
@@ -1744,7 +1748,7 @@
                 btn_login_mode: "Déjà un compte? Se connecter", btn_register_mode: "Pas de compte? S'inscrire", title_register: "Créer un compte", title_login: "Connexion",
                 title_users: "Gestion des utilisateurs", btn_approve: "Approuver", btn_make_admin: "Rendre Admin", btn_delete_user: "Supprimer",
                 title_export_excel: "Télécharger Excel", lbl_export_year: "Sélectionner l'année :", lbl_export_month: "Sélectionner le mois :", lbl_export_type: "Type de rapport :", opt_export_bilan: "Bilan complet (Dépenses + Recettes + Résumé)", opt_export_payments: "Paiements uniquement", opt_export_expenses: "Dépenses uniquement", btn_download_excel: "Télécharger Excel 📥",
-                apk_title: "📲 Télécharger l'application Android (APK)", apk_desc: "Téléchargez l'application officielle ZAINEB 4 directement sur votre smartphone pour un accès plus rapide.", apk_btn: "Télécharger APK", apk_guide_btn: "💡 Guide d'installation"
+                apk_title: "📲 Télécharger l'application Android (APK)", apk_desc: "Téléchargez l'application officielle ZAINEB 4 directement sur votre smartphone pour un accès plus rapide.", apk_btn: "Télécharger APK", apk_guide_btn: "💡 Guide d'installation", qr_code_btn: "📷 Code QR"
             },
             en: {
                 app_title: "🏢 Syndic", nav_dashboard: "Dashboard", nav_apartments: "Buildings", nav_expenses: "Expenses", nav_comm: "Comm.", nav_users: "Users",
@@ -1764,7 +1768,7 @@
                 btn_login_mode: "Already have an account? Login", btn_register_mode: "Don't have an account? Register", title_register: "Create New Account", title_login: "Secure Login",
                 btn_approve: "Approve", btn_make_admin: "Make Admin", btn_delete_user: "Delete",
                 title_export_excel: "Download Excel", lbl_export_year: "Select Year:", lbl_export_month: "Select Month:", lbl_export_type: "Report Type:", opt_export_bilan: "Full Bilan (Expenses + Incomes + Summary)", opt_export_payments: "Payments only", opt_export_expenses: "Expenses only", btn_download_excel: "Download Excel 📥",
-                apk_title: "📲 Download Android App (APK)", apk_desc: "Download official ZAINEB 4 app directly on your smartphone for faster access and smooth experience.", apk_btn: "Download APK", apk_guide_btn: "💡 Install Guide"
+                apk_title: "📲 Download Android App (APK)", apk_desc: "Download official ZAINEB 4 app directly on your smartphone for faster access and smooth experience.", apk_btn: "Download APK", apk_guide_btn: "💡 Install Guide", qr_code_btn: "📷 QR Code"
             }
         };
 
@@ -3775,6 +3779,53 @@
             const modalBody = document.getElementById('modalBody');
             if (modalBody) {
                 modalBody.innerHTML = instructions;
+                document.getElementById('universalModal').style.display = 'flex';
+            }
+        }
+
+        function showQrCodeModal() {
+            const isAr = currentLang === 'ar';
+            const isFr = currentLang === 'fr';
+            const siteUrl = 'https://riadmajid.github.io/Syndic-New/';
+            const qrImageSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&data=' + encodeURIComponent(siteUrl);
+
+            let html = `
+                <div style="text-align: center; padding: 15px 10px; font-family: 'Cairo', 'Tajawal', sans-serif;">
+                    <div style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); color: white; padding: 18px 20px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.35);">
+                        <div style="font-size: 40px; margin-bottom: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">📲</div>
+                        <h3 style="margin: 0; font-size: 20px; font-weight: 800; color: #ffffff;">${isAr ? 'رمز QR لموقع التطبيق' : (isFr ? 'Code QR du site web' : 'Website QR Code')}</h3>
+                        <p style="margin: 6px 0 0 0; font-size: 13px; color: #e0e7ff; line-height: 1.5;">${isAr ? 'امسح الرمز بواسطة كاميرا هاتفك للدخول المباشر إلى الموقع' : (isFr ? 'Scannez avec votre téléphone pour accéder directement au site' : 'Scan with your mobile camera to open the website directly')}</p>
+                    </div>
+
+                    <div style="background: #ffffff; padding: 18px; border-radius: 20px; display: inline-block; box-shadow: 0 12px 30px rgba(0,0,0,0.12); border: 2px solid #e2e8f0; margin-bottom: 18px; position: relative;">
+                        <img src="${qrImageSrc}" alt="QR Code" style="width: 230px; height: 230px; display: block; border-radius: 12px; margin: 0 auto;" onerror="this.onerror=null; this.src='https://chart.googleapis.com/chart?chs=260x260&cht=qr&chl=' + encodeURIComponent('${siteUrl}')">
+                        <div style="margin-top: 12px; font-size: 12.5px; font-weight: 800; color: #475569; background: #f1f5f9; padding: 6px 14px; border-radius: 20px; display: inline-block;">
+                            🏢 ZAINEB 4 • SYNDIC
+                        </div>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 12px 16px; border-radius: 14px; border: 1px solid #cbd5e1; font-size: 13.5px; color: #1e293b; font-weight: 700; word-break: break-all; margin-bottom: 22px; font-family: monospace; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>🔗</span>
+                        <a href="${siteUrl}" target="_blank" style="color: #2563eb; text-decoration: underline;">${siteUrl}</a>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary" onclick="navigator.clipboard.writeText('${siteUrl}'); alert('${isAr ? 'تم نسخ رابط الموقع بنجاح! 📋' : 'L\'URL a été copiée avec succès ! 📋'}');" style="padding: 11px 20px; font-weight: 800; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px;">
+                            📋 ${isAr ? 'نسخ الرابط' : (isFr ? 'Copier le lien' : 'Copy Link')}
+                        </button>
+                        <a href="${qrImageSrc}" download="ZAINEB4_QR.png" target="_blank" class="btn btn-success" style="padding: 11px 20px; font-weight: 800; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px;">
+                            📥 ${isAr ? 'تحميل الرمز' : (isFr ? 'Télécharger QR' : 'Download QR')}
+                        </a>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()" style="padding: 11px 20px; font-weight: 800; border-radius: 12px; font-size: 13.5px;">
+                            ${isAr ? 'إغلاق' : (isFr ? 'Fermer' : 'Close')}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const modalBody = document.getElementById('modalBody');
+            if (modalBody) {
+                modalBody.innerHTML = html;
                 document.getElementById('universalModal').style.display = 'flex';
             }
         }
