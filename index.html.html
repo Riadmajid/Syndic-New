@@ -3,8 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تسيير السانديك ZAINEB 4</title>
+
+    <!-- PWA & Mobile Home Screen Metadata -->
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ZAINEB 4">
+    <meta name="application-name" content="ZAINEB 4">
+
+    <!-- Icons for Android, iOS Safari & Desktop -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+    <link rel="shortcut icon" href="./favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="manifest" href="./manifest.json">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -3235,7 +3251,13 @@
         function renameItem(id, type) { /* Implement Rename logic */ }
         function deleteItem(id, type) { /* Implement Delete logic */ }
 
-        window.onload = () => { if (!localStorage.getItem('syndicLocalData')) localStorage.setItem('syndicLocalData', JSON.stringify(data)); };
+        window.onload = () => {
+            if (!localStorage.getItem('syndicLocalData')) localStorage.setItem('syndicLocalData', JSON.stringify(data));
+            // Register Service Worker for PWA / Shortcut support
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration error:', err));
+            }
+        };
     </script>
 </body>
 
