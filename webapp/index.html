@@ -1252,7 +1252,7 @@
                     <h3 style="margin-bottom: 15px;" data-i18n="title_chat">Resident Chat</h3>
                     <div class="chat-box" id="chatContainer"></div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;">
+                        <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat();}">
                         <button class="btn btn-primary" onclick="sendChat()">🚀</button>
                     </div>
                     <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px;">

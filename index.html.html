@@ -18,6 +18,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- SheetJS for Excel export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF and AutoTable for proper PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root {
@@ -405,7 +408,7 @@
             -webkit-overflow-scrolling: touch;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
 
@@ -420,10 +423,12 @@
             font-weight: 800;
             margin: 0 auto;
         }
+
         .payment-badge.paid {
             background-color: #d1fae5;
             color: #065f46;
         }
+
         .payment-badge.unpaid {
             background-color: #fee2e2;
             color: #991b1b;
@@ -544,10 +549,12 @@
             font-weight: 800;
             margin: 0 auto;
         }
+
         .payment-badge.paid {
             background-color: #d1fae5;
             color: #065f46;
         }
+
         .payment-badge.unpaid {
             background-color: #fee2e2;
             color: #991b1b;
@@ -969,7 +976,8 @@
                 <span id="chatBadge" class="chat-badge">!</span>
             </span>
             <button onclick="changePage('full-payments')" data-i18n="full_table_title">📋 الجدول السنوي</button>
-            <button id="navUsersLink" onclick="changePage('users')" data-i18n="nav_users" style="display: none;">المستخدمين</button>
+            <button id="navUsersLink" onclick="changePage('users')" data-i18n="nav_users"
+                style="display: none;">المستخدمين</button>
         </div>
     </nav>
 
@@ -1015,13 +1023,16 @@
                         <span data-i18n="lbl_remember_me">تذكرني (Remember Me)</span>
                     </label>
                     <a href="#" onclick="handleForgotPassword()"
-                        style="color: var(--secondary); text-decoration: none; font-weight: bold;" data-i18n="btn_forgot_pwd">نسيت كلمة السر؟</a>
+                        style="color: var(--secondary); text-decoration: none; font-weight: bold;"
+                        data-i18n="btn_forgot_pwd">نسيت كلمة السر؟</a>
                 </div>
 
-                <button id="authBtn" class="btn btn-primary" style="width: 100%;" onclick="handleAuth()" data-i18n="btn_login">تسجيل الدخول</button>
+                <button id="authBtn" class="btn btn-primary" style="width: 100%;" onclick="handleAuth()"
+                    data-i18n="btn_login">تسجيل الدخول</button>
                 <div style="margin-top: 20px;">
                     <a href="#" id="authToggle" onclick="toggleAuthMode()"
-                        style="color: var(--primary); text-decoration: none; font-weight: bold;" data-i18n="btn_register_mode">ليس لديك حساب؟ إنشاء حساب</a>
+                        style="color: var(--primary); text-decoration: none; font-weight: bold;"
+                        data-i18n="btn_register_mode">ليس لديك حساب؟ إنشاء حساب</a>
                 </div>
                 <p id="loginError" style="color: var(--danger); margin-top: 15px; font-size: 14px; display: none;"></p>
             </div>
@@ -1080,8 +1091,8 @@
             <div class="header-action">
                 <h3 data-i18n="dash_table_title">📋 آخر العمليات</h3>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-success" onclick="exportToExcel('bilan')" style="background:var(--secondary);">📥 تحميل الحصيلة كاملة (Excel)</button>
-                    <button class="btn btn-success" onclick="exportToExcel('payments')" title="Export to Excel">📊 Excel</button>
+                    <button class="btn btn-success" onclick="openExportModal('bilan')"
+                        style="background:var(--secondary);">📥 استخراج تقرير مفصل (Excel / PDF)</button>
                     <button class="btn btn-primary" onclick="changePage('full-payments')" data-i18n="btn_view_all">📄
                         الجميع</button>
                 </div>
@@ -1098,7 +1109,6 @@
             <!-- New Monthly Stats Section -->
             <div class="header-action" style="margin-top: 30px;">
                 <h3 data-i18n="title_stats_month">📊 إحصائيات الأداء المتأخر حسب العمارة</h3>
-                <button class="btn btn-danger btn-sm" onclick="runDataCleanup()" style="margin-right: 10px;">⚠️ إصلاح البيانات (Fix Data)</button>
             </div>
             <div id="monthlyStatsContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
 
@@ -1112,7 +1122,7 @@
                     <h3 data-i18n="full_table_title">الجدول السنوي للأداء</h3>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-success" onclick="exportToExcel('fullTable')">📗 Excel</button>
+                    <button class="btn btn-success" onclick="openExportModal('fullTable')">📗 Excel / PDF</button>
                     <select id="fullYear" class="modern-select" onchange="renderFullTable()"></select>
                 </div>
             </div>
@@ -1200,7 +1210,8 @@
                 <div style="display: flex; gap: 10px;">
                     <select id="expMonth" class="modern-select" onchange="renderExpenses()"></select>
                     <select id="expYear" class="modern-select" onchange="renderExpenses()"></select>
-                    <button class="btn btn-success" onclick="exportToExcel('expenses')" title="Export to Excel">📊 Excel</button>
+                    <button class="btn btn-success" onclick="openExportModal('expenses')" title="Export">📊 Excel /
+                        PDF</button>
                     <button class="btn btn-success btn-admin-only" onclick="requireAuth(openAddExpenseModal)">+
                         Add</button>
                 </div>
@@ -1241,7 +1252,7 @@
                     <h3 style="margin-bottom: 15px;" data-i18n="title_chat">Resident Chat</h3>
                     <div class="chat-box" id="chatContainer"></div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;">
+                        <input type="text" id="chatInput" placeholder="Write message..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat();}">
                         <button class="btn btn-primary" onclick="sendChat()">🚀</button>
                     </div>
                     <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px;">
@@ -1319,7 +1330,7 @@
             ar: {
                 app_title: "🏢 ZAINEB 4", nav_dashboard: "الرئيسية", nav_apartments: "العمارات", nav_expenses: "المصاريف", nav_comm: "التواصل", nav_users: "المستخدمين",
                 stat_incomes_month: "مداخيل (الشهر)", stat_expenses_month: "مصاريف (الشهر)", stat_balance: "الصندوق الصافي",
-                title_stats_filter: "📅 ملخص المالية :", dash_table_title: "📋 آخر 3 شقق أدوا الواجب", btn_view_all: "📄 الجميع",
+                title_stats_filter: "📅 ملخص المالية :", dash_table_title: "📋 آخر 3 شقق أدوا الواجب", btn_view_all: "📄 الجميع", title_stats_month: "📊 إحصائيات الأداء المتأخر حسب العمارة",
                 opt_all_months: "جميع الشهور", txt_paid_month: "مؤدى في", no_apts: "لا توجد شقق",
                 th_apt: "الشقة / الشهر", th_last_pay: "آخر أداء", th_amt: "المبلغ", no_recent: "لا يوجد عمليات أخيرة",
                 unpaid: "غير مؤدى", paid: "مؤدى", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -1339,7 +1350,7 @@
             fr: {
                 app_title: "🏢 ZAINEB 4", nav_dashboard: "Tableau de bord", nav_apartments: "Immeubles", nav_expenses: "Dépenses", nav_comm: "Comm.", nav_users: "Utilisateurs",
                 stat_incomes_month: "Incomes (Mois)", stat_expenses_month: "Dépenses (Mois)", stat_balance: "Caisse Net",
-                title_stats_filter: "📅 Résumé financier :", dash_table_title: "📋 Activités récentes", btn_view_all: "📄 Tous",
+                title_stats_filter: "📅 Résumé financier :", dash_table_title: "📋 Activités récentes", btn_view_all: "📄 Tous", title_stats_month: "📊 Statistiques de retards par immeuble",
                 opt_all_months: "Tous les mois", txt_paid_month: "Payé en", no_apts: "Aucun appartement",
                 th_apt: "Appartement", th_last_pay: "Dernier paiement", th_amt: "Montant", no_recent: "Aucune activité récente",
                 unpaid: "Impayé", paid: "Payé", months: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
@@ -1359,7 +1370,7 @@
             en: {
                 app_title: "🏢 Syndic", nav_dashboard: "Dashboard", nav_apartments: "Buildings", nav_expenses: "Expenses", nav_comm: "Comm.", nav_users: "Users",
                 stat_incomes_month: "Incomes (Month)", stat_expenses_month: "Expenses (Month)", stat_balance: "Net Balance",
-                title_stats_filter: "📅 Financial Summary :", dash_table_title: "📋 Recently", btn_view_all: "📄 View all",
+                title_stats_filter: "📅 Financial Summary :", dash_table_title: "📋 Recently", btn_view_all: "📄 View all", title_stats_month: "📊 Unpaid Stats by Building",
                 opt_all_months: "All Months", txt_paid_month: "Paid in", no_apts: "No apartments found",
                 th_apt: "Apartment", th_last_pay: "Last Pay", th_amt: "Amount", no_recent: "No recent payments",
                 unpaid: "Unpaid", paid: "Paid", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -1635,7 +1646,7 @@
                     ['buildings', 'apartments', 'expenses'].forEach(key => {
                         if (data[key] && !Array.isArray(data[key])) data[key] = Object.values(data[key]);
                     });
-                    
+
                     // DO NOT fix buildingId here (breaks Android)
 
                     if (!isLoaded) {
@@ -1653,21 +1664,34 @@
             // Chat Sync (Dedicated Collection)
             if (!chatSyncListener) {
                 chatSyncListener = db.collection("syndic_chat").orderBy("id").limitToLast(100).onSnapshot(snap => {
-                    const messages = snap.docs.map(doc => doc.data());
+                    const messages = snap.docs.map(doc => {
+                        const d = doc.data();
+                        return {
+                            ...d,
+                            firebaseDocId: doc.id,
+                            id: Number(d.id || doc.id)
+                        };
+                    });
+                    messages.sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0));
                     const oldChatCount = data.chat.length;
                     data.chat = messages;
 
                     if (isLoaded && data.chat.length > oldChatCount && oldChatCount > 0) {
-                        const isOnCommPage = document.getElementById('communication').classList.contains('active');
+                        const commEl = document.getElementById('communication');
+                        const isOnCommPage = commEl && commEl.classList.contains('active');
                         if (!isOnCommPage) {
                             const newMsg = data.chat[data.chat.length - 1];
+                            const currentUid = userAccount ? userAccount.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : '');
                             // Only notify for public or relevant private messages
-                            if (!newMsg.isPrivate || newMsg.senderUid === userAccount.uid || isAdmin()) {
+                            if (!newMsg.isPrivate || newMsg.senderUid === currentUid || isAdmin()) {
                                 showChatNotification(newMsg.name, newMsg.msg);
                             }
                         }
                     }
-                    if (document.getElementById('communication').classList.contains('active')) renderChat();
+                    const commEl = document.getElementById('communication');
+                    if (commEl && commEl.classList.contains('active')) renderChat();
+                }, err => {
+                    console.error("Chat sync error:", err);
                 });
             }
 
@@ -1711,7 +1735,7 @@
                     }),
                     payments: data.payments || {}
                 };
-                
+
                 // Sanitize payments to remove undefined values if any
                 Object.keys(toSave.payments).forEach(key => {
                     if (toSave.payments[key] === undefined || isNaN(toSave.payments[key])) {
@@ -1763,9 +1787,9 @@
         // --- MAINTENANCE: DATA CLEANUP (Run once to fix Android crashes) ---
         async function runDataCleanup() {
             if (!confirm("This will convert all String IDs in Firestore back to Numbers for Android compatibility. Continue?")) return;
-            
+
             console.log("Starting data cleanup...");
-            
+
             // 1. Main Data
             const mainDoc = await db.collection("syndic_data").doc("zaineb4").get();
             if (mainDoc.exists) {
@@ -1797,7 +1821,7 @@
                 await db.collection("syndic_announcements").doc(doc.id).set(fixedA);
             }
             console.log("Announcements fixed.");
-            
+
             alert("Data cleanup complete! The Android app should now work correctly.");
             location.reload();
         }
@@ -1926,12 +1950,12 @@
                 // Check if apartment has ANY payment in the payments object
                 const aptPaymentsKeys = Object.keys(data.payments).filter(key => key.startsWith(`${apt.id}_`));
                 const hasPayment = aptPaymentsKeys.length > 0;
-                
+
                 if (hasPayment) {
                     // Ensure apt.lastPaidTime is set if we found payments but it's missing
                     if (!apt.lastPaidTime) {
                         // Estimate last paid time (just something to make it sortable)
-                        apt.lastPaidTime = 1; 
+                        apt.lastPaidTime = 1;
                     }
                     recent.push(apt);
                 } else if (apt.lastPaidTime) {
@@ -1960,9 +1984,9 @@
                     if (aptPayments.length > 0) {
                         // Take the last one (most likely latest)
                         latestAmt = aptPayments[aptPayments.length - 1].val;
-                        
+
                         // Also try to extract date if possible, but for now just use placeholder or current
-                        if (!latestDate) latestDate = new Date(); 
+                        if (!latestDate) latestDate = new Date();
                     }
                 }
 
@@ -2093,7 +2117,7 @@
             console.log("Selecting building ID:", id);
             document.getElementById('fullBldSelector').style.display = 'none';
             document.getElementById('fullTableContent').style.display = 'block';
-            
+
             const b = data.buildings.find(b => String(b.id) === String(id));
             if (!b) {
                 console.error("Building not found for ID:", id);
@@ -2108,18 +2132,18 @@
             const ySelect = document.getElementById('fullYear');
             const y = ySelect ? ySelect.value : new Date().getFullYear();
             const bldId = window.activeFullBldId;
-            
+
             console.log("Rendering Full Table - Year:", y, "Building ID:", bldId);
-            
+
             // Defensively handle a.buildingId possibly being string or number
             const apts = data.apartments.filter(a => String(a.buildingId) == String(bldId));
-            
+
             const head = document.getElementById('fullTableHead');
             const body = document.getElementById('fullTableBody');
 
             // Header matching screenshot: "الشقة / الشهر" then Jan, Feb...
             head.innerHTML = `<th>${t('th_apt')}</th>` + t('months').map(m => `<th>${m}</th>`).join('');
-            
+
             if (apts.length === 0) {
                 body.innerHTML = `<tr><td colspan="13" style="padding:40px; text-align:center; color:#94a3b8;">${t('no_apts') || 'No apartments found'}</td></tr>`;
                 return;
@@ -2131,7 +2155,7 @@
                     const key = `${a.id}_${y}_${m}`;
                     const amt = data.payments[key] || 0;
                     const isPaid = amt > 0;
-                    
+
                     row += `<td style="background: white; padding: 10px;">
                         <div class="payment-badge ${isPaid ? 'paid' : 'unpaid'}">
                             ${isPaid ? amt : 'x'}
@@ -2143,9 +2167,9 @@
         }
 
         // EXPORT TO EXCEL WITH YEAR & MONTH SELECTION
-        function openExportExcelModal(defaultType = 'bilan') {
-            const currentY = (document.getElementById('dashStatYear') && document.getElementById('dashStatYear').value) 
-                ? parseInt(document.getElementById('dashStatYear').value) 
+        function openExportModal(defaultType = 'bilan') {
+            const currentY = (document.getElementById('dashStatYear') && document.getElementById('dashStatYear').value)
+                ? parseInt(document.getElementById('dashStatYear').value)
                 : new Date().getFullYear();
             const currentM = (document.getElementById('dashStatMonth') && document.getElementById('dashStatMonth').value)
                 ? document.getElementById('dashStatMonth').value
@@ -2211,8 +2235,11 @@
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn btn-success" style="flex: 2; padding: 12px; font-weight: bold; font-size: 15px;" onclick="executeExportExcel()">
-                        ${t('btn_download_excel') || '📥 تحميل Excel'}
+                    <button class="btn btn-success" style="flex: 2; padding: 12px; font-weight: bold; font-size: 15px;" onclick="executeExport('excel')">
+                        📥 تحميل Excel
+                    </button>
+                    <button class="btn btn-success" style="flex: 2; padding: 12px; font-weight: bold; font-size: 15px; background: #ef4444;" onclick="executeExport('pdf')">
+                        📄 تحميل PDF
                     </button>
                     <button class="btn" style="flex: 1; background: #e5e7eb; color: #4b5563;" onclick="closeModal()">
                         إلغاء
@@ -2222,7 +2249,7 @@
             document.getElementById('universalModal').style.display = 'flex';
         }
 
-        function executeExportExcel() {
+        function executeExport(format = 'excel') {
             const y = parseInt(document.getElementById('exportYearSel').value) || new Date().getFullYear();
             const m = document.getElementById('exportMonthSel').value; // 'all' or 1..12
             const expType = document.getElementById('exportTypeSel').value || 'bilan';
@@ -2232,8 +2259,8 @@
 
             const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const monthNamesAr = ["يناير", "فبراير", "مارس", "أبريل", "ماي", "يونيو", "يوليوز", "غشت", "شتنبر", "أكتوبر", "نونبر", "دجنبر"];
-            const currentMonthLabel = monthNum === null 
-                ? (t('opt_all_months') || "جميع الشهور") 
+            const currentMonthLabel = monthNum === null
+                ? (t('opt_all_months') || "جميع الشهور")
                 : `${monthNamesEn[monthNum - 1]} (${monthNamesAr[monthNum - 1]})`;
 
             // 1. FILTER EXPENSES
@@ -2352,60 +2379,139 @@
             ];
 
             const fileSuffix = monthNum === null ? `_Annee_${y}_Complet` : `_Annee_${y}_Mois_${monthNum}`;
+            let title = '';
+            if (expType === 'expenses') title = 'سجل المصاريف المفصل';
+            else if (expType === 'payments' || expType === 'fullTable') title = 'سجل الأداءات المفصل';
+            else title = 'الحصيلة المالية الشاملة';
 
-            if (expType === 'expenses') {
-                let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
-                XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
-                XLSX.writeFile(wb, `Syndic_Depenses${fileSuffix}.xlsx`);
-            } else if (expType === 'payments' || expType === 'fullTable') {
-                let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
-                XLSX.utils.book_append_sheet(wb, wsPay, `الأداءات (Paiements)`);
-                XLSX.writeFile(wb, `Syndic_Paiements${fileSuffix}.xlsx`);
-            } else {
-                // FULL BILAN
-                let wsRes = XLSX.utils.json_to_sheet(resumeData);
-                XLSX.utils.book_append_sheet(wb, wsRes, "الملخص المالي (Résumé)");
+            if (format === 'pdf') {
+                const printWindow = window.open('', '_blank');
+                let htmlContent = `
+                    <html lang="ar" dir="rtl">
+                    <head>
+                        <title>${title}</title>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+                            body { font-family: 'Tajawal', sans-serif; padding: 30px; direction: rtl; color: #333; }
+                            h1 { color: #1e3a8a; text-align: center; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 5px; }
+                            h2 { color: #1e3a8a; margin-top: 30px; }
+                            .date-label { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; margin-bottom: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+                            th { background-color: #f8fafc; color: #1e3a8a; font-weight: bold; }
+                            tr:nth-child(even) { background-color: #f9fafb; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${title} - إقامة زينب 4</h1>
+                        <div class="date-label">تاريخ التقرير: ${new Date().toLocaleDateString('ar-MA')} | للفترة: ${currentMonthLabel} ${y}</div>
+                `;
 
-                let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
-                XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
-
-                let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
-                XLSX.utils.book_append_sheet(wb, wsPay, "الأداءات (Paiements)");
-
-                // If specific month was chosen, add full year payments overview as well
-                if (monthNum !== null) {
-                    let fullYearPay = [];
-                    (data.apartments || []).forEach(a => {
-                        let b = (data.buildings || []).find(bld => String(bld.id) === String(a.buildingId));
-                        let row = {
-                            "العمارة (Immeuble)": b ? b.name : "N/A",
-                            "الشقة (Appartement)": a.name
-                        };
-                        let aptTotal = 0;
-                        for (let mo = 1; mo <= 12; mo++) {
-                            let key = `${a.id}_${y}_${mo}`;
-                            let amt = parseFloat(data.payments[key]) || 0;
-                            let moName = t('months')[mo - 1] || `M${mo}`;
-                            row[moName] = amt > 0 ? amt : 0;
-                            aptTotal += amt;
-                        }
-                        row["المجموع (Total)"] = aptTotal;
-                        fullYearPay.push(row);
-                    });
-                    if (fullYearPay.length > 0) {
-                        let wsFull = XLSX.utils.json_to_sheet(fullYearPay);
-                        XLSX.utils.book_append_sheet(wb, wsFull, `الجدول السنوي ${y}`);
-                    }
+                // Add Resume Table if Bilan
+                if (expType === 'bilan') {
+                    htmlContent += `<h2>الملخص المالي</h2><table><thead><tr><th>البند</th><th>القيمة</th></tr></thead><tbody>`;
+                    resumeData.forEach(r => { htmlContent += `<tr><td>${r["البند (Rubrique)"]}</td><td>${r["القيمة (Valeur)"]}</td></tr>`; });
+                    htmlContent += `</tbody></table>`;
                 }
 
-                XLSX.writeFile(wb, `Syndic_Bilan${fileSuffix}.xlsx`);
+                // Add Payments Table
+                if (expType === 'bilan' || expType === 'payments' || expType === 'fullTable') {
+                    htmlContent += `<h2>الأداءات</h2><table><thead><tr>`;
+                    if (paymentsData.length > 0) {
+                        Object.keys(paymentsData[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                        htmlContent += `</tr></thead><tbody>`;
+                        paymentsData.forEach(r => {
+                            htmlContent += `<tr>`;
+                            Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                            htmlContent += `</tr>`;
+                        });
+                    }
+                    htmlContent += `</tbody></table>`;
+                }
+
+                // Add Full Year Table if Bilan with specific month
+                if (expType === 'bilan' && monthNum !== null && typeof fullYearPay !== 'undefined' && fullYearPay.length > 0) {
+                    htmlContent += `<h2>الجدول السنوي</h2><table><thead><tr>`;
+                    Object.keys(fullYearPay[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                    htmlContent += `</tr></thead><tbody>`;
+                    fullYearPay.forEach(r => {
+                        htmlContent += `<tr>`;
+                        Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                        htmlContent += `</tr>`;
+                    });
+                    htmlContent += `</tbody></table>`;
+                }
+
+                // Add Expenses Table
+                if (expType === 'bilan' || expType === 'expenses') {
+                    htmlContent += `<h2>المصاريف</h2><table><thead><tr>`;
+                    if (expensesData.length > 0) {
+                        Object.keys(expensesData[0]).forEach(k => { htmlContent += `<th>${k}</th>`; });
+                        htmlContent += `</tr></thead><tbody>`;
+                        expensesData.forEach(r => {
+                            htmlContent += `<tr>`;
+                            Object.values(r).forEach(v => { htmlContent += `<td>${v}</td>`; });
+                            htmlContent += `</tr>`;
+                        });
+                    }
+                    htmlContent += `</tbody></table>`;
+                }
+
+                htmlContent += `</body></html>`;
+                printWindow.document.write(htmlContent);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
+
+            } else {
+                if (expType === 'expenses') {
+                    let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
+                    XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
+                    XLSX.writeFile(wb, `Syndic_Depenses${fileSuffix}.xlsx`);
+                } else if (expType === 'payments' || expType === 'fullTable') {
+                    let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
+                    XLSX.utils.book_append_sheet(wb, wsPay, `الأداءات (Paiements)`);
+                    XLSX.writeFile(wb, `Syndic_Paiements${fileSuffix}.xlsx`);
+                } else {
+                    let wsRes = XLSX.utils.json_to_sheet(resumeData);
+                    XLSX.utils.book_append_sheet(wb, wsRes, "الملخص المالي (Résumé)");
+
+                    let wsExp = XLSX.utils.json_to_sheet(expensesData.length ? expensesData : [{ "Info": "لا توجد مصاريف لهذه الفترة" }]);
+                    XLSX.utils.book_append_sheet(wb, wsExp, "المصاريف (Dépenses)");
+
+                    let wsPay = XLSX.utils.json_to_sheet(paymentsData.length ? paymentsData : [{ "Info": "لا توجد أداءات" }]);
+                    XLSX.utils.book_append_sheet(wb, wsPay, "الأداءات (Paiements)");
+
+                    if (monthNum !== null) {
+                        let fullYearPay = [];
+                        (data.apartments || []).forEach(a => {
+                            let b = (data.buildings || []).find(bld => String(bld.id) === String(a.buildingId));
+                            let row = {
+                                "العمارة (Immeuble)": b ? b.name : "N/A",
+                                "الشقة (Appartement)": a.name
+                            };
+                            let aptTotal = 0;
+                            for (let mo = 1; mo <= 12; mo++) {
+                                let key = `${a.id}_${y}_${mo}`;
+                                let amt = parseFloat(data.payments[key]) || 0;
+                                let moName = t('months')[mo - 1] || `M${mo}`;
+                                row[moName] = amt > 0 ? amt : 0;
+                                aptTotal += amt;
+                            }
+                            row["المجموع (Total)"] = aptTotal;
+                            fullYearPay.push(row);
+                        });
+                        if (fullYearPay.length > 0) {
+                            let wsFull = XLSX.utils.json_to_sheet(fullYearPay);
+                            XLSX.utils.book_append_sheet(wb, wsFull, `الجدول السنوي ${y}`);
+                        }
+                    }
+
+                    XLSX.writeFile(wb, `Syndic_Bilan${fileSuffix}.xlsx`);
+                }
             }
 
             closeModal();
-        }
-
-        function exportToExcel(type) {
-            openExportExcelModal(type || 'bilan');
         }
 
         // ACTIONS
@@ -2832,15 +2938,15 @@
                         }
                     }
 
-                    const newAnn = { 
-                        id: Number(annId), 
-                        title: titleVal, 
-                        msg: msgVal, 
-                        date: new Date().toLocaleDateString(), 
+                    const newAnn = {
+                        id: Number(annId),
+                        title: titleVal,
+                        msg: msgVal,
+                        date: new Date().toLocaleDateString(),
                         hasImage: hasImage,
                         comments: []
                     };
-                    
+
                     db.collection("syndic_announcements").doc(annId.toString()).set(newAnn).then(() => {
                         closeModal();
                     });
@@ -2891,12 +2997,16 @@
         };
 
         function sendChat() {
-            const m = document.getElementById('chatInput').value.trim();
-            const isPrivate = document.getElementById('chatIsPrivate').checked;
+            const inputEl = document.getElementById('chatInput');
+            const m = inputEl ? inputEl.value.trim() : '';
+            const privateCheckbox = document.getElementById('chatIsPrivate');
+            const isPrivate = privateCheckbox ? privateCheckbox.checked : false;
 
             if (!m) return;
 
-            const displayName = isAdmin() ? "Admin" : (userAccount ? userAccount.name : "Resident");
+            const currentUser = firebase.auth().currentUser;
+            const currentUserUid = (userAccount && userAccount.uid) ? userAccount.uid : (currentUser ? currentUser.uid : '');
+            const displayName = isAdmin() ? "Admin" : (userAccount?.name || (currentUser?.displayName) || "Resident");
             const messageId = Date.now();
             const message = {
                 id: Number(messageId),
@@ -2904,36 +3014,54 @@
                 msg: m,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 isPrivate: isPrivate,
-                senderUid: userAccount ? userAccount.uid : '',
+                senderUid: currentUserUid,
                 likes: 0,
                 dislikes: 0,
                 replies: []
             };
 
+            const sendBtn = document.querySelector('button[onclick="sendChat()"]');
+            if (sendBtn) sendBtn.disabled = true;
+
             db.collection("syndic_chat").doc(messageId.toString()).set(message).then(() => {
-                document.getElementById('chatInput').value = '';
-                document.getElementById('chatIsPrivate').checked = false;
-            }).catch(e => alert(e.message));
+                if (inputEl) inputEl.value = '';
+                if (privateCheckbox) privateCheckbox.checked = false;
+            }).catch(e => {
+                console.error("Chat send error:", e);
+                alert("تعذر إرسال الرسالة: " + (e.message || "يرجى التحقق من اتصالك بالإنترنت أو تفعيل حسابك من قبل الإدارة."));
+            }).finally(() => {
+                if (sendBtn) sendBtn.disabled = false;
+            });
         }
 
         function renderChat() {
             const c = document.getElementById('chatContainer');
-            const currentUserUid = userAccount ? userAccount.uid : '';
-            const isAdmin = userAccount ? userAccount.role === 'admin' : false;
+            if (!c) return;
+            const currentUser = firebase.auth().currentUser;
+            const currentUserUid = (userAccount && userAccount.uid) ? userAccount.uid : (currentUser ? currentUser.uid : '');
+            const userIsAdmin = isAdmin();
 
-            const filteredChat = data.chat.filter(m => {
+            const filteredChat = (data.chat || []).filter(m => {
                 if (!m.isPrivate) return true;
-                return m.senderUid === currentUserUid || isAdmin;
+                return (currentUserUid && m.senderUid === currentUserUid) || userIsAdmin;
             });
 
-            c.innerHTML = filteredChat.map(m => `
+            if (filteredChat.length === 0) {
+                c.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 30px;">لا توجد رسائل حالياً.</div>';
+                return;
+            }
+
+            c.innerHTML = filteredChat.map(m => {
+                const isMyMessage = currentUserUid && m.senderUid === currentUserUid;
+                const canDelete = userIsAdmin || isMyMessage;
+                return `
                 <div class="chat-msg" style="margin-bottom: 20px; position: relative; ${m.isPrivate ? 'border: 2px solid #ef4444; background: #fff5f5;' : ''}">
-                    <button class="delete-btn" onclick="requireAuth(() => deleteChatMessage('${m.id}'))">🗑️</button>
+                    ${canDelete ? `<button class="delete-btn" onclick="requireAuth(() => deleteChatMessage('${m.id}'))" title="حذف الرسالة">🗑️</button>` : ''}
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="sender">${m.name}</span>
+                        <span class="sender" style="${isMyMessage ? 'color: var(--secondary); font-weight: bold;' : ''}">${m.name} ${isMyMessage ? '(أنت)' : ''}</span>
                         ${m.isPrivate ? '<span style="color: #ef4444; font-size: 11px; font-weight: 800; background: white; padding: 2px 6px; border-radius: 4px; display: flex; align-items: center; gap: 2px;">🔒 Private</span>' : ''}
                     </div>
-                    <p class="text">${m.msg}</p>
+                    <p class="text" style="white-space: pre-wrap; word-break: break-word;">${m.msg}</p>
                     <span class="time">${m.time}</span>
                     
                     <div class="chat-actions" style="display: flex; gap: 15px; margin-top: 5px; font-size: 13px;">
@@ -2946,7 +3074,7 @@
                         <div class="chat-replies" style="margin-top: 10px; padding-left: 20px; border-left: 2px solid #e2e8f0; margin-left: 10px;">
                             ${m.replies.map(r => `
                                 <div style="background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 5px; font-size: 13px; position: relative; border: 1px solid #f1f5f9;">
-                                    ${isAdmin() ? `<button onclick="deleteChatReply('${m.id}', '${r.id}')" style="position: absolute; top: 2px; right: 2px; border: none; background: none; cursor: pointer; color: #ef4444; font-size: 10px;">🗑️</button>` : ''}
+                                    ${userIsAdmin ? `<button onclick="deleteChatReply('${m.id}', '${r.id}')" style="position: absolute; top: 2px; right: 2px; border: none; background: none; cursor: pointer; color: #ef4444; font-size: 10px;">🗑️</button>` : ''}
                                     <div style="font-weight: bold; color: var(--secondary); margin-bottom: 2px;">${r.name}</div>
                                     <div>${r.text}</div>
                                     <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">${r.date}</div>
@@ -2955,8 +3083,9 @@
                         </div>
                     ` : ''}
                 </div>
-            `).join('');
-            c.scrollTop = c.scrollHeight;
+            `;
+            }).join('');
+            setTimeout(() => { c.scrollTop = c.scrollHeight; }, 50);
         }
 
         function deleteChatMessage(id) {
@@ -3085,11 +3214,11 @@
             });
             document.documentElement.lang = currentLang;
             document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
-            
+
             // Show/Hide Users link based on role
             const navUsers = document.getElementById('navUsersLink');
             if (navUsers) navUsers.style.display = isAdmin() ? 'inline-block' : 'none';
-            
+
             refreshCurrentView();
         }
         function renameItem(id, type) { /* Implement Rename logic */ }
